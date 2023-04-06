@@ -208,7 +208,9 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         voxshader->use();
+        //voxshader->uniformColor("vcolor", vec4(0.0f, 1.0f, 1.0f, 1.0f));
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
+        
         for (int i = 0; i < 1; i++) {
             objs[i]->translate(glm::vec3(6*i, 0, 0));
             objs[i]->draw(mesh, voxshader);

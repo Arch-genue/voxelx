@@ -3,9 +3,7 @@
 
 Mesh::Mesh(const float* buffer, size_t vertices, const int* attrs) : vertices(vertices) {
     int vertex_size = 0;
-    for (int i = 0; attrs[i]; i++) {
-        vertex_size += attrs[i];
-    }
+    for (int i = 0; attrs[i]; i++) vertex_size += attrs[i];
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);

@@ -10,8 +10,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-Shader::Shader(unsigned int id) : id(id) {
-}
+Shader::Shader(unsigned int id) : id(id) {}
 
 Shader::~Shader() {
     glDeleteProgram(id);
@@ -24,6 +23,13 @@ void Shader::use() {
 void Shader::uniformMatrix(std::string name, glm::mat4 matrix) {
     GLuint transformLoc = glGetUniformLocation(id, name.c_str());
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+    //GLuint transformLoc = glGetUniformLocation(id, name.c_str());
+    //glUniform4d(transformLoc, 1.0f, 0.0f, 1.0f, 0.8f);
+}
+
+void Shader::uniformColor(std::string name, glm::vec4 color) {
+    GLuint transformLoc = glGetUniformLocation(id, name.c_str());
+    glUniform4f(transformLoc, color.x, color.y, color.z, color.a);
 }
 
 Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
@@ -96,7 +102,7 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
 
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        //glDeleteProgram(id);
+        glDeleteProgram(id);
         return nullptr;
     }
 
