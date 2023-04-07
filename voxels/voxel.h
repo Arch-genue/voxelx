@@ -8,6 +8,7 @@
 struct Voxel {
     uint8_t id;
     glm::vec3 position;
+    glm::vec4 clr;
 };
 
 class VoxModel {
@@ -16,13 +17,15 @@ public:
     std::string name;
 
     Voxel* voxels;
-    uint16_t voxcount;
+    int voxcount;
+    glm::vec3 m_size;
    
-    VoxModel(std::string filename); //Voxel* voxels, uint16_t amount
+    VoxModel(std::string filename, bool test); //Voxel* voxels, uint16_t amount
     ~VoxModel();
 
     void draw();
 private:
     void load_vox(std::string filename);
-    void nullvox();
+    void gen();
+    void nullvox(int voxcount);
 };

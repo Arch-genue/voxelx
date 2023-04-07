@@ -21,7 +21,7 @@ using namespace glm;
 #include "voxels/voxel.h"
 #include "voxels/chunk.h"
 #include "voxels/chunks.h"
-#include "object.h"
+#include "gameobject.h"
 
 #define MODELSIZE 1.0f
 
@@ -70,7 +70,18 @@ int main() {
         return 1;
     }
 
-    VoxModel* voxmodel = new VoxModel("../res/models/apple.voxtxt");
+    VoxModel* goblinhead = new VoxModel("../res/models/apple.voxtxt", false);
+    VoxModel* goblintorso = new VoxModel("../res/models/goblintorso.voxtxt", false);
+
+    //VoxModel* goblinLegLeft = new VoxModel("../res/models/goblinLegLeft.voxtxt", false);
+    //VoxModel* goblinLegRight = new VoxModel("../res/models/goblinLegRight.voxtxt", false);
+
+    //VoxModel* goblinArmLeft = new VoxModel("../res/models/goblinArmLeft.voxtxt", false);
+    VoxModel* watertest = new VoxModel("../res/models/watertest.voxtxt", true);
+    VoxModel* watertest1 = new VoxModel("../res/models/watertest.voxtxt", true);
+
+    //VoxModel* goblinArmRight = new VoxModel("../res/models/goblinArmRight.voxtxt");
+
     //VoxModel* voxmodel1 = new VoxModel("res/models/bread.voxtxt");
     //VoxModel* voxmodel2 = new VoxModel("res/models/goblin.voxtxt");
     // if (voxmodel == nullptr) {
@@ -82,27 +93,45 @@ int main() {
 
     //-----------
 
-    Chunks* chunks = new Chunks(8, 1, 8);
-    Mesh** meshes = new Mesh*[chunks->volume];
-    for (size_t i = 0; i < chunks->volume; i++) 
-        meshes[i] = nullptr;
+    // Chunks* chunks = new Chunks(8, 1, 8);
+    // Mesh** meshes = new Mesh*[chunks->volume];
+    // for (size_t i = 0; i < chunks->volume; i++) 
+    //     meshes[i] = nullptr;
 
-    VoxelRenderer renderer(1024*1024);
+    //VoxelRenderer renderer(1024*1024);
     ModelRenderer rend(1024*1024);
 
-    Mesh* mesh = rend.render(voxmodel);
+    Mesh* mesh1 = rend.render(goblinhead);
+    Mesh* mesh2 = rend.render(goblintorso);
+    
+    //Mesh* mesh3 = rend.render(goblinLegLeft);
+    //Mesh* mesh4 = rend.render(goblinLegRight);
+
+    //Mesh* mesh5 = rend.render(goblinArmLeft);
+    Mesh* mesh6 = rend.render(watertest);
+    Mesh* mesh7 = rend.render(watertest1);
 
     mat4 mat(1.0f);
-    Object *objs[100];
+    GameObject obj1(&mat);
+    GameObject obj2(&mat);
 
-    for (int i = 0; i < 100; i++)
-        objs[i] = new Object(&mat);
+    //Object obj3(&mat);
+    //Object obj4(&mat);
 
-    //mat4 mat1(1.0f);
+    // Object obj5(&mat);
+    GameObject obj6(&mat);
+    GameObject obj7(&mat);
+
+    //for (int i = 0; i < 100; i++)
+
+    // objs[3] = new Object(&mat);
+
+    // objs[4] = new Object(&mat);
+    // objs[5] = new Object(&mat);
+
     // for (int d = 0; d < 100; d++) {
     //     objd[d] = new Object(&mat);
     // }
-    // //mat4 mat1(1.0f);
     // for (int g = 0; g < 100; g++) {
     //     objg[g] = new Object(&mat);
     // }
@@ -125,8 +154,6 @@ int main() {
 
     float speed = 5;
 
-    float rd,rb = 0;
-
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
         delta = currentTime - lastTime;
@@ -137,6 +164,9 @@ int main() {
         }
         if (Input::jpressed(GLFW_KEY_TAB)) {
             Input::toggleCursor();
+        }
+        if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
+            //chunks->set((int)iend.x, (int)iend.y, (int)iend.z, 0);
         }
         
         if (Input::pressed(GLFW_KEY_W)) {
@@ -162,74 +192,108 @@ int main() {
             camera->rotate(camY, camX, 0);
         }
 
-        {
-            vec3 end;
-            vec3 norm;
-            vec3 iend;
-            Voxel* vox = chunks->rayCast(camera->position, camera->front, 5.0f, end, norm, iend);
-            if (vox != nullptr) {
-                if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
-                    chunks->set((int)iend.x, (int)iend.y, (int)iend.z, 0);
-                }
-                if (Input::jclicked(GLFW_MOUSE_BUTTON_2)) {
-                    chunks->set((int)iend.x+(int)(norm.x), (int)iend.y+(int)(norm.y), (int)iend.z+(int)(norm.z), 2);
-                }
-            }
-        }
+        // {
+        //     vec3 end;
+        //     vec3 norm;
+        //     vec3 iend;
+        //     Voxel* vox = chunks->rayCast(camera->position, camera->front, 5.0f, end, norm, iend);
+        //     if (vox != nullptr) {
+        //         if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
+        //             chunks->set((int)iend.x, (int)iend.y, (int)iend.z, 0);
+        //         }
+        //         if (Input::jclicked(GLFW_MOUSE_BUTTON_2)) {
+        //             chunks->set((int)iend.x+(int)(norm.x), (int)iend.y+(int)(norm.y), (int)iend.z+(int)(norm.z), 2);
+        //         }
+        //     }
+        // }
 
-        Chunk* closes[27];
-        for (int i = 0; i < chunks->volume; i++) {
-            Chunk* chunk = chunks->chunks[i];
-            if (!chunk->modified) continue;
-            chunk->modified = false;
+        // Chunk* closes[27];
+        // for (int i = 0; i < chunks->volume; i++) {
+        //     Chunk* chunk = chunks->chunks[i];
+        //     if (!chunk->modified) continue;
+        //     chunk->modified = false;
 
-            if (meshes[i] != nullptr) delete meshes[i];
-            for (int d = 0; d < 27; d++) closes[d] = nullptr;
+        //     if (meshes[i] != nullptr) delete meshes[i];
+        //     for (int d = 0; d < 27; d++) closes[d] = nullptr;
             
-            for (int j = 0; j < chunks->volume; j++) {
-                Chunk* other = chunks->chunks[j];
+        //     for (int j = 0; j < chunks->volume; j++) {
+        //         Chunk* other = chunks->chunks[j];
 
-                int ox = other->x - chunk->x;
-                int oy = other->y - chunk->y;
-                int oz = other->z - chunk->z;
+        //         int ox = other->x - chunk->x;
+        //         int oy = other->y - chunk->y;
+        //         int oz = other->z - chunk->z;
 
-                if (abs(ox) > 1 || abs(oy) > 1 || abs(oz) > 1) continue;
+        //         if (abs(ox) > 1 || abs(oy) > 1 || abs(oz) > 1) continue;
 
-                ox += 1;
-                oy += 1;
-                oz += 1;
-                closes[(oy * 3 +oz) * 3 + ox] = other;
-            }
+        //         ox += 1;
+        //         oy += 1;
+        //         oz += 1;
+        //         closes[(oy * 3 +oz) * 3 + ox] = other;
+        //     }
 
-            Mesh* mesh = renderer.render(chunk, (const Chunk**)closes);
-            meshes[i] = mesh;
-        }
+        //     Mesh* mesh = renderer.render(chunk, (const Chunk**)closes);
+        //     meshes[i] = mesh;
+        // }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         voxshader->use();
-        //voxshader->uniformColor("vcolor", vec4(0.0f, 1.0f, 1.0f, 1.0f));
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
-        
-        for (int i = 0; i < 1; i++) {
-            objs[i]->translate(glm::vec3(6*i, 0, 0));
-            objs[i]->draw(mesh, voxshader);
-        }
 
-        //MAIN VOXELS
-        mat4 model(1.0f);
-        shader->use();
-        shader->uniformMatrix("projview", camera->getProjection()*camera->getView());
-        texture->bind();
-        for (size_t i = 0; i < chunks->volume; i++) {
-            Chunk* chunk = chunks->chunks[i];
-            Mesh* mesh = meshes[i];
-            model = translate(mat4(1.0f), vec3((chunk->x*CHUNK_W+0.5f)*MODELSIZE, (chunk->y*CHUNK_H+0.5f)*MODELSIZE, (chunk->z*CHUNK_D+0.5f)*MODELSIZE));
-            //model = scale(model, vec3(MODELSIZE));
+        obj1.setPosition(glm::vec3(0, 0, 0));
+        //obj1.rotate(radians(-90.0f), vec3(1,0,0));
+        obj1.draw(mesh1, voxshader);
 
-            shader->uniformMatrix("model", model);
-            mesh->draw(GL_TRIANGLES);
-        }
+        obj2.setPosition(glm::vec3(0, -11, 0));
+        obj2.setRotation(radians(-90.0f), vec3(1,0,0));
+
+        obj2.draw(mesh2, voxshader);
+
+        // if (test) {
+        //     obj2.setPosition(glm::vec3(0, -11, 0));
+
+        //     //obj2.rotate(radians(-90.0f), vec3(1,0,0));
+        //     obj2.draw(mesh2, voxshader);
+        // }
+
+        // obj3.translate(glm::vec3(0, -20, -2));
+        // obj3.rotate(radians(-90.0f), vec3(1,0,0));
+        // obj3.draw(mesh3, voxshader);
+
+        // obj4.translate(glm::vec3(0, -20, 2));
+        // obj4.rotate(radians(-90.0f), vec3(1,0,0));
+        // obj4.draw(mesh4, voxshader);
+
+        // obj5.translate(glm::vec3(0, -9, -6));
+        // obj5.rotate(radians(-90.0f), vec3(1,0,0));
+        // obj5.draw(mesh5, voxshader);
+
+        // obj6.setPosition(glm::vec3(15, 0, 15));
+        // obj6.draw(mesh6, voxshader);
+
+        // obj7.translate(0.1f, glm::vec3(1, 0, 0));
+        // obj7.draw(mesh7, voxshader);
+
+        // for (int i = 0; i < 1; i++) {
+        //     objs[i]->translate(glm::vec3(6*i, 0, 0));
+        //     objs[i]->rotate(radians(-90.0f), vec3(1,0,0));
+        //     objs[i]->draw(mesh, voxshader);
+        // }
+
+        //!MAIN VOXELS
+        // mat4 model(1.0f);
+        // shader->use();
+        // shader->uniformMatrix("projview", camera->getProjection()*camera->getView());
+        // texture->bind();
+        // for (size_t i = 0; i < chunks->volume; i++) {
+        //     Chunk* chunk = chunks->chunks[i];
+        //     Mesh* mesh = meshes[i];
+        //     model = translate(mat4(1.0f), vec3((chunk->x*CHUNK_W+0.5f)*MODELSIZE, (chunk->y*CHUNK_H+0.5f)*MODELSIZE, (chunk->z*CHUNK_D+0.5f)*MODELSIZE));
+        //     //model = scale(model, vec3(MODELSIZE));
+
+        //     shader->uniformMatrix("model", model);
+        //     mesh->draw(GL_TRIANGLES);
+        // }
         
         crosshairShader->use();
         crosshair->draw(GL_LINES);
@@ -242,8 +306,15 @@ int main() {
     delete shader;
     delete crosshairShader;
     delete texture;
-    //delete voxmodel;
+    delete goblinhead;
+    //delete goblinArmLeft;
+    delete goblintorso;
+    //delete goblinLegLeft;
+    // delete goblinLegRight;
+    delete watertest;
+    
+    //delete goblintorso;
     //delete mesh;
-    delete chunks;
+    //delete chunks;
     return 0;
 }

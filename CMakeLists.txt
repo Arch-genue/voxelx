@@ -22,7 +22,7 @@ set(SOURCE
 	voxels/chunks.cpp
 	loaders/png_loading.cpp
 	camera.cpp
-	object.cpp
+	gameobject.cpp
 )
 
 set(HEADER
@@ -38,7 +38,7 @@ set(HEADER
 	voxels/chunks.h
 	loaders/png_loading.h
 	camera.h
-	object.h
+	gameobject.h
 )
 
 find_package(PNG REQUIRED)
