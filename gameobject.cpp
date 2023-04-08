@@ -4,7 +4,6 @@
 #include <glm/ext.hpp>
 #include "graphics/mesh.h"
 #include "graphics/shader.h"
-
 //#include <iostream>
 
 GameObject::GameObject(glm::mat4 *mat) {
@@ -38,14 +37,10 @@ void GameObject::rotate(float angle, glm::vec3 rot) {
 
 void GameObject::scale(float scale, glm::vec3 scalevec) {
     scaling += scalevec*scale;
-    std::cout << (scaling.x) << std::endl;
 }
 
 void GameObject::setPosition(glm::vec3 pos) {
     position = pos;
-}
-glm::vec3 GameObject::getPosition() {
-    return position;
 }
 void GameObject::setRotation(float angle, glm::vec3 rot) {
     rotAngle = angle;
@@ -53,6 +48,10 @@ void GameObject::setRotation(float angle, glm::vec3 rot) {
 }
 void GameObject::setScale(glm::vec3 scalevec) {
     scaling = scalevec;
+}
+
+glm::vec3 GameObject::getPosition() {
+    return position;
 }
 
 glm::mat4 GameObject::getMatrix() {

@@ -23,9 +23,10 @@ void split(std::string* bufstr, std::string str, char separator) {
 }
 
 //TODO !!!!!!!!!!!
-
 VoxModel::VoxModel(std::string filename, bool test) {
-    if (!test) load_vox(filename);
+    if (!test) { 
+        path = filename;
+        load_vox(filename); }
     else gen();
 }
 VoxModel::~VoxModel() {
@@ -38,19 +39,26 @@ void VoxModel::gen() {
     int16_t x_coord, y_coord, z_coord;
     std::string str[5];
     int vi = 0;
-    voxcount = 15000;
+    voxcount = 300000;
     voxels = new Voxel[voxcount];
     float clr_r, clr_g, clr_b, clr_a = 0.0f;
-    clr_r = 0.3f;
-    clr_g = 0.3f;
-    clr_b = 0.3f;
+    // clr_r = 0.3f;
+    // clr_g = 0.3f;
+    // clr_b = 0.3f;
+    
     // clr_r = 0.3f;
     // clr_g = 0.7f;
     // clr_b = 1.0f;
     clr_a = 1.0f;
-    for(int x2 = 0; x2 < 100; x2++) {
-        for(int y2 = 0; y2 < 50; y2++) {
-            for(int z2 = 0; z2 < 3; z2++) {
+    for(uint16_t x2 = 0; x2 < 500; x2++) {
+        for(uint16_t y2 = 0; y2 < 100; y2++) {
+            for(uint16_t z2 = 0; z2 < 3; z2++) {
+                clr_r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                //clr_g = clr_r;
+                //clr_b = clr_r;
+                clr_g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+                clr_b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+
                 x_coord = x2;
                 y_coord = y2;
                 z_coord = z2;
@@ -96,22 +104,17 @@ void VoxModel::load_vox(std::string filename) {
         std::string line;
         uint16_t vi = 0;
 
-        float x_min, y_min, z_min = 0;
-        float x_max, y_max, z_max = -999;
-        int16_t x_coord, y_coord, z_coord;
+        short x_min = 999; short y_min = 999; short z_min = 999;
+        short x_max = -999; short y_max = -999; short z_max = -999;
+        short x_coord, y_coord, z_coord;
         std::string str[5];
         
         vi = 0;
         while (getline(in, line)) {
             vi++;
             if ( vi == 4 ) voxcount = atoi(line.c_str()); 
-
             if ( vi < 5 ) continue;
-
-            if ( vi == 5 ) {
-                voxels = new Voxel[voxcount];
-                nullvox(voxcount);
-            }
+            if ( vi == 5 ) voxels = new Voxel[voxcount];
             
             split(str, line, ' '); // x y z clr
 
@@ -123,11 +126,7 @@ void VoxModel::load_vox(std::string filename) {
             if (y_coord < 0 && y_coord < y_min) y_min = y_coord;
             if (z_coord < 0 && z_coord < z_min) z_min = z_coord;
 
-            voxels[vi-5].position = glm::vec3( 
-                x_coord, // x
-                y_coord, // y
-                z_coord  // z
-            );
+            voxels[vi-5].position = glm::vec3(x_coord, y_coord, z_coord);
             
             // VOXEL COLOR
             float clr_r, clr_g, clr_b, clr_a = 0.0f;
@@ -138,19 +137,25 @@ void VoxModel::load_vox(std::string filename) {
             strncat(g, clr+2, 2);
             clr_g = round( strtoul(g, NULL, 16) / 255.0 * 100 ) / 100;
             clr_b = round( strtoul(clr+4, NULL, 16) / 255.0 * 100 ) / 100;
-            clr_a = 1.0f;//str[5] != "" ? round( atoi(str[5].c_str()) / 255.0 * 100 ) / 100 : 1.0f;
+            clr_a = 1.0f;
 
-            voxels[vi-5].clr = glm::vec4( 
-                clr_r, // r
-                clr_g, // g
-                clr_b, // b
-                clr_a  // a
-            );
+            voxels[vi-5].clr = glm::vec4(clr_r, clr_g, clr_b, clr_a);
         }
+        if ( x_min == 999 ) x_min = 0;
+        if ( y_min == 999 ) y_min = 0;
+        if ( z_min == 999 ) z_min = 0;
+        if ( x_max == -999 ) x_max = 0;
+        if ( y_max == -999 ) y_max = 0;
+        if ( z_max == -999 ) z_max = 0;
+
         for (int i = 0; i < voxcount; i++) {
             voxels[i].position.x += abs(x_min);
             voxels[i].position.y += abs(y_min);
             voxels[i].position.z += abs(z_min);
+            // std::cout << filename << " "  << 
+            // voxels[i].position.x << " " << 
+            // voxels[i].position.y << " " << 
+            // voxels[i].position.z << std::endl;
 
             if (voxels[i].position.x > x_max) x_max = voxels[i].position.x;
             if (voxels[i].position.y > y_max) y_max = voxels[i].position.y;

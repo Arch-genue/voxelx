@@ -12,16 +12,17 @@ using namespace glm;
 #include "graphics/shader.h"
 #include "graphics/texture.h"
 #include "graphics/mesh.h"
-#include "graphics/voxelrenderer.h"
+//#include "graphics/voxelrenderer.h"
 #include "graphics/vox_renderer.h"
 #include "window.h"
 #include "input.h"
 #include "camera.h"
 #include "loaders/png_loading.h"
 #include "voxels/voxel.h"
-#include "voxels/chunk.h"
-#include "voxels/chunks.h"
+//#include "voxels/chunk.h"
+//#include "voxels/chunks.h"
 #include "gameobject.h"
+#include "entity.h"
 
 #define MODELSIZE 1.0f
 
@@ -46,14 +47,19 @@ int main() {
     Input::init();
 
     //?Loaders
-    Shader* shader = load_shader("../res/shaders/main.glslv", "../res/shaders/main.glslf");
-    if (shader == nullptr) {
-        std::cerr << "Failed to load shader\n";
+    // Shader* shader = load_shader("../res/shaders/main.glslv", "../res/shaders/main.glslf");
+    // if (shader == nullptr) {
+    //     std::cerr << "Failed to load shader\n";
+    //     Window::exit();
+    //     return 1;
+    // }
+
+    Shader* voxshader = load_shader("../res/shaders/voxel.glslv", "../res/shaders/voxel.glslf");
+    if (voxshader == nullptr) {
+        std::cerr << "Failed to load VOXEL shader\n";
         Window::exit();
         return 1;
     }
-
-    Shader* voxshader = load_shader("../res/shaders/voxel.glslv", "../res/shaders/voxel.glslf");
 
     Shader* crosshairShader = load_shader("../res/shaders/crosshair.glslv", "../res/shaders/crosshair.glslf");
     if (crosshairShader == nullptr) {
@@ -62,81 +68,54 @@ int main() {
         return 1;
     }
 
-    Texture* texture = load_texture("../res/block.png");
-    if (texture == nullptr) {
-        std::cerr << "Failed to load texture\n";
-        delete shader;
-        Window::exit();
-        return 1;
-    }
-
-    VoxModel* goblinhead = new VoxModel("../res/models/apple.voxtxt", false);
-    VoxModel* goblintorso = new VoxModel("../res/models/goblintorso.voxtxt", false);
-
-    //VoxModel* goblinLegLeft = new VoxModel("../res/models/goblinLegLeft.voxtxt", false);
-    //VoxModel* goblinLegRight = new VoxModel("../res/models/goblinLegRight.voxtxt", false);
-
-    //VoxModel* goblinArmLeft = new VoxModel("../res/models/goblinArmLeft.voxtxt", false);
-    VoxModel* watertest = new VoxModel("../res/models/watertest.voxtxt", true);
-    VoxModel* watertest1 = new VoxModel("../res/models/watertest.voxtxt", true);
-
-    //VoxModel* goblinArmRight = new VoxModel("../res/models/goblinArmRight.voxtxt");
-
-    //VoxModel* voxmodel1 = new VoxModel("res/models/bread.voxtxt");
-    //VoxModel* voxmodel2 = new VoxModel("res/models/goblin.voxtxt");
-    // if (voxmodel == nullptr) {
-    //     std::cerr << "Failed to load voxel model\n";
-    //     //delete voxmodel;
+    // Texture* texture = load_texture("../res/block.png");
+    // if (texture == nullptr) {
+    //     std::cerr << "Failed to load texture\n";
+    //     //delete shader;
     //     Window::exit();
     //     return 1;
     // }
 
-    //-----------
+    VoxModel* goblinhead = new VoxModel("../res/models/goblin.voxtxt", false);
+    VoxModel* goblintorso = new VoxModel("../res/models/goblintorso.voxtxt", false);
 
-    // Chunks* chunks = new Chunks(8, 1, 8);
-    // Mesh** meshes = new Mesh*[chunks->volume];
-    // for (size_t i = 0; i < chunks->volume; i++) 
-    //     meshes[i] = nullptr;
+    VoxModel* goblinLegLeft = new VoxModel("../res/models/goblinLegLeft.voxtxt", false);
+    VoxModel* goblinLegRight = new VoxModel("../res/models/goblinLegRight.voxtxt", false);
+
+    VoxModel* goblinArmLeft = new VoxModel("../res/models/goblinArmLeft.voxtxt", false);
+    
+    VoxModel* watertest = new VoxModel("../res/models/watertest.voxtxt", true);
+    VoxModel* null = new VoxModel("../res/models/null.voxtxt", false);
+
+    //VoxModel* goblinArmRight = new VoxModel("../res/models/goblinArmRight.voxtxt");
 
     //VoxelRenderer renderer(1024*1024);
-    ModelRenderer rend(1024*1024);
+    ModelRenderer rend(1024*1024*10);
 
     Mesh* mesh1 = rend.render(goblinhead);
     Mesh* mesh2 = rend.render(goblintorso);
     
-    //Mesh* mesh3 = rend.render(goblinLegLeft);
-    //Mesh* mesh4 = rend.render(goblinLegRight);
+    Mesh* mesh3 = rend.render(goblinLegLeft);
+    Mesh* mesh4 = rend.render(goblinLegRight);
 
-    //Mesh* mesh5 = rend.render(goblinArmLeft);
+    Mesh* mesh5 = rend.render(goblinArmLeft);
     Mesh* mesh6 = rend.render(watertest);
-    Mesh* mesh7 = rend.render(watertest1);
+    Mesh* mesh7 = rend.render(watertest);
+
+    Mesh* nullmesh = rend.render(null);
 
     mat4 mat(1.0f);
     GameObject obj1(&mat);
     GameObject obj2(&mat);
 
-    //Object obj3(&mat);
-    //Object obj4(&mat);
+    GameObject obj3(&mat);
+    GameObject obj4(&mat);
 
-    // Object obj5(&mat);
+    GameObject obj5(&mat);
     GameObject obj6(&mat);
     GameObject obj7(&mat);
-
-    //for (int i = 0; i < 100; i++)
-
-    // objs[3] = new Object(&mat);
-
-    // objs[4] = new Object(&mat);
-    // objs[5] = new Object(&mat);
-
-    // for (int d = 0; d < 100; d++) {
-    //     objd[d] = new Object(&mat);
-    // }
-    // for (int g = 0; g < 100; g++) {
-    //     objg[g] = new Object(&mat);
-    // }
     
-    glClearColor(0.6f,0.6f,0.6f,1);
+    glClearColor(0.6f, 0.6f, 0.6f,1);
     
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -207,94 +186,45 @@ int main() {
         //     }
         // }
 
-        // Chunk* closes[27];
-        // for (int i = 0; i < chunks->volume; i++) {
-        //     Chunk* chunk = chunks->chunks[i];
-        //     if (!chunk->modified) continue;
-        //     chunk->modified = false;
-
-        //     if (meshes[i] != nullptr) delete meshes[i];
-        //     for (int d = 0; d < 27; d++) closes[d] = nullptr;
-            
-        //     for (int j = 0; j < chunks->volume; j++) {
-        //         Chunk* other = chunks->chunks[j];
-
-        //         int ox = other->x - chunk->x;
-        //         int oy = other->y - chunk->y;
-        //         int oz = other->z - chunk->z;
-
-        //         if (abs(ox) > 1 || abs(oy) > 1 || abs(oz) > 1) continue;
-
-        //         ox += 1;
-        //         oy += 1;
-        //         oz += 1;
-        //         closes[(oy * 3 +oz) * 3 + ox] = other;
-        //     }
-
-        //     Mesh* mesh = renderer.render(chunk, (const Chunk**)closes);
-        //     meshes[i] = mesh;
-        // }
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         voxshader->use();
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
 
-        obj1.setPosition(glm::vec3(0, 0, 0));
-        //obj1.rotate(radians(-90.0f), vec3(1,0,0));
-        obj1.draw(mesh1, voxshader);
-
-        obj2.setPosition(glm::vec3(0, -11, 0));
-        obj2.setRotation(radians(-90.0f), vec3(1,0,0));
-
-        obj2.draw(mesh2, voxshader);
-
-        // if (test) {
-        //     obj2.setPosition(glm::vec3(0, -11, 0));
-
-        //     //obj2.rotate(radians(-90.0f), vec3(1,0,0));
-        //     obj2.draw(mesh2, voxshader);
-        // }
-
-        // obj3.translate(glm::vec3(0, -20, -2));
-        // obj3.rotate(radians(-90.0f), vec3(1,0,0));
-        // obj3.draw(mesh3, voxshader);
-
-        // obj4.translate(glm::vec3(0, -20, 2));
-        // obj4.rotate(radians(-90.0f), vec3(1,0,0));
-        // obj4.draw(mesh4, voxshader);
-
-        // obj5.translate(glm::vec3(0, -9, -6));
-        // obj5.rotate(radians(-90.0f), vec3(1,0,0));
-        // obj5.draw(mesh5, voxshader);
-
-        // obj6.setPosition(glm::vec3(15, 0, 15));
-        // obj6.draw(mesh6, voxshader);
-
-        // obj7.translate(0.1f, glm::vec3(1, 0, 0));
-        // obj7.draw(mesh7, voxshader);
-
-        // for (int i = 0; i < 1; i++) {
-        //     objs[i]->translate(glm::vec3(6*i, 0, 0));
-        //     objs[i]->rotate(radians(-90.0f), vec3(1,0,0));
-        //     objs[i]->draw(mesh, voxshader);
-        // }
-
-        //!MAIN VOXELS
-        // mat4 model(1.0f);
-        // shader->use();
-        // shader->uniformMatrix("projview", camera->getProjection()*camera->getView());
-        // texture->bind();
-        // for (size_t i = 0; i < chunks->volume; i++) {
-        //     Chunk* chunk = chunks->chunks[i];
-        //     Mesh* mesh = meshes[i];
-        //     model = translate(mat4(1.0f), vec3((chunk->x*CHUNK_W+0.5f)*MODELSIZE, (chunk->y*CHUNK_H+0.5f)*MODELSIZE, (chunk->z*CHUNK_D+0.5f)*MODELSIZE));
-        //     //model = scale(model, vec3(MODELSIZE));
-
-        //     shader->uniformMatrix("model", model);
-        //     mesh->draw(GL_TRIANGLES);
-        // }
+        //*GOBLIN
         
+        //Head
+        obj1.setPosition(glm::vec3(100, 18, 30));
+        obj1.setRotation(radians(-90.0f), vec3(1,0,0));
+        obj1.draw(mesh1, voxshader); 
+
+        //Torso
+        obj2.setPosition(glm::vec3(100, 8, 30));
+        obj2.setRotation(radians(-90.0f), vec3(1,0,0));
+        obj2.draw(mesh2, voxshader);
+        
+        //Left leg
+        obj3.setPosition(glm::vec3(101, 0, 24));
+        obj3.setRotation(radians(-90.0f), vec3(1,0,0));
+        obj3.draw(mesh3, voxshader);
+
+        //Right leg
+        obj3.setPosition(glm::vec3(101, 0, 28));
+        obj3.setRotation(radians(-90.0f), vec3(1,0,0));
+        obj3.translate(0.1f, vec3(1, 0 ,0));
+        obj3.draw(mesh4, voxshader);
+
+        obj3.setRotation(radians(-90.0f), vec3(1,0,0));
+        obj3.setPosition(vec3(0, -3, 99));
+        obj3.draw(mesh6, voxshader);
+
+        obj3.setRotation(radians(0.0f), vec3(1,0,0));
+        obj3.setPosition(vec3(0, 0, 0));
+        obj3.draw(mesh6, voxshader);
+
+        obj4.setPosition(vec3(0, 0, 97));
+        obj4.draw(mesh7, voxshader);
+
         crosshairShader->use();
         crosshair->draw(GL_LINES);
         
@@ -303,18 +233,24 @@ int main() {
     }
 
     Window::exit();
-    delete shader;
+    delete voxshader;
     delete crosshairShader;
-    delete texture;
+
     delete goblinhead;
-    //delete goblinArmLeft;
+    delete goblinArmLeft;
     delete goblintorso;
-    //delete goblinLegLeft;
-    // delete goblinLegRight;
+    delete goblinLegLeft;
+    delete goblinLegRight;
+    delete null;
     delete watertest;
     
-    //delete goblintorso;
-    //delete mesh;
-    //delete chunks;
+    delete mesh1;
+    delete mesh2;
+    delete mesh3;
+    delete mesh4;
+    delete mesh5;
+    delete mesh6;
+    delete mesh7;
+    delete nullmesh;
     return 0;
 }
