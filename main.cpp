@@ -12,11 +12,13 @@ using namespace glm;
 #include "graphics/shader.h"
 #include "graphics/texture.h"
 #include "graphics/mesh.h"
+
 //#include "graphics/voxelrenderer.h"
 #include "graphics/vox_renderer.h"
 #include "window.h"
 #include "input.h"
 #include "camera.h"
+#include "loaders/resourceloader.h"
 #include "loaders/png_loading.h"
 #include "voxels/voxel.h"
 //#include "voxels/chunk.h"
@@ -46,7 +48,13 @@ int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D");
     Input::init();
 
-    //?Loaders
+    //? Loaders
+    //std::string h = ;
+    ResourceLoader::setPath("../res/");
+    ResourceLoader::loadShaders();
+    ResourceLoader::loadTextures();
+    ResourceLoader::loadModels();
+
     // Shader* shader = load_shader("../res/shaders/main.glslv", "../res/shaders/main.glslf");
     // if (shader == nullptr) {
     //     std::cerr << "Failed to load shader\n";
@@ -68,14 +76,6 @@ int main() {
         return 1;
     }
 
-    // Texture* texture = load_texture("../res/block.png");
-    // if (texture == nullptr) {
-    //     std::cerr << "Failed to load texture\n";
-    //     //delete shader;
-    //     Window::exit();
-    //     return 1;
-    // }
-
     VoxModel* goblinhead = new VoxModel("../res/models/goblin.voxtxt", false);
     VoxModel* goblintorso = new VoxModel("../res/models/goblintorso.voxtxt", false);
 
@@ -87,9 +87,8 @@ int main() {
     VoxModel* watertest = new VoxModel("../res/models/watertest.voxtxt", true);
     VoxModel* null = new VoxModel("../res/models/null.voxtxt", false);
 
-    //VoxModel* goblinArmRight = new VoxModel("../res/models/goblinArmRight.voxtxt");
+    
 
-    //VoxelRenderer renderer(1024*1024);
     ModelRenderer rend(1024*1024*10);
 
     Mesh* mesh1 = rend.render(goblinhead);

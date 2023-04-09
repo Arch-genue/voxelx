@@ -20,6 +20,7 @@ set(SOURCE
 	voxels/voxel.cpp
 	voxels/chunk.cpp
 	voxels/chunks.cpp
+	loaders/resourceloader.cpp
 	loaders/png_loading.cpp
 	camera.cpp
 	gameobject.cpp
@@ -36,6 +37,7 @@ set(HEADER
 	voxels/voxel.h
 	voxels/chunk.h
 	voxels/chunks.h
+	loaders/resourceloader.h
 	loaders/png_loading.h
 	camera.h
 	gameobject.h

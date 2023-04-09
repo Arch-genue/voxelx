@@ -39,7 +39,7 @@ void VoxModel::gen() {
     int16_t x_coord, y_coord, z_coord;
     std::string str[5];
     int vi = 0;
-    voxcount = 300000;
+    voxcount = 150000;
     voxels = new Voxel[voxcount];
     float clr_r, clr_g, clr_b, clr_a = 0.0f;
     // clr_r = 0.3f;
