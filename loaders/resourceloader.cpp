@@ -18,7 +18,7 @@ void ResourceLoader::loadShaders() {
     for (const auto & entry : fs::directory_iterator(path)) {
         //Shader* shader = load_shader(entry.path().string(), entry.path().string());
         //paths = entry.path();
-        std::cout << entry.path() << std::endl;
+        //std::cout << entry.path() << std::endl;
     }
     delete[] paths;
 }

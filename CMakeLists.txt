@@ -15,11 +15,8 @@ set(SOURCE
 	graphics/shader.cpp
 	graphics/texture.cpp
 	graphics/mesh.cpp
-	graphics/voxelrenderer.cpp
 	graphics/vox_renderer.cpp
 	voxels/voxel.cpp
-	voxels/chunk.cpp
-	voxels/chunks.cpp
 	loaders/resourceloader.cpp
 	loaders/png_loading.cpp
 	camera.cpp
@@ -32,16 +29,17 @@ set(HEADER
 	graphics/shader.h 
 	graphics/texture.h 
 	graphics/mesh.h
-	graphics/voxelrenderer.h
 	graphics/vox_renderer.h
 	voxels/voxel.h
-	voxels/chunk.h
-	voxels/chunks.h
 	loaders/resourceloader.h
 	loaders/png_loading.h
 	camera.h
 	gameobject.h
 )
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 find_package(PNG REQUIRED)
 if(NOT PNG_FOUND)

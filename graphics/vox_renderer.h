@@ -3,7 +3,8 @@
 #include "stdlib.h"
 
 class Mesh;
-class VoxModel;
+//class Model;
+class _voxels;
 
 class ModelRenderer {
 	float* buffer;
@@ -12,5 +13,5 @@ public:
 	ModelRenderer(size_t capacity);
 	~ModelRenderer();
 
-	Mesh* render(VoxModel* chunk);
+	Mesh* render(_voxels* voxels);
 };

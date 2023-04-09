@@ -5,28 +5,25 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-struct Voxel {
-    uint8_t id;
+struct voxel_m {
     glm::vec3 position;
     glm::vec4 clr;
 };
 
-class VoxModel {
-public: 
-    uint8_t id;
-    std::string name;
-    std::string path;
+struct _voxels {
+    voxel_m* voxels;
+    size_t count;
+};
 
-    Voxel* voxels;
-    int voxcount;
-    glm::vec3 m_size;
-   
-    VoxModel(std::string filename, bool test); //Voxel* voxels, uint16_t amount
-    ~VoxModel();
+class Model {
+public:    
+    Model();
+    ~Model();
 
     void draw();
 private:
     void load_vox(std::string filename);
-    void gen();
-    void nullvox(int voxcount);
+    _voxels* gen_wall();
 };
+
+extern _voxels* load_model(std::string filename, const char* type, bool test);

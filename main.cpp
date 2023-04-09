@@ -76,43 +76,16 @@ int main() {
         return 1;
     }
 
-    VoxModel* goblinhead = new VoxModel("../res/models/goblin.voxtxt", false);
-    VoxModel* goblintorso = new VoxModel("../res/models/goblintorso.voxtxt", false);
-
-    VoxModel* goblinLegLeft = new VoxModel("../res/models/goblinLegLeft.voxtxt", false);
-    VoxModel* goblinLegRight = new VoxModel("../res/models/goblinLegRight.voxtxt", false);
-
-    VoxModel* goblinArmLeft = new VoxModel("../res/models/goblinArmLeft.voxtxt", false);
-    
-    VoxModel* watertest = new VoxModel("../res/models/watertest.voxtxt", true);
-    VoxModel* null = new VoxModel("../res/models/null.voxtxt", false);
-
-    
-
+    _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt", false);
+    std::cout << "dbg1" << std::endl;
+    //_voxels* wallvox = load_model("../res/models/apple.voxtxt", "voxtxt", true);
     ModelRenderer rend(1024*1024*10);
 
-    Mesh* mesh1 = rend.render(goblinhead);
-    Mesh* mesh2 = rend.render(goblintorso);
-    
-    Mesh* mesh3 = rend.render(goblinLegLeft);
-    Mesh* mesh4 = rend.render(goblinLegRight);
-
-    Mesh* mesh5 = rend.render(goblinArmLeft);
-    Mesh* mesh6 = rend.render(watertest);
-    Mesh* mesh7 = rend.render(watertest);
-
-    Mesh* nullmesh = rend.render(null);
+    Mesh* apple = rend.render(applevox);
+    std::cout << "dbg3" << std::endl;
 
     mat4 mat(1.0f);
-    GameObject obj1(&mat);
-    GameObject obj2(&mat);
-
-    GameObject obj3(&mat);
-    GameObject obj4(&mat);
-
-    GameObject obj5(&mat);
-    GameObject obj6(&mat);
-    GameObject obj7(&mat);
+    GameObject obj(&mat);
     
     glClearColor(0.6f, 0.6f, 0.6f,1);
     
@@ -193,36 +166,38 @@ int main() {
         //*GOBLIN
         
         //Head
-        obj1.setPosition(glm::vec3(100, 18, 30));
-        obj1.setRotation(radians(-90.0f), vec3(1,0,0));
-        obj1.draw(mesh1, voxshader); 
+        //appleobj.setPosition(glm::vec3(10, 10, 10)); //obj1.setPosition(glm::vec3(100, 18, 30));
+        //obj1.setRotation(radians(-90.0f), vec3(1,0,0));
+        //appleobj.draw(apple, voxshader); 
 
-        //Torso
-        obj2.setPosition(glm::vec3(100, 8, 30));
-        obj2.setRotation(radians(-90.0f), vec3(1,0,0));
-        obj2.draw(mesh2, voxshader);
+        obj.draw(apple, voxshader);
+
+        // //Torso
+        // obj2.setPosition(glm::vec3(100, 8, 30));
+        // obj2.setRotation(radians(-90.0f), vec3(1,0,0));
+        // obj2.draw(mesh2, voxshader);
         
-        //Left leg
-        obj3.setPosition(glm::vec3(101, 0, 24));
-        obj3.setRotation(radians(-90.0f), vec3(1,0,0));
-        obj3.draw(mesh3, voxshader);
+        // //Left leg
+        // obj3.setPosition(glm::vec3(101, 0, 24));
+        // obj3.setRotation(radians(-90.0f), vec3(1,0,0));
+        // obj3.draw(mesh3, voxshader);
 
-        //Right leg
-        obj3.setPosition(glm::vec3(101, 0, 28));
-        obj3.setRotation(radians(-90.0f), vec3(1,0,0));
-        obj3.translate(0.1f, vec3(1, 0 ,0));
-        obj3.draw(mesh4, voxshader);
+        // //Right leg
+        // obj3.setPosition(glm::vec3(101, 0, 28));
+        // obj3.setRotation(radians(-90.0f), vec3(1,0,0));
+        // obj3.translate(0.1f, vec3(1, 0 ,0));
+        // obj3.draw(mesh4, voxshader);
 
-        obj3.setRotation(radians(-90.0f), vec3(1,0,0));
-        obj3.setPosition(vec3(0, -3, 99));
-        obj3.draw(mesh6, voxshader);
+        // obj3.setRotation(radians(-90.0f), vec3(1,0,0));
+        // obj3.setPosition(vec3(0, -3, 99));
+        // obj3.draw(mesh6, voxshader);
 
-        obj3.setRotation(radians(0.0f), vec3(1,0,0));
-        obj3.setPosition(vec3(0, 0, 0));
-        obj3.draw(mesh6, voxshader);
+        // obj3.setRotation(radians(0.0f), vec3(1,0,0));
+        // obj3.setPosition(vec3(0, 0, 0));
+        // obj3.draw(mesh6, voxshader);
 
-        obj4.setPosition(vec3(0, 0, 97));
-        obj4.draw(mesh7, voxshader);
+        // obj4.setPosition(vec3(0, 0, 97));
+        // obj4.draw(mesh7, voxshader);
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);
@@ -235,21 +210,11 @@ int main() {
     delete voxshader;
     delete crosshairShader;
 
-    delete goblinhead;
-    delete goblinArmLeft;
-    delete goblintorso;
-    delete goblinLegLeft;
-    delete goblinLegRight;
-    delete null;
-    delete watertest;
-    
-    delete mesh1;
-    delete mesh2;
-    delete mesh3;
-    delete mesh4;
-    delete mesh5;
-    delete mesh6;
-    delete mesh7;
-    delete nullmesh;
+    delete applevox;
+    delete wallvox;
+
+    delete apple;
+    delete wall;
+
     return 0;
 }

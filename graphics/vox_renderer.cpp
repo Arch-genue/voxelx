@@ -7,10 +7,10 @@
 //#include <glm/ext.hpp>
 
 #define VERTEX_SIZE (3 + 4 + 1)
-int chunk_attrs1[] = {3,4,1, 0};
+int chunk_attrs[] = {3,4,1, 0};
 
 #define IS_IN(X,Y,Z) ((X) >= 0 && (Y) >= 0 && (Z) >= 0)
-#define IS_BLOCKED(X,Y,Z) (false)
+#define IS_BLOCKED(VOXELS,X,Y,Z) (find((VOXELS), (X), (Y), (Z)))
 #define VERTEX(INDEX, X,Y,Z, C1,C2,C3,C4,L) \
 					buffer[INDEX+0] = (X); \
 					buffer[INDEX+1] = (Y); \
@@ -30,31 +30,42 @@ ModelRenderer::~ModelRenderer() {
 	delete[] buffer;
 }
 
-Mesh* ModelRenderer::render(VoxModel* model) {
+//! OPTIMIZATION
+bool find(_voxels* voxels, float x, float y, float z) {
+	//return false;
+	for (size_t i = 0; i < voxels->count; i++)
+		if (voxels->voxels[i].position.x == x && voxels->voxels[i].position.y == y && voxels->voxels[i].position.z == z )
+			return true;
+	return false;
+}
+
+Mesh* ModelRenderer::render(_voxels* voxels) {
 	size_t index = 0;
+	float x,y,z;
+
 	float c1 = 0.0f;
 	float c2 = 0.0f;
 	float c3 = 0.0f;
 	float c4 = 1.0f;
 	float l = 1.0f;
 	//float l = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	float x,y,z;
-	for (int i = 0; i < model->voxcount; i++) {
-		c1 = model->voxels[i].clr.x;
-		c2 = model->voxels[i].clr.y;
-		c3 = model->voxels[i].clr.z;
-		c4 = model->voxels[i].clr.w;
-		
-		x = model->voxels[i].position.x;
-		y = model->voxels[i].position.y;
-		z = model->voxels[i].position.z;
+
+	for (size_t i = 0; i < voxels->count; i++) {
+		x = voxels->voxels[i].position.x;
+		y = voxels->voxels[i].position.y;
+		z = voxels->voxels[i].position.z;
+
+		c1 = voxels->voxels[i].clr.x;
+		c2 = voxels->voxels[i].clr.y;
+		c3 = voxels->voxels[i].clr.z;
+		c4 = voxels->voxels[i].clr.w;
 
 		//* 0.5f 0.5f 0.0f 1.0f -- vomit
 		//* 0.3f 0.3f 1.0f 0.5f -- water
 		//* 0.3f 0.7f 1.0f 0.5f -- water2
 		
 		//? Y
-		if (!IS_BLOCKED(x,y+1,z)) {
+		if (!IS_BLOCKED(voxels, x,y+1,z)) {
 			l = 1.0f;
 			VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, c1,c2,c3,c4,l);
@@ -64,7 +75,7 @@ Mesh* ModelRenderer::render(VoxModel* model) {
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 		} 
-		if (!IS_BLOCKED(x,y-1,z)) {
+		if (!IS_BLOCKED(voxels, x,y-1,z)) {
 			l = 0.75f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, c1,c2,c3,c4,l);
@@ -76,7 +87,7 @@ Mesh* ModelRenderer::render(VoxModel* model) {
 		}
 
 		//? X
-		if (!IS_BLOCKED(x+1,y,z)) {
+		if (!IS_BLOCKED(voxels, x+1,y,z)) {
 			l = 0.95f;
 			VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, c1,c2,c3,c4,l);
@@ -86,7 +97,7 @@ Mesh* ModelRenderer::render(VoxModel* model) {
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, c1,c2,c3,c4,l);
 		}
-		if (!IS_BLOCKED(x-1,y,z)) {
+		if (!IS_BLOCKED(voxels, x-1,y,z)) {
 			l = 0.85f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, c1,c2,c3,c4,l);
@@ -98,7 +109,7 @@ Mesh* ModelRenderer::render(VoxModel* model) {
 		}
 
 		//? Z
-		if (!IS_BLOCKED(x,y,z+1)) {
+		if (!IS_BLOCKED(voxels, x,y,z+1)) {
 			l = 0.9f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, c1,c2,c3,c4,l);
@@ -108,7 +119,7 @@ Mesh* ModelRenderer::render(VoxModel* model) {
 			VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, c1,c2,c3,c4,l);
 		}
-		if (!IS_BLOCKED(x,y,z-1)) {
+		if (!IS_BLOCKED(voxels, x,y,z-1)) {
 			l = 0.8f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 			VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, c1,c2,c3,c4,l);
@@ -119,5 +130,5 @@ Mesh* ModelRenderer::render(VoxModel* model) {
 			VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, c1,c2,c3,c4,l);
 		}
 	}
-	return new Mesh(buffer, index / VERTEX_SIZE, chunk_attrs1);
+	return new Mesh(buffer, index / VERTEX_SIZE, chunk_attrs);
 }
