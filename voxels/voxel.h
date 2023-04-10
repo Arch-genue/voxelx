@@ -8,11 +8,13 @@
 struct voxel_m {
     glm::vec3 position;
     glm::vec4 clr;
+    bool visible = false;
 };
 
 struct _voxels {
     voxel_m* voxels;
     size_t count;
+    glm::vec3 m_size;
 };
 
 class Model {
@@ -23,7 +25,6 @@ public:
     void draw();
 private:
     void load_vox(std::string filename);
-    _voxels* gen_wall();
 };
 
-extern _voxels* load_model(std::string filename, const char* type, bool test);
+extern _voxels* load_model(std::string filename, const char* type);

@@ -1,19 +1,36 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "graphics/vox_renderer.h"
 
 class Mesh;
 class Shader;
+class ModelRenderer;
 
 class GameObject {
-    glm::mat4 modelmatrix;
+    //?OBJECTS
+    ModelRenderer* render;
+    Mesh* mesh;
+    Shader* shader;
 
+    //?POSITIONS
+    glm::mat4 modelmatrix;
     glm::vec3 position;
     glm::vec3 rotAxis;
     float rotAngle;
     glm::vec3 scaling;
+
+    //! VoxPhysics v0.0.1
+    glm::vec3 velocity;
+    glm::vec3 acceleration;
+    glm::vec3 impulse;
+    float impulseTime;
+
+    //?PROPERTIES
+    float mass;
+    bool collider;
 public:
-    GameObject(glm::mat4 *mat);
+    GameObject(ModelRenderer* rndr, Mesh* m, Shader *sh);
     ~GameObject();
 
     void translate(float val, glm::vec3 vec);
@@ -27,9 +44,14 @@ public:
     void setScale(glm::vec3 scalevec);
     glm::mat4 getMatrix();
 
-    void draw(Mesh *m, Shader *sh);
+    void draw();
+    void updatePhysics(float deltaTime);
+
+    void setImpulse(glm::vec3 force);
 
     //Voxel operations
     void setVoxelState(uint8_t i, bool state);
     bool getVoxelState(uint8_t i);
+
+    void rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 };

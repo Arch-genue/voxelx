@@ -23,13 +23,11 @@ void Shader::use() {
 void Shader::uniformMatrix(std::string name, glm::mat4 matrix) {
     GLuint transformLoc = glGetUniformLocation(id, name.c_str());
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-    //GLuint transformLoc = glGetUniformLocation(id, name.c_str());
-    //glUniform4d(transformLoc, 1.0f, 0.0f, 1.0f, 0.8f);
 }
-
-void Shader::uniformColor(std::string name, glm::vec4 color) {
+void Shader::uniformFloat(std::string name, float val) {
     GLuint transformLoc = glGetUniformLocation(id, name.c_str());
-    glUniform4f(transformLoc, color.x, color.y, color.z, color.a);
+    //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+    glUniform1f(transformLoc, val);
 }
 
 Shader * load_shader(std::string vertexFile, std::string fragmentFile) {

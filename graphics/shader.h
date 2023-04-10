@@ -12,6 +12,6 @@ class Shader {
 
         void use();
         void uniformMatrix(std::string name, glm::mat4 matrix);
-        void uniformColor(std::string name, glm::vec4 color);
+        void uniformFloat(std::string name, float val);
 };
 extern Shader * load_shader(std::string vertexFile, std::string fragmentFile); 
