@@ -33,15 +33,16 @@ GameObject::GameObject(ModelRenderer* rndr, _voxels voxels, Shader *sh) {
 
     //!CREATE MESH!
 	mesh = render->render(voxs);
+	//delete voxs;
 }
 GameObject::~GameObject() {}
 
 void GameObject::draw() {
     modelmatrix = glm::scale(modelmatrix, scaling);
-    modelmatrix = glm::translate(modelmatrix, position);
+    //modelmatrix = glm::translate(modelmatrix, position);
     
-    glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
-    modelmatrix = modelmatrix * rotateMatrix;
+    //glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
+    //modelmatrix = modelmatrix * rotateMatrix;
 
     shader->uniformMatrix("model", modelmatrix);
     mesh->draw(GL_TRIANGLES);
@@ -59,7 +60,7 @@ void GameObject::applyForce(glm::vec3 force) {
 }
 
 void GameObject::updatePhysics(float deltaTime) {
-	velocity += acceleration* 5.0f * deltaTime;
+	velocity += acceleration * 500.0f * deltaTime;
 	position += velocity;
 	acceleration = glm::vec3(0.0f);
 	if (position == lastposition) return;

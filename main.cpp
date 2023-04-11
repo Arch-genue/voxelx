@@ -72,6 +72,7 @@ int main() {
     }
 
     _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt");
+
     _voxels* watervox = new _voxels;
     watervox->m_size = vec3(100, 5, 100);
     std::vector<voxel_m> voxs;
@@ -93,11 +94,9 @@ int main() {
 
     ModelRenderer* renderer = new ModelRenderer(1024*1024*10);
 
-    //Mesh* water = renderer->render(watervox);
-
     GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
     GameObject* apple1obj = new GameObject(renderer, *applevox, voxshader);
-    //GameObject* waterobj = new GameObject(renderer, water, voxshader);
+    GameObject* waterobj = new GameObject(renderer, *watervox, voxshader);
     
     glClearColor(0.6f, 0.6f, 0.6f,1);
     
@@ -107,7 +106,7 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     Mesh* crosshair = new Mesh(new _voxels, vertices, 4, attrs);
-    Camera* camera = new Camera(vec3(10,1,5), radians(90.0f));
+    Camera* camera = new Camera(vec3(10,1,5), radians(70.0f));
 
     float lastTime = glfwGetTime();
     float delta = 0.0f;
@@ -177,14 +176,18 @@ int main() {
         glm::vec3 gravity(0.0f, -9.81f, 0.0f);
         apple1obj->applyForce(gravity);
         apple1obj->updatePhysics(delta);
-        apple1obj->draw();
-        if (test) { 
+        
+        if (test) {
             appleobj->setPosition(vec3(10, 0, 0));
             test = false;
         }
+
         appleobj->applyForce(gravity*2.0f);
         appleobj->updatePhysics(delta);
+        
+        apple1obj->draw();
         appleobj->draw();
+        //waterobj->draw();
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);
@@ -199,10 +202,9 @@ int main() {
 
     delete applevox;
 
-    //delete apple;
-
+    delete appleobj;
     delete apple1obj;
-    //delete waterobj;
+    delete waterobj;
 
     delete renderer;
     return 0;
