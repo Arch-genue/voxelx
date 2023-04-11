@@ -8,10 +8,13 @@
 
 #include <iostream>
 
-GameObject::GameObject(ModelRenderer* rndr, Mesh* m, Shader *sh) {
+GameObject::GameObject(ModelRenderer* rndr, _voxels voxels, Shader *sh) {
     //
     render = rndr;
-    mesh = m;
+	_voxels* voxs = new _voxels;
+	voxs->voxels = voxels.voxels;
+	voxs->m_size = voxels.m_size;
+    //voxels = voxs;
     shader = sh;
 
     //
@@ -22,14 +25,14 @@ GameObject::GameObject(ModelRenderer* rndr, Mesh* m, Shader *sh) {
     scaling = glm::vec3(0.1f);
 
     //
-    mass = 100*1000; //100Kg
+    mass = 100; //100Kg
     collider = true; //Solid
 
     velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-    acceleration = glm::vec3(0.0f, -9.8f*mass, 0.0f) / mass;
+    acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
     //!CREATE MESH!
-    
+	mesh = render->render(voxs);
 }
 GameObject::~GameObject() {}
 
@@ -51,24 +54,50 @@ void GameObject::setImpulse(glm::vec3 force) {
     impulseTime = 1.0f;
 }
 
+void GameObject::applyForce(glm::vec3 force) {
+	acceleration += force / mass;
+}
+
 void GameObject::updatePhysics(float deltaTime) {
-    if (impulseTime > 0.0f) {
-        acceleration = impulse * impulseTime;
-        velocity += acceleration * deltaTime;
-        impulseTime -= deltaTime;
-    } else {
-        velocity = glm::vec3(0.0f);
-        impulse = glm::vec3(0.0f);
-        impulseTime = 0.0f;
-    }
+	velocity += acceleration* 5.0f * deltaTime;
+	position += velocity;
+	acceleration = glm::vec3(0.0f);
+	if (position == lastposition) return;
+	_voxels* voxels = mesh->getVoxels();
+
+	for (size_t i = 0; i < voxels->voxels.size(); i++) {
+		voxels->voxels.at(i).position += velocity*deltaTime;
+	}
+	delete mesh;
+
+	mesh = render->render(voxels);
+	lastposition = position;
+
+    // if (impulseTime > 0.0f) {
+    //     acceleration = impulse * impulseTime;
+    //     velocity += acceleration * deltaTime;
+    //     impulseTime -= deltaTime;
+    // } else {
+    //     velocity = glm::vec3(0.0f);
+    //     impulse = glm::vec3(0.0f);
+    //     impulseTime = 0.0f;
+    // }
     
-    if (!true) velocity += acceleration * deltaTime;
+    // if (!true) velocity += acceleration * deltaTime;
     
-    position += velocity * 10.0f * deltaTime;
+    //position += velocity * 10.0f * deltaTime;
 }
 
 void GameObject::translate(float val, glm::vec3 vec) {
-    position += vec * val;
+	position += vec*val;
+	_voxels* voxels = mesh->getVoxels();
+
+	for (size_t i = 0; i < voxels->voxels.size(); i++) {
+		voxels->voxels.at(i).position += position;
+	}
+	delete mesh;
+
+	mesh = render->render(voxels);
 }
 
 void GameObject::rotate(float angle, glm::vec3 rot) {
@@ -76,23 +105,23 @@ void GameObject::rotate(float angle, glm::vec3 rot) {
     rotAxis = rot; 
 }
 
-void GameObject::scale(float scale, glm::vec3 scalevec) {
-    scaling += scalevec*scale;
-}
-
 void GameObject::setPosition(glm::vec3 pos) {
-    position = pos;
+	position += pos;
+	_voxels* voxels = mesh->getVoxels();
+
+	for (size_t i = 0; i < voxels->voxels.size(); i++) {
+		voxels->voxels.at(i).position += position;
+	}
+	delete mesh;
+
+	mesh = render->render(voxels);
 }
 void GameObject::setRotation(float angle, glm::vec3 rot) {
     rotAngle = angle;
     rotAxis = rot; 
     glm::mat4 rotation = glm::rotate(modelmatrix, rotAngle, rotAxis);
 
-    // умножение матрицы модели на матрицу поворота
     modelmatrix = rotation * modelmatrix;
-}
-void GameObject::setScale(glm::vec3 scalevec) {
-    scaling = scalevec;
 }
 
 glm::vec3 GameObject::getPosition() {

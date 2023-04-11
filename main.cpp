@@ -74,26 +74,29 @@ int main() {
     _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt");
     _voxels* watervox = new _voxels;
     watervox->m_size = vec3(100, 5, 100);
-    watervox->count = watervox->m_size.x*watervox->m_size.y*watervox->m_size.z;
-    watervox->voxels = new voxel_m[watervox->count];
-    int id = 0;
+    std::vector<voxel_m> voxs;
+    watervox->voxels = voxs;
+    
+    size_t i = 0;
     for (size_t y = 0; y < watervox->m_size.y; y++) {
         for (size_t z = 0; z < watervox->m_size.z; z++) {
             for (size_t x = 0; x < watervox->m_size.x; x++) {
-                id = (y * (int)watervox->m_size.z + z) * (int)watervox->m_size.x + x;
-                watervox->voxels[id].visible = true;
-                watervox->voxels[id].clr = vec4(0.0f, 0.0f, 1.0f, 0.5f);
+                voxel_m vox;
+                vox.visible = true;
+                vox.position = vec3(x, y, z);
+                vox.clr = vec4(0.0f, 0.0f, 1.0f, 0.5f);
+                watervox->voxels.push_back(vox);
+                i++;
             }
         }
     }
 
     ModelRenderer* renderer = new ModelRenderer(1024*1024*10);
 
-    Mesh* apple = renderer->render(applevox);
     //Mesh* water = renderer->render(watervox);
 
-    GameObject* appleobj = new GameObject(renderer, apple, voxshader);
-    GameObject* apple1obj = new GameObject(renderer, apple, voxshader);
+    GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
+    GameObject* apple1obj = new GameObject(renderer, *applevox, voxshader);
     //GameObject* waterobj = new GameObject(renderer, water, voxshader);
     
     glClearColor(0.6f, 0.6f, 0.6f,1);
@@ -114,6 +117,8 @@ int main() {
 
     float speed = 5;
 
+    bool test = true;
+
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
         delta = currentTime - lastTime;
@@ -124,9 +129,6 @@ int main() {
         }
         if (Input::jpressed(GLFW_KEY_TAB)) {
             Input::toggleCursor();
-        }
-        if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
-            //chunks->set((int)iend.x, (int)iend.y, (int)iend.z, 0);
         }
         
         if (Input::pressed(GLFW_KEY_W)) {
@@ -171,17 +173,18 @@ int main() {
 
         voxshader->use();
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
-
-        apple1obj->draw();
+        
+        glm::vec3 gravity(0.0f, -9.81f, 0.0f);
+        apple1obj->applyForce(gravity);
         apple1obj->updatePhysics(delta);
-
-        //appleobj->setPosition(vec3(15, 0, 0));
-        appleobj->draw();
-        appleobj->updatePhysics(delta);
-        if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
-            appleobj->setImpulse(vec3(0.0f, 50000.0f, 0.0f));
-            apple1obj->setImpulse(vec3(5000.0f, 25000.0f, 0.0f));
+        apple1obj->draw();
+        if (test) { 
+            appleobj->setPosition(vec3(10, 0, 0));
+            test = false;
         }
+        appleobj->applyForce(gravity*2.0f);
+        appleobj->updatePhysics(delta);
+        appleobj->draw();
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);
@@ -196,9 +199,9 @@ int main() {
 
     delete applevox;
 
-    delete apple;
+    //delete apple;
 
-    delete appleobj;
+    delete apple1obj;
     //delete waterobj;
 
     delete renderer;

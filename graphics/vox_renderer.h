@@ -13,5 +13,5 @@ public:
 	ModelRenderer(size_t capacity);
 	~ModelRenderer();
 
-	Mesh* render(_voxels* voxels);
+	Mesh* render(_voxels* voxels=nullptr);
 };

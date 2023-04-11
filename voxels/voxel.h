@@ -12,8 +12,7 @@ struct voxel_m {
 };
 
 struct _voxels {
-    voxel_m* voxels;
-    size_t count;
+    std::vector<voxel_m> voxels;
     glm::vec3 m_size;
 };
 

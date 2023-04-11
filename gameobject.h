@@ -16,6 +16,7 @@ class GameObject {
     //?POSITIONS
     glm::mat4 modelmatrix;
     glm::vec3 position;
+    glm::vec3 lastposition;
     glm::vec3 rotAxis;
     float rotAngle;
     glm::vec3 scaling;
@@ -30,7 +31,7 @@ class GameObject {
     float mass;
     bool collider;
 public:
-    GameObject(ModelRenderer* rndr, Mesh* m, Shader *sh);
+    GameObject(ModelRenderer* rndr, _voxels voxels, Shader *sh);
     ~GameObject();
 
     void translate(float val, glm::vec3 vec);
@@ -48,6 +49,7 @@ public:
     void updatePhysics(float deltaTime);
 
     void setImpulse(glm::vec3 force);
+    void applyForce(glm::vec3 force);
 
     //Voxel operations
     void setVoxelState(uint8_t i, bool state);
