@@ -7,8 +7,11 @@
 
 struct voxel_m {
     glm::vec3 position;
+    glm::vec3 velocity;
     glm::vec4 clr;
-    bool visible = false;
+    float size;
+
+    float lifetime;
 };
 
 struct _voxels {

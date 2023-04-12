@@ -2,82 +2,49 @@
 
 #include <iostream>
 
+#include <random>
+
+// Создание генератора случайных чисел
+std::mt19937 rng(std::random_device{}());
+// Определение распределения для координат
+std::uniform_real_distribution<float> pos_dist(-1.0f, 1.0f);
+// Определение распределения для скоростей
+std::normal_distribution<float> vel_dist(0.0f, 1.0f);
+std::normal_distribution<float> clr_dist(0.0f, 1.0f);
+std::normal_distribution<float> life_dist(0.5f, 1.5f);
+
 VoxelParticles::VoxelParticles(int bufferSize, VoxelRenderer* render, Shader* shader) {
     renderer = render;
     sh = shader;
     m_gravity = vec3(0, -9.8, 0);
-    m_particles.reserve(bufferSize);
+    
+    voxels = new _voxels;
+    voxels->voxels.reserve(bufferSize);
 }
 VoxelParticles::~VoxelParticles() {}
 
-void VoxelParticles::Update(float dt) {
-    for (auto it = m_particles.begin(); it != m_particles.end(); it++) {
-        particle_m& p = *it;
-        if (p.lifetime >= 0.0f) {
-            p.position.x += 15.0f * p.velocity.x * dt;
-            p.position.y += 15.0f * p.velocity.y * dt;
-            p.position.z += 15.0f * p.velocity.z * dt;
-
-            // Обновление позиции
-            p.position += p.velocity * dt;
-            p.lifetime -= dt;
+void VoxelParticles::update(float dt) {
+    for (auto it = voxels->voxels.begin(); it != voxels->voxels.end(); it++) {
+        if (it->lifetime >= 0.0f) {
+            it->position += 15.0f * it->velocity * dt;
+            it->lifetime -= dt;
         } else {
-            m_particles.erase(it);
-            particle_m newParticle;
-            newParticle.position.x = 0.0f;
-            newParticle.position.y = 0.0f;
-            newParticle.position.z = 0.0f;
-            newParticle.velocity.x = rand() / static_cast<float>(RAND_MAX) - 0.5f;
-            newParticle.velocity.y = rand() / static_cast<float>(RAND_MAX) - 0.5f;
-            newParticle.velocity.z = rand() / static_cast<float>(RAND_MAX) - 0.5f;
-            newParticle.lifetime = 5.0f;
-            m_particles.push_back(newParticle);
+            it->position = vec3(pos_dist(rng), pos_dist(rng), pos_dist(rng));
+            it->velocity = vec3(vel_dist(rng), vel_dist(rng), vel_dist(rng));
+            it->clr = vec4(clr_dist(rng), clr_dist(rng), clr_dist(rng), 1.0f);
+            it->lifetime = life_dist(rng);
             it--;
         }
     }
-
-    // for (auto& particle : m_particles) {
-    //     particle.position.x += 15.0f * particle.velocity.x * dt;
-    //     particle.position.y += 15.0f * particle.velocity.y * dt;
-    //     particle.position.z += 15.0f * particle.velocity.z * dt;
-
-    //     // Обновление позиции
-    //     particle.position += particle.velocity * dt;
-    //     particle.lifetime -= dt;
-        
-    //     if (particle.lifetime <= 0.0f ) {
-
-    //     }
-    // }
-
-    // m_particles.erase(
-    //     std::remove_if(m_particles.begin(), 
-    //         m_particles.end(),
-    //         [](const particle_m& p) { 
-    //             return p.lifetime <= 0.0f; 
-    //             }
-    //     ),
-    //     m_particles.end()
-    // );
 }
 
-void VoxelParticles::addParticle(const particle_m& particle) { 
-    m_particles.push_back(particle); 
+void VoxelParticles::addParticle(const voxel_m& particle) { 
+    voxels->voxels.push_back(particle); 
 }
 
-void VoxelParticles::draw() const {
-    // отрисовка всех частиц с помощью вашего воксельного движка
-    for (auto& particle : m_particles) {
-        voxel_m* voxel = new voxel_m;
-        voxel->position = particle.position;
-        voxel->clr = vec4(1.0f, 0.5f, 0.0f, 1.0f);
-        Mesh *m = renderer->voxelRender(voxel);
+void VoxelParticles::draw() {
+    mesh = renderer->render(voxels);
+    sh->uniformMatrix("model", scale(mat4(1.0f), vec3(0.1f)));
+    mesh->draw(GL_TRIANGLES);
 
-        mat4 model(1.0f);
-        model = scale(model, vec3(0.05f));
-
-        sh->uniformMatrix("model", model);
-        m->draw(GL_TRIANGLES);
-        delete m;
-    }
 }

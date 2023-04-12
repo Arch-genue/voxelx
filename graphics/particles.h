@@ -16,25 +16,19 @@ class Mesh;
 class Shader;
 class voxel_m;
 
-struct particle_m {
-    float vx, vy, vz;
-    float lifetime;
-    vec3 velocity;
-    vec3 position;
-};
-
+//! MEMORY LEAKS
 class VoxelParticles {
-    Shader* sh;
     VoxelRenderer* renderer;
+    Mesh* mesh;
+    Shader* sh;
+    _voxels* voxels;
+    
     vec3 m_gravity;
 public:
     VoxelParticles(int bufferSize, VoxelRenderer* render, Shader* shader);
     ~VoxelParticles();
 
-    void Update(float dt);
-    void addParticle(const particle_m& particle);
-    void draw() const;
-
-private:
-    std::vector<particle_m> m_particles;
+    void update(float dt);
+    void addParticle(const voxel_m& particle);
+    void draw();    
 };

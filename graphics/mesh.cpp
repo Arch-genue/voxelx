@@ -37,6 +37,7 @@ void Mesh::setVoxels(_voxels* voxs) {
 Mesh::~Mesh() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
+    delete voxels;
 }
 
 void Mesh::draw(unsigned int primitive) {

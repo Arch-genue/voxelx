@@ -42,19 +42,14 @@ _voxels* load_model(std::string filename, const char* type) {
         short x_max = -999; short y_max = -999; short z_max = -999;
         float clr_r = 0.0f, clr_g = 0.0f, clr_b = 0.0f, clr_a = 0.0f;
         
-        _voxels* voxels;
-        voxels = new _voxels;
-        //std::vector<voxel_m> tmpvoxs;
-        //voxels->voxels = tmpvoxs;
+        _voxels* voxels = new _voxels;
 
         std::string str[5];
 
         vi = 0;
         while (getline(in, line)) {
             vi++;
-            //if ( vi == 4 ) voxels->count = atoi(line.c_str()); 
             if ( vi < 5 ) continue;
-            //if ( vi == 5 ) 
             voxel_m vox;
 
             split(str, line, ' '); // x y z clr
@@ -79,7 +74,6 @@ _voxels* load_model(std::string filename, const char* type) {
 
             vox.position = glm::vec3(x_coord, y_coord, z_coord);
             vox.clr = glm::vec4(clr_r, clr_g, clr_b, clr_a);
-            vox.visible = true;
             voxels->voxels.push_back(vox);
         }
         if ( x_min == 999 ) x_min = 0;

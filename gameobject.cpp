@@ -69,7 +69,7 @@ void GameObject::updatePhysics(float deltaTime) {
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
 		voxels->voxels.at(i).position += velocity*deltaTime;
 	}
-	delete mesh;
+	//delete mesh;
 
 	mesh = render->render(voxels);
 	lastposition = position;
@@ -96,7 +96,7 @@ void GameObject::translate(float val, glm::vec3 vec) {
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
 		voxels->voxels.at(i).position += position;
 	}
-	delete mesh;
+	//delete mesh;
 
 	mesh = render->render(voxels);
 }
@@ -113,7 +113,7 @@ void GameObject::setPosition(glm::vec3 pos) {
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
 		voxels->voxels.at(i).position += position;
 	}
-	delete mesh;
+	//delete mesh;
 
 	mesh = render->render(voxels);
 }

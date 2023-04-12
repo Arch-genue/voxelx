@@ -27,6 +27,7 @@ using namespace glm;
 
 #include <vector>
 #include <algorithm>
+#include <random>
 
 #define MODELSIZE 1.0f
 
@@ -82,7 +83,6 @@ int main() {
         for (size_t z = 0; z < watervox->m_size.z; z++) {
             for (size_t x = 0; x < watervox->m_size.x; x++) {
                 voxel_m vox;
-                vox.visible = true;
                 vox.position = vec3(x, y, z);
                 vox.clr = vec4(0.0f, 0.0f, 1.0f, 0.5f);
                 watervox->voxels.push_back(vox);
@@ -113,32 +113,27 @@ int main() {
     float camX = 0.0f;
     float camY = 0.0f;
 
-    float speed = 5;
+    float speed = 10;
 
     bool test = true;
 
-    // std::vector<particle_m> buffer;
-    // int bufferSize = 1000;
+    // Создание генератора случайных чисел
+    std::mt19937 rng(std::random_device{}());
+    // Определение распределения для координат
+    std::uniform_real_distribution<float> pos_dist(-1.0f, 1.0f);
+    // Определение распределения для скоростей
+    std::normal_distribution<float> vel_dist(0.0f, 1.0f);
+    std::normal_distribution<float> life_dist(0.5f, 1.5f);
 
-    // buffer.reserve(bufferSize);
-    // for (int i = 0; i < bufferSize; i++) {
-    //     particle_m p;
-    //     buffer.push_back(p);
-    // }
-
-    // создаем объект эффекта
     VoxelParticles effect(1000, renderer, voxshader);
 
-    // добавляем частицы
     for (int i = 0; i < 1000; ++i) {
-        particle_m particle;
-        particle.position.x = 0.0f;
-        particle.position.y = 0.0f;
-        particle.position.z = 0.0f;
-        particle.velocity.x = rand() / static_cast<float>(RAND_MAX) - 0.5f;
-        particle.velocity.y = rand() / static_cast<float>(RAND_MAX) - 0.5f;
-        particle.velocity.z = rand() / static_cast<float>(RAND_MAX) - 0.5f;
-        particle.lifetime = 5.0f;
+        voxel_m particle;
+        particle.position = vec3(pos_dist(rng), pos_dist(rng), pos_dist(rng));
+        particle.velocity = vec3(vel_dist(rng), vel_dist(rng), vel_dist(rng));
+        particle.clr = vec4(vel_dist(rng), vel_dist(rng), vel_dist(rng), 1.0f);
+        particle.lifetime = life_dist(rng);
+        particle.size = 0.1f;
         effect.addParticle(particle);
     }
 
@@ -197,9 +192,7 @@ int main() {
         voxshader->use();
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
         
-        effect.Update(delta);
-
-        // отрисовываем частицы
+        effect.update(delta);
         effect.draw();
 
         glm::vec3 gravity(0.0f, -9.81f, 0.0f);
@@ -216,7 +209,7 @@ int main() {
         
         apple1obj->draw();
         appleobj->draw();
-        //waterobj->draw();
+        // waterobj->draw();
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);
@@ -231,8 +224,8 @@ int main() {
 
     delete applevox;
 
-    delete appleobj;
-    delete apple1obj;
+    //delete appleobj;
+    //delete apple1obj;
     delete waterobj;
 
     delete renderer;

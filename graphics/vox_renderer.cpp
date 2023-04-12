@@ -42,7 +42,7 @@ Mesh* VoxelRenderer::voxelRender(voxel_m* voxel) {
 	y = voxel->position.y;
 	z = voxel->position.z;
 	clr = voxel->clr;
-	_voxels* voxels = new _voxels;
+	//_voxels* voxels = new _voxels;
 	//voxels.voxels.push_back(voxel);
 
 	//* 0.5f 0.5f 0.0f 1.0f -- vomit
@@ -114,7 +114,7 @@ Mesh* VoxelRenderer::voxelRender(voxel_m* voxel) {
 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
 	}
-	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
+	return new Mesh(new _voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 
 Mesh* VoxelRenderer::render(_voxels* voxels) {
@@ -125,7 +125,7 @@ Mesh* VoxelRenderer::render(_voxels* voxels) {
 	float l = 1.0f;
 
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
-		if (!voxels->voxels[i].visible) continue;
+		//if (!voxels->voxels[i].visible) continue;
 
 		x = voxels->voxels[i].position.x;
 		y = voxels->voxels[i].position.y;
