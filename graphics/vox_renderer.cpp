@@ -23,15 +23,15 @@ int chunk_attrs[] = {3,4,1, 0};
 					buffer[INDEX+7] = (L);\
 					INDEX += VERTEX_SIZE;
 
-ModelRenderer::ModelRenderer(size_t capacity) : capacity(capacity) {
+VoxelRenderer::VoxelRenderer(size_t capacity) : capacity(capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
 }
 
-ModelRenderer::~ModelRenderer() {
+VoxelRenderer::~VoxelRenderer() {
 	delete[] buffer;
 }
 
-Mesh* ModelRenderer::voxelRender(voxel_m* voxel) {
+Mesh* VoxelRenderer::voxelRender(voxel_m* voxel) {
 	size_t index = 0;
 	float x, y, z;
 
@@ -117,7 +117,7 @@ Mesh* ModelRenderer::voxelRender(voxel_m* voxel) {
 	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 
-Mesh* ModelRenderer::render(_voxels* voxels) {
+Mesh* VoxelRenderer::render(_voxels* voxels) {
 	size_t index = 0;
 	float x, y, z;
 

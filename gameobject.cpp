@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-GameObject::GameObject(ModelRenderer* rndr, _voxels voxels, Shader *sh) {
+GameObject::GameObject(VoxelRenderer* rndr, _voxels voxels, Shader *sh) {
     //
     render = rndr;
 	_voxels* voxs = new _voxels;

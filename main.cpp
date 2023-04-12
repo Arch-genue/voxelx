@@ -4,91 +4,29 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-//GLM
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 using namespace glm;
 
-#include "graphics/shader.h"
-#include "graphics/texture.h"
-#include "graphics/mesh.h"
-
-//#include "graphics/voxelrenderer.h"
-#include "graphics/vox_renderer.h"
 #include "window.h"
 #include "input.h"
 #include "camera.h"
+
+#include "graphics/shader.h"
+#include "graphics/texture.h"
+#include "graphics/mesh.h"
+#include "graphics/vox_renderer.h"
+#include "graphics/particles.h"
+
 #include "loaders/resourceloader.h"
 #include "loaders/png_loading.h"
+
 #include "voxels/voxel.h"
-//#include "voxels/chunk.h"
-//#include "voxels/chunks.h"
 #include "gameobject.h"
 #include "entity.h"
 
 #include <vector>
 #include <algorithm>
-
-vec3 m_gravity(0, -9.8, 0);
-
-struct Particle {
-    float vx, vy, vz;
-    float lifetime;
-    vec3 velocity;
-    vec3 position;
-};
-
-class VoxelEffect {
-public:
-    VoxelEffect() {}
-    virtual ~VoxelEffect() {}
-
-    void Update(float dt) {
-        for (auto& particle : m_particles) {
-            particle.position.x += 5.0f * particle.velocity.x * dt;
-            particle.position.y += 5.0f * particle.velocity.y * dt;
-            particle.position.z += 5.0f * particle.velocity.z * dt;
-
-            // Обновление позиции
-            particle.position += particle.velocity * dt;
-            particle.lifetime -= dt;
-        }
-
-        m_particles.erase(
-            std::remove_if(m_particles.begin(), 
-                m_particles.end(),
-                [](const Particle& p) { 
-                    return p.lifetime <= 0.0f; 
-                    }
-            ),
-            m_particles.end()
-        );
-    }
-
-    void AddParticle(const Particle& particle) { 
-        m_particles.push_back(particle); 
-    }
-
-    void Draw(ModelRenderer &renderer, Shader* shader) const {
-        // отрисовка всех частиц с помощью вашего воксельного движка
-        for (auto& particle : m_particles) {
-            voxel_m* voxel = new voxel_m;
-            voxel->position = particle.position;
-            voxel->clr = vec4(1.0f, 0.5f, 0.0f, 1.0f);
-            Mesh *m = renderer.voxelRender(voxel);
-
-            mat4 model(1.0f);
-            model = scale(model, vec3(0.1f));
-
-            shader->uniformMatrix("model", model);
-            m->draw(GL_TRIANGLES);
-            delete m;
-        }
-    }
-
-private:
-    std::vector<Particle> m_particles;
-};
 
 #define MODELSIZE 1.0f
 
@@ -153,7 +91,7 @@ int main() {
         }
     }
 
-    ModelRenderer* renderer = new ModelRenderer(1024*1024*10);
+    VoxelRenderer* renderer = new VoxelRenderer(1024*1024*10);
 
     GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
     GameObject* apple1obj = new GameObject(renderer, *applevox, voxshader);
@@ -179,12 +117,21 @@ int main() {
 
     bool test = true;
 
+    // std::vector<particle_m> buffer;
+    // int bufferSize = 1000;
+
+    // buffer.reserve(bufferSize);
+    // for (int i = 0; i < bufferSize; i++) {
+    //     particle_m p;
+    //     buffer.push_back(p);
+    // }
+
     // создаем объект эффекта
-    VoxelEffect effect;
+    VoxelParticles effect(1000, renderer, voxshader);
 
     // добавляем частицы
     for (int i = 0; i < 1000; ++i) {
-        Particle particle;
+        particle_m particle;
         particle.position.x = 0.0f;
         particle.position.y = 0.0f;
         particle.position.z = 0.0f;
@@ -192,15 +139,13 @@ int main() {
         particle.velocity.y = rand() / static_cast<float>(RAND_MAX) - 0.5f;
         particle.velocity.z = rand() / static_cast<float>(RAND_MAX) - 0.5f;
         particle.lifetime = 5.0f;
-        effect.AddParticle(particle);
+        effect.addParticle(particle);
     }
 
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
         delta = currentTime - lastTime;
         lastTime = currentTime;
-
-        
 
         if (Input::jpressed(GLFW_KEY_ESCAPE)) {
             Window::setShouldClose(true);
@@ -255,7 +200,7 @@ int main() {
         effect.Update(delta);
 
         // отрисовываем частицы
-        effect.Draw(*renderer, voxshader);
+        effect.draw();
 
         glm::vec3 gravity(0.0f, -9.81f, 0.0f);
         apple1obj->applyForce(gravity);

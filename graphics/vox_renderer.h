@@ -3,16 +3,15 @@
 #include "stdlib.h"
 
 class Mesh;
-//class Model;
 class _voxels;
 class voxel_m;
 
-class ModelRenderer {
+class VoxelRenderer {
 	float* buffer;
 	size_t capacity;
 public:
-	ModelRenderer(size_t capacity);
-	~ModelRenderer();
+	VoxelRenderer(size_t capacity);
+	~VoxelRenderer();
 
 	Mesh* render(_voxels* voxels=nullptr);
 	Mesh* voxelRender(voxel_m* voxel);

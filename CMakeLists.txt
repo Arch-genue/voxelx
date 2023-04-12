@@ -16,6 +16,7 @@ set(SOURCE
 	graphics/texture.cpp
 	graphics/mesh.cpp
 	graphics/vox_renderer.cpp
+	graphics/particles.cpp
 	voxels/voxel.cpp
 	loaders/resourceloader.cpp
 	loaders/png_loading.cpp
@@ -30,6 +31,7 @@ set(HEADER
 	graphics/texture.h 
 	graphics/mesh.h
 	graphics/vox_renderer.h
+	graphics/particles.h
 	voxels/voxel.h
 	loaders/resourceloader.h
 	loaders/png_loading.h

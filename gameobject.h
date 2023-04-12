@@ -5,11 +5,11 @@
 
 class Mesh;
 class Shader;
-class ModelRenderer;
+class VoxelRenderer;
 
 class GameObject {
     //?OBJECTS
-    ModelRenderer* render;
+    VoxelRenderer* render;
     Mesh* mesh;
     Shader* shader;
 
@@ -31,7 +31,7 @@ class GameObject {
     float mass;
     bool collider;
 public:
-    GameObject(ModelRenderer* rndr, _voxels voxels, Shader *sh);
+    GameObject(VoxelRenderer* rndr, _voxels voxels, Shader *sh);
     ~GameObject();
 
     void translate(float val, glm::vec3 vec);
