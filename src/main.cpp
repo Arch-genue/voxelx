@@ -8,9 +8,9 @@
 #include <glm/ext.hpp>
 using namespace glm;
 
-#include "window.h"
-#include "input.h"
-#include "camera.h"
+#include "window/window.h"
+#include "window/input.h"
+#include "gamesystems/camera.h"
 
 #include "graphics/shader.h"
 #include "graphics/texture.h"
@@ -22,8 +22,8 @@ using namespace glm;
 #include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
-#include "gameobject.h"
-#include "entity.h"
+#include "gamesystems/gameobject.h"
+#include "gamesystems/entity.h"
 
 #include <vector>
 #include <random>

@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "window.h"
+#include "../window/window.h"
 
 #include <glm/ext.hpp>
 

@@ -2,9 +2,9 @@
 
 #include <GL/glew.h>
 #include <glm/ext.hpp>
-#include "graphics/mesh.h"
-#include "graphics/shader.h"
-#include "voxels/voxel.h"
+#include "../graphics/mesh.h"
+#include "../graphics/shader.h"
+#include "../voxels/voxel.h"
 
 #include <iostream>
 

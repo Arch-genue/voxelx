@@ -108,7 +108,7 @@ int _png_load(const char* file, int* width, int* height) {
 Texture* load_texture(std::string filename) {
     int width, height;
     GLuint texture = _png_load(filename.c_str(), &width, &height);
-    if (texture == NULL) {
+    if (texture == 0) {
         std::cerr << "ERROR::TEXTURE::NOT_LOADED" << filename << std::endl;
         return nullptr;
     }

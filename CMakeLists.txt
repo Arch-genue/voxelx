@@ -9,34 +9,34 @@ set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
 
 set(SOURCE 
-    main.cpp 
-	window.cpp 
-	input.cpp 
-	graphics/shader.cpp
-	graphics/texture.cpp
-	graphics/mesh.cpp
-	graphics/vox_renderer.cpp
-	graphics/particles.cpp
-	voxels/voxel.cpp
-	loaders/resourceloader.cpp
-	loaders/png_loading.cpp
-	camera.cpp
-	gameobject.cpp
+    src/main.cpp 
+	src/window/window.cpp 
+	src/window/input.cpp 
+	src/graphics/shader.cpp
+	src/graphics/texture.cpp
+	src/graphics/mesh.cpp
+	src/graphics/vox_renderer.cpp
+	src/graphics/particles.cpp
+	src/voxels/voxel.cpp
+	src/loaders/resourceloader.cpp
+	src/loaders/png_loading.cpp
+	src/gamesystems/camera.cpp
+	src/gamesystems/gameobject.cpp
 )
 
 set(HEADER
-    window.h
-	input.h 
-	graphics/shader.h 
-	graphics/texture.h 
-	graphics/mesh.h
-	graphics/vox_renderer.h
-	graphics/particles.h
-	voxels/voxel.h
-	loaders/resourceloader.h
-	loaders/png_loading.h
-	camera.h
-	gameobject.h
+    src/window/window.h
+	src/window/input.h 
+	src/graphics/shader.h 
+	src/graphics/texture.h 
+	src/graphics/mesh.h
+	src/graphics/vox_renderer.h
+	src/graphics/particles.h
+	src/voxels/voxel.h
+	src/loaders/resourceloader.h
+	src/loaders/png_loading.h
+	src/gamesystems/camera.h
+	src/gamesystems/gameobject.h
 )
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
