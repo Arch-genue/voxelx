@@ -4,8 +4,6 @@
 #include <fstream>
 #include <string.h>
 #include <cstring>
-#include <cmath>
-#include <array>
 
 void split(std::string* bufstr, std::string str, char separator) {
     uint16_t len = strlen(str.data());
@@ -32,7 +30,7 @@ Model::~Model() {
 }
 
 _voxels* load_model(std::string filename, const char* type) {
-    std::ifstream in(filename); // окрываем файл для чтения
+    std::ifstream in(filename);
     if (in.is_open()) {
         std::string line;
         uint16_t vi = 0;
@@ -87,10 +85,6 @@ _voxels* load_model(std::string filename, const char* type) {
             voxels->voxels[i].position.x += abs(x_min);
             voxels->voxels[i].position.y += abs(y_min);
             voxels->voxels[i].position.z += abs(z_min);
-            // std::cout << filename << " "  << 
-            // voxels->voxels[i].position.x << " " << 
-            // voxels->voxels[i].position.y << " " << 
-            // voxels->voxels[i].position.z << std::endl;
 
             if (voxels->voxels[i].position.x > x_max) x_max = voxels->voxels[i].position.x;
             if (voxels->voxels[i].position.y > y_max) y_max = voxels->voxels[i].position.y;

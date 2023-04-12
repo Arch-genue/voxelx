@@ -1,8 +1,8 @@
 #include "mesh.h"
 #include <GL/glew.h>
 
-Mesh::Mesh(_voxels* voxs, const float* buffer, size_t vertices, const int* attrs) : vertices(vertices) {
-    voxels = voxs;
+Mesh::Mesh(const float* buffer, size_t vertices, const int* attrs) : vertices(vertices) {
+    //voxels = voxs;
 
     int vertex_size = 0;
     for (int i = 0; attrs[i]; i++) vertex_size += attrs[i];
@@ -27,17 +27,17 @@ Mesh::Mesh(_voxels* voxs, const float* buffer, size_t vertices, const int* attrs
 }
 
 _voxels* Mesh::getVoxels() {
-    return voxels;
+    //return voxels;
 }
 
 void Mesh::setVoxels(_voxels* voxs) {
-    voxels = voxs;
+    //voxels = voxs;
 }
 
 Mesh::~Mesh() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
-    delete voxels;
+    //delete voxels;
 }
 
 void Mesh::draw(unsigned int primitive) {

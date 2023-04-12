@@ -26,7 +26,6 @@ using namespace glm;
 #include "entity.h"
 
 #include <vector>
-#include <algorithm>
 #include <random>
 
 #define MODELSIZE 1.0f
@@ -77,8 +76,6 @@ int main() {
     watervox->m_size = vec3(100, 5, 100);
     std::vector<voxel_m> voxs;
     watervox->voxels = voxs;
-    
-    size_t i = 0;
     for (size_t y = 0; y < watervox->m_size.y; y++) {
         for (size_t z = 0; z < watervox->m_size.z; z++) {
             for (size_t x = 0; x < watervox->m_size.x; x++) {
@@ -86,25 +83,24 @@ int main() {
                 vox.position = vec3(x, y, z);
                 vox.clr = vec4(0.0f, 0.0f, 1.0f, 0.5f);
                 watervox->voxels.push_back(vox);
-                i++;
             }
         }
     }
 
     VoxelRenderer* renderer = new VoxelRenderer(1024*1024*10);
 
-    GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
-    GameObject* apple1obj = new GameObject(renderer, *applevox, voxshader);
-    GameObject* waterobj = new GameObject(renderer, *watervox, voxshader);
+    // GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
+    // GameObject* apple1obj = new GameObject(renderer, *applevox, voxshader);
+    // GameObject* waterobj = new GameObject(renderer, *watervox, voxshader);
     
-    glClearColor(0.6f, 0.6f, 0.6f,1);
+    glClearColor(0.6f, 0.6f, 0.6f, 1);
     
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Mesh* crosshair = new Mesh(new _voxels, vertices, 4, attrs);
+    Mesh* crosshair = new Mesh(vertices, 4, attrs);
     Camera* camera = new Camera(vec3(10,1,5), radians(70.0f));
 
     float lastTime = glfwGetTime();
@@ -115,23 +111,26 @@ int main() {
 
     float speed = 10;
 
-    bool test = true;
+    //bool test = true;
 
     // Создание генератора случайных чисел
     std::mt19937 rng(std::random_device{}());
     // Определение распределения для координат
     std::uniform_real_distribution<float> pos_dist(-1.0f, 1.0f);
     // Определение распределения для скоростей
-    std::normal_distribution<float> vel_dist(0.0f, 1.0f);
+    std::normal_distribution<float> vel_dist(0.0f, 3.0f);
+
+    std::normal_distribution<float> clr_dist(0.0f, 1.0f);
     std::normal_distribution<float> life_dist(0.5f, 1.5f);
 
-    VoxelParticles effect(1000, renderer, voxshader);
-
-    for (int i = 0; i < 1000; ++i) {
+    //!TESTING
+    int particlesCount = 10000;
+    VoxelParticles effect(particlesCount, renderer, voxshader);
+    for (int i = 0; i < particlesCount; ++i) {
         voxel_m particle;
         particle.position = vec3(pos_dist(rng), pos_dist(rng), pos_dist(rng));
         particle.velocity = vec3(vel_dist(rng), vel_dist(rng), vel_dist(rng));
-        particle.clr = vec4(vel_dist(rng), vel_dist(rng), vel_dist(rng), 1.0f);
+        particle.clr = vec4(clr_dist(rng), clr_dist(rng), clr_dist(rng), 1.0f);
         particle.lifetime = life_dist(rng);
         particle.size = 0.1f;
         effect.addParticle(particle);
@@ -195,20 +194,20 @@ int main() {
         effect.update(delta);
         effect.draw();
 
-        glm::vec3 gravity(0.0f, -9.81f, 0.0f);
-        apple1obj->applyForce(gravity);
-        apple1obj->updatePhysics(delta);
+        // glm::vec3 gravity(0.0f, -9.81f, 0.0f);
+        // apple1obj->applyForce(gravity);
+        // apple1obj->updatePhysics(delta);
         
-        if (test) {
-            appleobj->setPosition(vec3(10, 0, 0));
-            test = false;
-        }
+        // if (test) {
+        //     appleobj->setPosition(vec3(10, 0, 0));
+        //     test = false;
+        // }
 
-        appleobj->applyForce(gravity*2.0f);
-        appleobj->updatePhysics(delta);
+        // appleobj->applyForce(gravity*2.0f);
+        // appleobj->updatePhysics(delta);
         
-        apple1obj->draw();
-        appleobj->draw();
+        // apple1obj->draw();
+        // appleobj->draw();
         // waterobj->draw();
 
         crosshairShader->use();
@@ -226,7 +225,7 @@ int main() {
 
     //delete appleobj;
     //delete apple1obj;
-    delete waterobj;
+    //delete waterobj;
 
     delete renderer;
     return 0;

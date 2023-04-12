@@ -9,8 +9,6 @@
 #include "shader.h"
 #include "../voxels/voxel.h"
 
-using namespace glm;
-
 class VoxelRenderer;
 class Mesh;
 class Shader;
@@ -23,7 +21,7 @@ class VoxelParticles {
     Shader* sh;
     _voxels* voxels;
     
-    vec3 m_gravity;
+    glm::vec3 m_gravity;
 public:
     VoxelParticles(int bufferSize, VoxelRenderer* render, Shader* shader);
     ~VoxelParticles();

@@ -114,7 +114,7 @@ Mesh* VoxelRenderer::voxelRender(voxel_m* voxel) {
 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
 	}
-	return new Mesh(new _voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
+	return new Mesh(buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 
 Mesh* VoxelRenderer::render(_voxels* voxels) {
@@ -202,5 +202,5 @@ Mesh* VoxelRenderer::render(_voxels* voxels) {
 			VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
 		}
 	}
-	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
+	return new Mesh(buffer, index / VERTEX_SIZE, chunk_attrs);
 }
