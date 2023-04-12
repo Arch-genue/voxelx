@@ -5,6 +5,7 @@
 class Mesh;
 //class Model;
 class _voxels;
+class voxel_m;
 
 class ModelRenderer {
 	float* buffer;
@@ -14,4 +15,5 @@ public:
 	~ModelRenderer();
 
 	Mesh* render(_voxels* voxels=nullptr);
+	Mesh* voxelRender(voxel_m* voxel);
 };

@@ -31,6 +31,92 @@ ModelRenderer::~ModelRenderer() {
 	delete[] buffer;
 }
 
+Mesh* ModelRenderer::voxelRender(voxel_m* voxel) {
+	size_t index = 0;
+	float x, y, z;
+
+	glm::vec4 clr;
+	float l = 1.0f;
+
+	x = voxel->position.x;
+	y = voxel->position.y;
+	z = voxel->position.z;
+	clr = voxel->clr;
+	_voxels* voxels = new _voxels;
+	//voxels.voxels.push_back(voxel);
+
+	//* 0.5f 0.5f 0.0f 1.0f -- vomit
+	//* 0.3f 0.3f 1.0f 0.5f -- water
+	//* 0.3f 0.7f 1.0f 0.5f -- water2
+	
+	//? Y
+	if (!IS_BLOCKED(x,y+1,z)) {
+		l = 1.0f;
+		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+
+		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+	} 
+	if (!IS_BLOCKED(x,y-1,z)) {
+		l = 0.75f;
+		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+
+		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+	}
+
+	//? X
+	if (!IS_BLOCKED(x+1,y,z)) {
+		l = 0.95f;
+		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+
+		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+	}
+	if (!IS_BLOCKED(x-1,y,z)) {
+		l = 0.85f;
+		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+
+		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+	}
+
+	//? Z
+	if (!IS_BLOCKED(x,y,z+1)) {
+		l = 0.9f;
+		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+
+		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+	}
+	if (!IS_BLOCKED(x,y,z-1)) {
+		l = 0.8f;
+		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+
+		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+	}
+	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
+}
+
 Mesh* ModelRenderer::render(_voxels* voxels) {
 	size_t index = 0;
 	float x, y, z;
