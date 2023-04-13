@@ -23,15 +23,15 @@ int chunk_attrs[] = {3,4,1, 0};
 					buffer[INDEX+7] = (L);\
 					INDEX += VERTEX_SIZE;
 
-VoxelRenderer::VoxelRenderer(size_t capacity) : capacity(capacity) {
+Renderer::Renderer(size_t capacity) : capacity(capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
 }
 
-VoxelRenderer::~VoxelRenderer() {
+Renderer::~Renderer() {
 	delete[] buffer;
 }
 
-Mesh* VoxelRenderer::voxelRender(voxel_m* voxel) {
+Mesh* Renderer::voxelRender(voxel_m* voxel) {
 	size_t index = 0;
 	float x, y, z;
 
@@ -112,10 +112,10 @@ Mesh* VoxelRenderer::voxelRender(voxel_m* voxel) {
 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
 	}
-	return new Mesh(buffer, index / VERTEX_SIZE, chunk_attrs);
+	return new Mesh(nullptr, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 
-Mesh* VoxelRenderer::render(_voxels* voxels) {
+Mesh* Renderer::render(_voxels* voxels) {
 	size_t index = 0;
 	float x, y, z;
 
@@ -123,7 +123,7 @@ Mesh* VoxelRenderer::render(_voxels* voxels) {
 	float l = 1.0f;
 
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
-		//if (!voxels->voxels[i].visible) continue;
+		if (!voxels->voxels[i].visible) continue;
 
 		x = voxels->voxels[i].position.x;
 		y = voxels->voxels[i].position.y;
@@ -200,5 +200,5 @@ Mesh* VoxelRenderer::render(_voxels* voxels) {
 			VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
 		}
 	}
-	return new Mesh(buffer, index / VERTEX_SIZE, chunk_attrs);
+	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }

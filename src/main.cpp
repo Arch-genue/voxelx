@@ -30,9 +30,10 @@ using namespace glm;
 
 #define MODELSIZE 1.0f
 
-int WIDTH = 800;
-int HEIGHT = 600;
+int WIDTH = 1024;
+int HEIGHT = 768;
 
+//Crosshair
 float vertices[] = {
     //x     y
     0.0f,-0.02f,
@@ -45,6 +46,25 @@ float vertices[] = {
 int attrs[2] = {
 	2,  0 //null terminator
 };
+
+const int SIZE = 10;
+
+void generateDungeon(int dungeon[SIZE][SIZE]) {
+    srand(time(NULL));
+    for (int x = 0; x < SIZE; x++) {
+        for (int z = 0; z < SIZE; z++) {
+            if (x == 0 || z == 0 || x == SIZE - 1 || z == SIZE - 1) {
+                dungeon[x][z] = 1; // Границы подземелья
+            }
+            else if (rand() % 100 < 45) {
+                dungeon[x][z] = 1; // Стена
+            }
+            else {
+                dungeon[x][z] = 0; // Пустота
+            }
+        }
+    }
+}
 
 int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D");
@@ -74,8 +94,8 @@ int main() {
 
     _voxels* watervox = new _voxels;
     watervox->m_size = vec3(100, 5, 100);
-    std::vector<voxel_m> voxs;
-    watervox->voxels = voxs;
+    //std::vector<voxel_m> voxs;
+    //watervox->voxels = voxs;
     for (size_t y = 0; y < watervox->m_size.y; y++) {
         for (size_t z = 0; z < watervox->m_size.z; z++) {
             for (size_t x = 0; x < watervox->m_size.x; x++) {
@@ -86,12 +106,41 @@ int main() {
             }
         }
     }
+    //std::mt19937 rng(std::random_device{}());
+    //std::uniform_real_distribution<float> clr_generator(0.1f, 0.9f);
+    // _voxels* wallvox = new _voxels;
+    // wallvox->m_size = vec3(30, 50, 30);
+    //std::vector<voxel_m> voxs;
+    //wallvox->voxels = voxs;
+    // float clr;
+    // for (size_t y = 0; y < wallvox->m_size.y; y++) {
+    //     for (size_t z = 0; z < wallvox->m_size.z; z++) {
+    //         for (size_t x = 0; x < wallvox->m_size.x; x++) {
+    //             voxel_m vox;
+    //             clr = clr_generator(rng);
+    //             vox.position = vec3(x, y, z);
+    //             vox.clr = vec4(clr, clr, clr, 1.0f);
+    //             vox.visible = false;
+    //             if (
+    //                 ( x == 0 || x == wallvox->m_size.x-1 ) ||
+    //                 ( y == 0 || y == wallvox->m_size.y-1 ) ||
+    //                 ( z == 0 || z == wallvox->m_size.z-1 )
+    //             ) vox.visible = true;
+    //             wallvox->voxels.push_back(vox);
+    //         }
+    //     }
+    // }
 
-    VoxelRenderer* renderer = new VoxelRenderer(1024*1024*10);
+    Renderer* renderer = new Renderer(1024*1024*10);
 
-    // GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
+    //GameObject* wallobj = new GameObject(renderer, *wallvox, voxshader);
+    GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
     // GameObject* apple1obj = new GameObject(renderer, *applevox, voxshader);
     // GameObject* waterobj = new GameObject(renderer, *watervox, voxshader);
+
+    //int dungeon[SIZE][SIZE];
+    //generateDungeon(dungeon);
+    //printDungeon(dungeon);
     
     glClearColor(0.6f, 0.6f, 0.6f, 1);
     
@@ -100,28 +149,16 @@ int main() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Mesh* crosshair = new Mesh(vertices, 4, attrs);
+    Mesh* crosshair = new Mesh(new _voxels, vertices, 4, attrs);
     Camera* camera = new Camera(vec3(3, 0, 0), radians(70.0f));
 
     float lastTime = glfwGetTime();
-    float delta = 0.0f;
+    float deltaTime = 0.0f;
 
     float camX = 0.0f;
     float camY = 0.0f;
 
     float speed = 10;
-
-    //bool test = true;
-
-    // Создание генератора случайных чисел
-    std::mt19937 rng(std::random_device{}());
-    // Определение распределения для координат
-    std::uniform_real_distribution<float> pos_dist(-1.0f, 1.0f);
-    // Определение распределения для скоростей
-    std::normal_distribution<float> vel_dist(0.0f, 3.0f);
-
-    std::normal_distribution<float> clr_dist(0.0f, 1.0f);
-    std::normal_distribution<float> life_dist(0.5f, 1.5f);
 
     //!TESTING
     VoxelParticles* effect = new VoxelParticles(30, renderer, voxshader);
@@ -135,10 +172,11 @@ int main() {
     VoxelParticles* effect2 = new VoxelParticles(10, renderer, voxshader);
     effect2->setType(EFFECT_WATER);
     effect2->setPosition(vec3(0.0f, 0.0f, -20.0f));
+    bool test = false;
 
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
-        delta = currentTime - lastTime;
+        deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
         if (Input::jpressed(GLFW_KEY_ESCAPE)) {
@@ -149,16 +187,16 @@ int main() {
         }
         
         if (Input::pressed(GLFW_KEY_W)) {
-            camera->position += camera->front * delta * speed;
+            camera->position += camera->front * deltaTime * speed;
         }
         if (Input::pressed(GLFW_KEY_S)) {
-            camera->position -= camera->front * delta * speed;
+            camera->position -= camera->front * deltaTime * speed;
         }
         if (Input::pressed(GLFW_KEY_A)) {
-            camera->position -= camera->right * delta * speed;
+            camera->position -= camera->right * deltaTime * speed;
         }
         if (Input::pressed(GLFW_KEY_D)) {
-            camera->position += camera->right * delta * speed;
+            camera->position += camera->right * deltaTime * speed;
         }
 
         if (Input::_cursor_locked) {
@@ -191,25 +229,35 @@ int main() {
         voxshader->use();
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
         
-        effect->draw(delta);
-        effect1->draw(delta);
-        effect2->draw(delta);
-
-        // glm::vec3 gravity(0.0f, -9.81f, 0.0f);
-        // apple1obj->applyForce(gravity);
-        // apple1obj->updatePhysics(delta);
+        effect1->draw(deltaTime);
         
-        // if (test) {
-        //     appleobj->setPosition(vec3(10, 0, 0));
-        //     test = false;
+
+        //wallobj->draw();
+
+        // for (int x = 0; x < SIZE; x++) {
+        //     for (int z = 0; z < SIZE; z++) {
+        //         if (dungeon[x][z] == 1) {
+        //             //std::cout << "#";
+        //             wallobj->draw();
+        //             wallobj->setPosition(vec3(x*30, 0, z*30));
+        //         }
+        //     }
         // }
-
-        // appleobj->applyForce(gravity*2.0f);
-        // appleobj->updatePhysics(delta);
-        
-        // apple1obj->draw();
-        // appleobj->draw();
-        // waterobj->draw();
+        appleobj->draw();
+        vec3 end;
+        vec3 norm;
+        vec3 iend;
+        // if ( appleobj->rayCast(camera->position, camera->front, 3.0f, end, norm, iend) ) {
+        //     test = true;
+        //     effect1->setPosition(vec3(camera->front.x, camera->front.y + 10.0f, camera->front.z));
+        // }
+        if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
+            //std::cout << camera->position.x << " " << camera->front.x << std::endl;
+            if (appleobj->rayCast(camera->position, camera->front, 3.0f, end, norm, iend)) {
+                test = true;
+                effect1->setPosition(vec3(camera->front.x, camera->front.y + 10.0f, camera->front.z));
+            } else effect1->setPosition(vec3(40.0f, 0, 0));
+        }
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);
@@ -223,6 +271,8 @@ int main() {
     delete crosshairShader;
 
     delete applevox;
+    delete watervox;
+
     delete effect;
     delete effect1;
 

@@ -6,12 +6,12 @@ class Mesh;
 class _voxels;
 class voxel_m;
 
-class VoxelRenderer {
+class Renderer {
 	float* buffer;
 	size_t capacity;
 public:
-	VoxelRenderer(size_t capacity);
-	~VoxelRenderer();
+	Renderer(size_t capacity);
+	~Renderer();
 
 	Mesh* render(_voxels* voxels=nullptr);
 	Mesh* voxelRender(voxel_m* voxel);

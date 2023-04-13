@@ -5,11 +5,11 @@
 
 class Mesh;
 class Shader;
-class VoxelRenderer;
+class Renderer;
 
 class GameObject {
     //?OBJECTS
-    VoxelRenderer* render;
+    Renderer* render;
     Mesh* mesh;
     Shader* shader;
 
@@ -31,7 +31,7 @@ class GameObject {
     float mass;
     bool collider;
 public:
-    GameObject(VoxelRenderer* rndr, _voxels voxels, Shader *sh);
+    GameObject(Renderer* rndr, _voxels voxels, Shader *sh);
     ~GameObject();
 
     void translate(float val, glm::vec3 vec);
@@ -53,7 +53,7 @@ public:
 
     //Voxel operations
     void setVoxelState(uint8_t i, bool state);
-    bool getVoxelState(uint8_t i);
+    voxel_m* getVoxel(glm::vec3 pos);
 
-    void rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
+    bool rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 };

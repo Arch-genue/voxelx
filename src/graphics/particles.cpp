@@ -4,7 +4,7 @@
 
 std::mt19937 rng(std::random_device{}());
 
-VoxelParticles::VoxelParticles(int bufferSize, VoxelRenderer* render, Shader* shader) {
+VoxelParticles::VoxelParticles(int bufferSize, Renderer* render, Shader* shader) {
     renderer = render;
     sh = shader;
     m_gravity = glm::vec3(0, -9.8, 0);
@@ -17,6 +17,7 @@ VoxelParticles::VoxelParticles(int bufferSize, VoxelRenderer* render, Shader* sh
     for (int i = 0; i < bufferSize; ++i) {
         voxel_m particle;
         particle.lifetime = 0.0f;
+        particle.visible = true;
         //addParticle(particle);
         voxels->voxels.push_back(particle); 
     }

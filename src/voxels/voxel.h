@@ -12,6 +12,7 @@ struct voxel_m {
     float size;
 
     float lifetime;
+    bool visible;
 };
 
 struct _voxels {

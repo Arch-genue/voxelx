@@ -11,7 +11,7 @@
 #include "shader.h"
 #include "../voxels/voxel.h"
 
-class VoxelRenderer;
+class Renderer;
 class Mesh;
 class Shader;
 class voxel_m;
@@ -28,10 +28,9 @@ struct _particles {
 
 };
 
-//! MEMORY LEAKS
 class VoxelParticles {
     //? Objects
-    VoxelRenderer* renderer;
+    Renderer* renderer;
     Mesh* mesh;
     Shader* sh;
     _voxels* voxels;
@@ -48,7 +47,7 @@ class VoxelParticles {
     std::uniform_real_distribution<float> clr_generator;
     std::uniform_real_distribution<float> lifetime_generator;
 public:
-    VoxelParticles(int bufferSize, VoxelRenderer* render, Shader* shader);
+    VoxelParticles(int bufferSize, Renderer* render, Shader* shader);
     ~VoxelParticles();
 
     void addParticle(voxel_m& particle);

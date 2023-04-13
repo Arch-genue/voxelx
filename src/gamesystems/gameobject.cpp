@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-GameObject::GameObject(VoxelRenderer* rndr, _voxels voxels, Shader *sh) {
+GameObject::GameObject(Renderer* rndr, _voxels voxels, Shader *sh) {
     //
     render = rndr;
 	_voxels* voxs = new _voxels;
@@ -39,7 +39,7 @@ GameObject::~GameObject() {}
 
 void GameObject::draw() {
     modelmatrix = glm::scale(modelmatrix, scaling);
-    //modelmatrix = glm::translate(modelmatrix, position);
+    modelmatrix = glm::translate(modelmatrix, position);
     
     //glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
     //modelmatrix = modelmatrix * rotateMatrix;
@@ -107,15 +107,15 @@ void GameObject::rotate(float angle, glm::vec3 rot) {
 }
 
 void GameObject::setPosition(glm::vec3 pos) {
-	position += pos;
-	_voxels* voxels = mesh->getVoxels();
+	position = pos;
+	// _voxels* voxels = mesh->getVoxels();
 
-	for (size_t i = 0; i < voxels->voxels.size(); i++) {
-		voxels->voxels.at(i).position += position;
-	}
+	// for (size_t i = 0; i < voxels->voxels.size(); i++) {
+	// 	voxels->voxels.at(i).position += position;
+	// }
 	//delete mesh;
 
-	mesh = render->render(voxels);
+	//mesh = render->render(voxels);
 }
 void GameObject::setRotation(float angle, glm::vec3 rot) {
     rotAngle = angle;
@@ -133,7 +133,18 @@ glm::mat4 GameObject::getMatrix() {
     return modelmatrix;
 }
 
-void GameObject::rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend) {
+voxel_m* GameObject::getVoxel(glm::vec3 pos) {
+	_voxels* voxs = mesh->getVoxels();
+	for (size_t i = 0; i < voxs->voxels.size(); i++) {
+		std::cout << voxs->voxels[i].position.x << " " << voxs->voxels[i].position.y << " " << voxs->voxels[i].position.z << std::endl;
+		if (voxs->voxels[i].position == pos) {
+			return &voxs->voxels[i];
+		}
+	}
+	return nullptr;
+}
+
+bool GameObject::rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend) {
 	float px = a.x;
 	float py = a.y;
 	float pz = a.z;
@@ -168,48 +179,52 @@ void GameObject::rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& e
 	int steppedIndex = -1;
 
 	while (t <= maxDist) {
-        std::cout << "URA" << std::endl;
-		// voxel_m* voxel = get(ix, iy, iz);
-		// if (voxel == nullptr || voxel->id){
-		// 	end.x = px + t * dx;
-		// 	end.y = py + t * dy;
-		// 	end.z = pz + t * dz;
+		//voxel_m* voxel = get(ix, iy, iz);
+		//std::cout << "Obj " << getPosition().x << " " << getPosition().y << " " << getPosition().z << std::endl;
+		//std::cout << "Camera " << ix << " " << iy << " " << iz << std::endl;
+		//std::cout << getVoxel(glm::vec3(ix, iy, iz))->position.x << std::endl;
+		if (getPosition() == glm::vec3(ix, iy, iz)) {
+		//if (getVoxel(glm::vec3(ix, iy, iz)) != nullptr) {
+			//std::cout << "SUCCESS" << std::endl;
+			end.x = px + t * dx;
+			end.y = py + t * dy;
+			end.z = pz + t * dz;
 
-		// 	iend.x = ix;
-		// 	iend.y = iy;
-		// 	iend.z = iz;
+			iend.x = ix;
+			iend.y = iy;
+			iend.z = iz;
 
-		// 	norm.x = norm.y = norm.z = 0.0f;
-		// 	if (steppedIndex == 0) norm.x = -stepx;
-		// 	if (steppedIndex == 1) norm.y = -stepy;
-		// 	if (steppedIndex == 2) norm.z = -stepz;
-		// 	return voxel;
-		// }
-		// if (txMax < tyMax) {
-		// 	if (txMax < tzMax) {
-		// 		ix += stepx;
-		// 		t = txMax;
-		// 		txMax += txDelta;
-		// 		steppedIndex = 0;
-		// 	} else {
-		// 		iz += stepz;
-		// 		t = tzMax;
-		// 		tzMax += tzDelta;
-		// 		steppedIndex = 2;
-		// 	}
-		// } else {
-		// 	if (tyMax < tzMax) {
-		// 		iy += stepy;
-		// 		t = tyMax;
-		// 		tyMax += tyDelta;
-		// 		steppedIndex = 1;
-		// 	} else {
-		// 		iz += stepz;
-		// 		t = tzMax;
-		// 		tzMax += tzDelta;
-		// 		steppedIndex = 2;
-		// 	}
-		// }
+			norm.x = norm.y = norm.z = 0.0f;
+			if (steppedIndex == 0) norm.x = -stepx;
+			if (steppedIndex == 1) norm.y = -stepy;
+			if (steppedIndex == 2) norm.z = -stepz;
+			return true;
+		}
+		if (txMax < tyMax) {
+			if (txMax < tzMax) {
+				ix += stepx;
+				t = txMax;
+				txMax += txDelta;
+				steppedIndex = 0;
+			} else {
+				iz += stepz;
+				t = tzMax;
+				tzMax += tzDelta;
+				steppedIndex = 2;
+			}
+		} else {
+			if (tyMax < tzMax) {
+				iy += stepy;
+				t = tyMax;
+				tyMax += tyDelta;
+				steppedIndex = 1;
+			} else {
+				iz += stepz;
+				t = tzMax;
+				tzMax += tzDelta;
+				steppedIndex = 2;
+			}
+		}
 	}
 	iend.x = ix;
 	iend.y = iy;
@@ -219,5 +234,5 @@ void GameObject::rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& e
 	end.y = py + t * dy;
 	end.z = pz + t * dz;
 	norm.x = norm.y = norm.z = 0.0f;
-	//return nullptr;
+	return false;
 }

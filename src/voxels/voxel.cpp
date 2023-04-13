@@ -70,6 +70,7 @@ _voxels* load_model(std::string filename, const char* type) {
             clr_b = round( strtoul(clr+4, NULL, 16) / 255.0 * 100 ) / 100;
             clr_a = 1.0f;
 
+            vox.visible = true;
             vox.position = glm::vec3(x_coord, y_coord, z_coord);
             vox.clr = glm::vec4(clr_r, clr_g, clr_b, clr_a);
             voxels->voxels.push_back(vox);
