@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "../graphics/vox_renderer.h"
+#include "../graphics/renderer.h"
 
 class Mesh;
 class Shader;

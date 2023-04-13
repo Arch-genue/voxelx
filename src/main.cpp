@@ -15,7 +15,7 @@ using namespace glm;
 #include "graphics/shader.h"
 #include "graphics/texture.h"
 #include "graphics/mesh.h"
-#include "graphics/vox_renderer.h"
+#include "graphics/renderer.h"
 #include "graphics/particles.h"
 
 #include "loaders/resourceloader.h"
@@ -101,7 +101,7 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     Mesh* crosshair = new Mesh(vertices, 4, attrs);
-    Camera* camera = new Camera(vec3(10,1,5), radians(70.0f));
+    Camera* camera = new Camera(vec3(3, 0, 0), radians(70.0f));
 
     float lastTime = glfwGetTime();
     float delta = 0.0f;
@@ -124,17 +124,17 @@ int main() {
     std::normal_distribution<float> life_dist(0.5f, 1.5f);
 
     //!TESTING
-    int particlesCount = 10000;
-    VoxelParticles effect(particlesCount, renderer, voxshader);
-    for (int i = 0; i < particlesCount; ++i) {
-        voxel_m particle;
-        particle.position = vec3(pos_dist(rng), pos_dist(rng), pos_dist(rng));
-        particle.velocity = vec3(vel_dist(rng), vel_dist(rng), vel_dist(rng));
-        particle.clr = vec4(clr_dist(rng), clr_dist(rng), clr_dist(rng), 1.0f);
-        particle.lifetime = life_dist(rng);
-        particle.size = 0.1f;
-        effect.addParticle(particle);
-    }
+    VoxelParticles* effect = new VoxelParticles(30, renderer, voxshader);
+    effect->setType(EFFECT_VOMIT);
+    effect->setPosition(vec3(0.0f, 0.0f, 0.0f));
+
+    VoxelParticles* effect1 = new VoxelParticles(10, renderer, voxshader);
+    effect1->setType(EFFECT_FLAME);
+    effect1->setPosition(vec3(40.0f, 0.0f, 0.0f));
+
+    VoxelParticles* effect2 = new VoxelParticles(10, renderer, voxshader);
+    effect2->setType(EFFECT_WATER);
+    effect2->setPosition(vec3(0.0f, 0.0f, -20.0f));
 
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
@@ -191,8 +191,9 @@ int main() {
         voxshader->use();
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
         
-        effect.update(delta);
-        effect.draw();
+        effect->draw(delta);
+        effect1->draw(delta);
+        effect2->draw(delta);
 
         // glm::vec3 gravity(0.0f, -9.81f, 0.0f);
         // apple1obj->applyForce(gravity);
@@ -222,6 +223,8 @@ int main() {
     delete crosshairShader;
 
     delete applevox;
+    delete effect;
+    delete effect1;
 
     //delete appleobj;
     //delete apple1obj;

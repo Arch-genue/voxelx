@@ -15,7 +15,7 @@ set(SOURCE
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
 	src/graphics/mesh.cpp
-	src/graphics/vox_renderer.cpp
+	src/graphics/renderer.cpp
 	src/graphics/particles.cpp
 	src/voxels/voxel.cpp
 	src/loaders/resourceloader.cpp
@@ -30,7 +30,7 @@ set(HEADER
 	src/graphics/shader.h 
 	src/graphics/texture.h 
 	src/graphics/mesh.h
-	src/graphics/vox_renderer.h
+	src/graphics/renderer.h
 	src/graphics/particles.h
 	src/voxels/voxel.h
 	src/loaders/resourceloader.h
