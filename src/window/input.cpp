@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <string.h>
 
+#include <iostream>
+
 bool* Input::_keys;
 uint* Input::_frames;
 uint Input::_current = 0;
@@ -47,6 +49,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 }
 
 void window_size_callback(GLFWwindow* window, int width, int height) {
+    std::cout << width << " " << height << std::endl;
     glViewport(0, 0, width, height);
 }
 

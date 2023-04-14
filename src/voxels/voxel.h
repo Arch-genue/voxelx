@@ -9,6 +9,7 @@ struct voxel_m {
     glm::vec3 position;
     glm::vec3 velocity;
     glm::vec4 clr;
+    glm::vec3 normal; //!TEST
     float size;
 
     float lifetime;

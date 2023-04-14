@@ -104,7 +104,7 @@ void VoxelParticles::draw(float deltaTime) {
     //* DRAW
     delete mesh;
     mesh = renderer->render(voxels);
-    sh->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(m_size)));
+    sh->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)));
     mesh->draw(GL_TRIANGLES);
 }
 

@@ -7,6 +7,12 @@ class Mesh;
 class Shader;
 class Renderer;
 
+// Создаем структуру Ray, чтобы представить луч
+struct Ray {
+    glm::vec3 origin;
+    glm::vec3 direction;
+};
+
 class GameObject {
     //?OBJECTS
     Renderer* render;
@@ -53,7 +59,8 @@ public:
 
     //Voxel operations
     void setVoxelState(uint8_t i, bool state);
-    voxel_m* getVoxel(glm::vec3 pos);
+    bool getVoxel(glm::vec3 pos);
 
+    bool testraycast(glm::vec3 rayOrigin, glm::vec3 rayDirection, float maxDistance);
     bool rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 };
