@@ -9,9 +9,8 @@ class Renderer;
 
 class GameObject {
     //?OBJECTS
-    Renderer* render;
+    Renderer* renderer;
     Mesh* mesh;
-    Shader* shader;
 
     //?POSITIONS
     glm::mat4 modelmatrix;
@@ -32,14 +31,14 @@ class GameObject {
     float mass;
     bool collider;
 public:
-    GameObject(Renderer* rndr, _voxels voxels, Shader *sh);
+    GameObject(Renderer* rndr, const char* model);
     ~GameObject();
 
     void translate(float val, glm::vec3 vec);
     void rotate(float val, glm::vec3 rot);
     void scale(float val, glm::vec3 scalevec);
 
-    //Pos
+    //* Pos
     void setPosition(glm::vec3 pos);
     glm::vec3 getPosition();
     void setRotation(float angle, glm::vec3 rot);
@@ -54,7 +53,7 @@ public:
     void setImpulse(glm::vec3 force);
     void applyForce(glm::vec3 force);
 
-    //Voxel operations
+    //* Voxel operations
     void setVoxelState(uint8_t i, bool state);
     bool getVoxel(glm::vec3 pos);
 

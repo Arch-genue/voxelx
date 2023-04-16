@@ -52,7 +52,7 @@ int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D");
     Input::init();
 
-    //? Loaders
+    //TODO ResourceLoader
     ResourceLoader::setPath("../res/");
     ResourceLoader::loadShaders();
     ResourceLoader::loadTextures();
@@ -98,6 +98,7 @@ int main() {
             }
         }
     }
+    
     //GameObject** objs = new GameObject*[100];
 
     _voxels* nullvox = new _voxels;
@@ -112,10 +113,13 @@ int main() {
     renderer->addShader(voxshader); // 0
     renderer->addShader(crosshairShader); // 1
 
-    GameObject* nullobj = new GameObject(renderer, *nullvox, voxshader);
+    renderer->addRowModel("null", nullvox);
+    renderer->addRowModel("apple", applevox);
+
+    GameObject* nullobj = new GameObject(renderer, "null");
     nullobj->setPosition(vec3(15,0,0));
 
-    GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
+    GameObject* appleobj = new GameObject(renderer, "apple");
 
     Window::glInit();
 
@@ -125,15 +129,13 @@ int main() {
     float lastTime = glfwGetTime();
     float deltaTime = 0.0f;
 
-    float camX = 0.0f;
-    float camY = 0.0f;
+    vec2 cam(0.0f, 0.0f);
 
     float speed = 5;
 
     //!TESTING PARTICLES
-    VoxelParticles* effect1 = new VoxelParticles(20, renderer, voxshader);
-    effect1->setType(EFFECT_FLAME);
-    effect1->setPosition(vec3(2.0f, 5.0f, 2.0f));
+    VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
+    effect1->setPosition(vec3(4.0f, 20.0f, 4.0f));
 
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
@@ -161,13 +163,13 @@ int main() {
         }
 
         if (Input::_cursor_locked) {
-            camX += -Input::deltaX / Window::height;
-            camY += -Input::deltaY / Window::height;
-            if (camY < -radians(89.0f)) camY = -radians(89.0f);
-            if (camY > radians(89.0f)) camY = radians(89.0f);
+            cam.x += -Input::deltaX / Window::height;
+            cam.y += -Input::deltaY / Window::height;
+            if (cam.y < -radians(89.0f)) cam.y = -radians(89.0f);
+            if (cam.y > radians(89.0f)) cam.y = radians(89.0f);
 
             camera->rotation = mat4(1.0f);
-            camera->rotate(camY, camX, 0);
+            camera->rotate(cam, 0);
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -190,10 +192,6 @@ int main() {
             }
         }
 
-        // for(int i = 0; i < ind; i++) {
-        //     objs[i]->draw();
-        // }
-
         // std::cout << camera->getPosition().x << " " << camera->getPosition().y   << " " << camera->getPosition().z << " " << std::endl;
         // nullobj->draw();
 
@@ -204,19 +202,19 @@ int main() {
     }
 
     Window::exit();
-    
     delete voxshader;
     delete crosshairShader;
 
+    delete nullvox;
+    delete wallvox;
     delete applevox;
 
     delete effect1;
     //delete[] objs;
 
-    //delete appleobj;
-    //delete apple1obj;
-    //delete waterobj;
-
+    delete nullobj;
+    delete appleobj;
+    
     delete renderer;
     return 0;
 }

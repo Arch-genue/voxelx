@@ -8,16 +8,13 @@
 
 #include <iostream>
 
-GameObject::GameObject(Renderer* rndr, _voxels voxels, Shader *sh) {
+GameObject::GameObject(Renderer* rndr, const char* model) {
     //
-    render = rndr;
-	_voxels* voxs = new _voxels;
-	voxs->voxels = voxels.voxels;
-	voxs->m_size = voxels.m_size;
+    renderer = rndr;
+    //_voxels* voxs = new _voxels;
+	//voxs->voxels = voxels.voxels;
+	//voxs->m_size = voxels.m_size;
 	
-    //voxels = voxs;
-    shader = sh;
-
     //
     modelmatrix = glm::mat4(1.0f);;
     position = glm::vec3(0);
@@ -35,7 +32,7 @@ GameObject::GameObject(Renderer* rndr, _voxels voxels, Shader *sh) {
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
     //!CREATE MESH!
-	mesh = render->render(voxs);
+	mesh = renderer->render(renderer->getRowModel(model));
 	//delete voxs;
 }
 GameObject::~GameObject() {}
@@ -48,7 +45,7 @@ void GameObject::draw() {
     //glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
     //modelmatrix = modelmatrix * rotateMatrix;
 
-    shader->uniformMatrix("model", modelmatrix);
+    renderer->getDefaultShader()->uniformMatrix("model", modelmatrix);
     mesh->draw(GL_TRIANGLES);
 
     modelmatrix = glm::mat4(1.0f);
@@ -75,7 +72,7 @@ void GameObject::updatePhysics(float deltaTime) {
 	}
 	//delete mesh;
 
-	mesh = render->render(voxels);
+	mesh = renderer->render(voxels);
 	lastposition = position;
 }
 
@@ -88,7 +85,7 @@ void GameObject::translate(float val, glm::vec3 vec) {
 	}
 	//delete mesh;
 
-	mesh = render->render(voxels);
+	mesh = renderer->render(voxels);
 }
 
 void GameObject::rotate(float angle, glm::vec3 rot) {

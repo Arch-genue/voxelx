@@ -4,13 +4,12 @@
 
 std::mt19937 rng(std::random_device{}());
 
-VoxelParticles::VoxelParticles(int bufferSize, Renderer* render, Shader* shader) {
+VoxelParticles::VoxelParticles(Renderer* render, _effects ptype, int bufferSize) {
     renderer = render;
-    sh = shader;
     m_gravity = glm::vec3(0, -9.8, 0);
     voxels = new _voxels;
     
-    setType(EFFECT_IMPORT);
+    setType(ptype);
     setPosition(glm::vec3(0));
     setSize(0.05f);
 
@@ -27,6 +26,7 @@ VoxelParticles::VoxelParticles(int bufferSize, Renderer* render, Shader* shader)
 
 VoxelParticles::~VoxelParticles() {
     delete voxels;
+    delete mesh;
 }
 
 void VoxelParticles::setType(_effects ptype) {
@@ -104,7 +104,7 @@ void VoxelParticles::draw(float deltaTime) {
     //* DRAW
     delete mesh;
     mesh = renderer->render(voxels);
-    sh->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)));
+    renderer->getDefaultShader()->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
     mesh->draw(GL_TRIANGLES);
 }
 

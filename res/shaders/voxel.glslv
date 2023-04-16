@@ -13,5 +13,5 @@ uniform float vtime;
 
 void main() {
     gl_Position = projview *  model * vec4(v_position, 1.0);
-    a_color = vcolor;
+    a_color = vec4(vcolor.x*vlight, vcolor.y*vlight, vcolor.z*vlight, vcolor.w);
 }

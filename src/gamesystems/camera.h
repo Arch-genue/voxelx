@@ -17,7 +17,7 @@ public:
     
     Camera(vec3 position, float fov);
 
-    void rotate(float x, float y, float z);
+    void rotate(vec2 rot, float z);
 
     vec3 getPosition();
     mat4 getProjection();

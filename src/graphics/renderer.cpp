@@ -41,102 +41,19 @@ void Renderer::addShader(Shader* shader) {
 	shaders[_shaderindex] = shader;
 	_shaderindex++;
 }
+void Renderer::addRowModel(std::string name, _voxels* row) {
+	rowmodels[name] = row;
+}
 
 void Renderer::addMesh(Mesh* mesh) {
 	meshes[_meshindex] = mesh;
 	_meshindex++;
 }
 
-// Mesh* Renderer::voxelRender(voxel_m* voxel) {
-// 	size_t index = 0;
-// 	float x, y, z;
-
-// 	glm::vec4 clr;
-// 	float l = 1.0f;
-
-// 	x = voxel->position.x;
-// 	y = voxel->position.y;
-// 	z = voxel->position.z;
-// 	clr = voxel->clr;
-
-// 	//* 0.5f 0.5f 0.0f 1.0f -- vomit
-// 	//* 0.3f 0.3f 1.0f 0.5f -- water
-// 	//* 0.3f 0.7f 1.0f 0.5f -- water2
-	
-// 	//? Y
-// 	if (!IS_BLOCKED(x,y+1,z)) {
-// 		l = 1.0f;
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-// 	} 
-// 	if (!IS_BLOCKED(x,y-1,z)) {
-// 		l = 0.75f;
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 	}
-
-// 	//? X
-// 	if (!IS_BLOCKED(x+1,y,z)) {
-// 		l = 0.95f;
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 	}
-// 	if (!IS_BLOCKED(x-1,y,z)) {
-// 		l = 0.85f;
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 	}
-
-// 	//? Z
-// 	if (!IS_BLOCKED(x,y,z+1)) {
-// 		l = 0.9f;
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-// 	}
-// 	if (!IS_BLOCKED(x,y,z-1)) {
-// 		l = 0.8f;
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-
-// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-// 	}
-// 	return new Mesh(nullptr, buffer, index / VERTEX_SIZE, chunk_attrs);
-// }
-
 Mesh* Renderer::render(_voxels* voxels) {
 	size_t index = 0;
-	float x, y, z;
-
+	float x, y, z, l;
 	glm::vec4 clr;
-	float l = 1.0f;
 
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
 		if (!voxels->voxels[i].visible) continue;
@@ -213,4 +130,11 @@ Mesh* Renderer::render(_voxels* voxels) {
 		}
 	}
 	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
+}
+
+Shader* Renderer::getDefaultShader() {
+	return shaders[0];		
+}
+_voxels* Renderer::getRowModel(const char* model) {
+	return rowmodels[model];
 }

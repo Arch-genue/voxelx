@@ -32,7 +32,6 @@ class VoxelParticles {
     //? Objects
     Renderer* renderer;
     Mesh* mesh;
-    Shader* sh;
     _voxels* voxels;
     
     //? 
@@ -47,7 +46,7 @@ class VoxelParticles {
     std::uniform_real_distribution<float> clr_generator;
     std::uniform_real_distribution<float> lifetime_generator;
 public:
-    VoxelParticles(int bufferSize, Renderer* render, Shader* shader);
+    VoxelParticles(Renderer* render, _effects ptype, int bufferSize);
     ~VoxelParticles();
 
     void addParticle(voxel_m& particle);

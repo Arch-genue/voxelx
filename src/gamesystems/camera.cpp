@@ -13,10 +13,10 @@ void Camera::updateVectors() {
     up = vec3(rotation * vec4(0, 1, 0, 1));
 }
 
-void Camera::rotate(float x, float y, float z) {
+void Camera::rotate(vec2 rot, float z) {
     rotation = glm::rotate(rotation, z, vec3(0,0,1));
-    rotation = glm::rotate(rotation, y, vec3(0,1,0));
-    rotation = glm::rotate(rotation, x, vec3(1,0,0));
+    rotation = glm::rotate(rotation, rot.x, vec3(0,1,0));
+    rotation = glm::rotate(rotation, rot.y, vec3(1,0,0));
 
     updateVectors();
 }
