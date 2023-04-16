@@ -37,6 +37,14 @@ int Window::init(int width, int height, const char * title) {
 
     return 0;
 }
+void Window::glInit() {
+    glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
+    
+    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
 
 bool Window::swapBuffers() {
     glfwSwapBuffers(window);

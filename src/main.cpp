@@ -25,8 +25,9 @@ using namespace glm;
 #include "gamesystems/gameobject.h"
 #include "gamesystems/entity.h"
 
-#include <vector>
-#include <random>
+// #include <freetype2/ft2build.h>
+// #include FT_FREETYPE_H
+// #include <map>
 
 #define MODELSIZE 1.0f
 
@@ -64,6 +65,8 @@ int main() {
         return 1;
     }
 
+    //Shader* fontshader = load_shader("../res/shaders/font.glslv", "../res/shaders/font.glslf");
+
     Shader* crosshairShader = load_shader("../res/shaders/crosshair.glslv", "../res/shaders/crosshair.glslf");
     if (crosshairShader == nullptr) {
         std::cerr << "Failed to load crosshair shader\n";
@@ -95,28 +98,26 @@ int main() {
             }
         }
     }
+    //GameObject** objs = new GameObject*[100];
 
     _voxels* nullvox = new _voxels;
     nullvox->m_size = vec3(1, 1, 1);
     voxel_m vox;
     vox.position = vec3(0, 0, 0);
-    vox.clr = vec4(0.5f, 1.0f, 0.0f, 1.0f);
-    vox.visible = false;
+    vox.clr = vec4(0.5f, 1.0f, 0.5f, 1.0f);
     vox.visible = true;
     nullvox->voxels.push_back(vox);
 
-    Renderer* renderer = new Renderer(1024*1024*10);
+    Renderer* renderer = new Renderer(1024*1024*10, 100, 100);
+    renderer->addShader(voxshader); // 0
+    renderer->addShader(crosshairShader); // 1
 
     GameObject* nullobj = new GameObject(renderer, *nullvox, voxshader);
+    nullobj->setPosition(vec3(15,0,0));
 
     GameObject* appleobj = new GameObject(renderer, *applevox, voxshader);
 
-    glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
-    
-    glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Window::glInit();
 
     Mesh* crosshair = new Mesh(new _voxels, vertices, 4, attrs);
     Camera* camera = new Camera(vec3(3, 0, 0), radians(70.0f));
@@ -129,18 +130,10 @@ int main() {
 
     float speed = 5;
 
-    //!TESTING
-    VoxelParticles* effect = new VoxelParticles(30, renderer, voxshader);
-    effect->setType(EFFECT_VOMIT);
-    effect->setPosition(vec3(0.0f, 0.0f, 0.0f));
-
+    //!TESTING PARTICLES
     VoxelParticles* effect1 = new VoxelParticles(20, renderer, voxshader);
     effect1->setType(EFFECT_FLAME);
     effect1->setPosition(vec3(2.0f, 5.0f, 2.0f));
-
-    VoxelParticles* effect2 = new VoxelParticles(10, renderer, voxshader);
-    effect2->setType(EFFECT_WATER);
-    effect2->setPosition(vec3(0.0f, 0.0f, -20.0f));
 
     while (!Window::isShouldClose()) {
         float currentTime = glfwGetTime();
@@ -176,7 +169,6 @@ int main() {
             camera->rotation = mat4(1.0f);
             camera->rotate(camY, camX, 0);
         }
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         voxshader->use();
@@ -185,9 +177,25 @@ int main() {
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
 
         appleobj->draw();
-        // nullobj->draw();
-        
+        vec3 end;
+        vec3 norm;
+        vec3 iend;
+        if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
+            if (appleobj->raycast(camera->getPosition(), camera->front, 10.0f, end, norm, iend) ) {
+                //std::cout << "Obj" << std::endl;
+                //chunks->set((int)(iend.x)+(int)(norm.x), (int)(iend.y)+(int)(norm.y), (int)(iend.z)+(int)(norm.z), 2);
+                //objs[ind] = new GameObject(renderer, *nullvox, voxshader);
+                appleobj->setVisible(false);
+                //objs[ind]->setPosition(vec3((int)(iend.x)+(int)(norm.x), (int)(iend.y)+(int)(norm.y), (int)(iend.z)+(int)(norm.z)));
+            }
+        }
 
+        // for(int i = 0; i < ind; i++) {
+        //     objs[i]->draw();
+        // }
+
+        // std::cout << camera->getPosition().x << " " << camera->getPosition().y   << " " << camera->getPosition().z << " " << std::endl;
+        // nullobj->draw();
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);    
@@ -196,13 +204,14 @@ int main() {
     }
 
     Window::exit();
+    
     delete voxshader;
     delete crosshairShader;
 
     delete applevox;
 
-    delete effect;
     delete effect1;
+    //delete[] objs;
 
     //delete appleobj;
     //delete apple1obj;

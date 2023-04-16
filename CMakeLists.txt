@@ -43,6 +43,15 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
+find_package(Freetype REQUIRED)
+if(NOT Freetype_FOUND)
+	message(SEND_ERROR "Failed to find FreeType2")
+	return()
+else()
+	include_directories(${FREETYPE_INCLUDE_DIRS})
+endif()
+
+
 find_package(PNG REQUIRED)
 if(NOT PNG_FOUND)
 	message(SEND_ERROR "Failed to find PNG")
@@ -84,4 +93,5 @@ ${PNG_LIBRARY}
 ${GLEW_LIBRARIES}
 ${OPENGL_gl_LIBRARY}
 ${GLU_LIBRARY}
+${FREETYPE_LIBRARIES}
 )

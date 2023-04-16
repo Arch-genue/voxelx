@@ -7,12 +7,6 @@ class Mesh;
 class Shader;
 class Renderer;
 
-// Создаем структуру Ray, чтобы представить луч
-struct Ray {
-    glm::vec3 origin;
-    glm::vec3 direction;
-};
-
 class GameObject {
     //?OBJECTS
     Renderer* render;
@@ -34,6 +28,7 @@ class GameObject {
     float impulseTime;
 
     //?PROPERTIES
+    bool visible;
     float mass;
     bool collider;
 public:
@@ -51,6 +46,8 @@ public:
     void setScale(glm::vec3 scalevec);
     glm::mat4 getMatrix();
 
+    void setVisible(bool vis);
+
     void draw();
     void updatePhysics(float deltaTime);
 
@@ -61,6 +58,6 @@ public:
     void setVoxelState(uint8_t i, bool state);
     bool getVoxel(glm::vec3 pos);
 
-    bool testraycast(glm::vec3 rayOrigin, glm::vec3 rayDirection, float maxDistance);
-    bool rayCast(glm::vec3 a, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
+    bool simpleRaycast(glm::vec3 rayOrigin, glm::vec3 rayDirection, float maxDistance);
+    bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 };

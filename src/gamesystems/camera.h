@@ -19,6 +19,7 @@ public:
 
     void rotate(float x, float y, float z);
 
+    vec3 getPosition();
     mat4 getProjection();
     mat4 getView();
 };

@@ -21,6 +21,10 @@ void Camera::rotate(float x, float y, float z) {
     updateVectors();
 }
 
+vec3 Camera::getPosition() {
+    return position*10.0f;
+}
+
 mat4 Camera::getProjection() {
     float aspect = (float)Window::width / (float)Window::height;
     return glm::perspective(fov, aspect, 0.1f, 100.0f);

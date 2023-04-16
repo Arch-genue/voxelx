@@ -1,9 +1,9 @@
 #include "renderer.h"
 #include "mesh.h"
-//#include "../voxels/chunk.h"
 #include "../voxels/voxel.h"
-#include <iostream>
 #include <glm/glm.hpp>
+
+#include <iostream>
 
 #define VERTEX_SIZE (3 + 4 + 1)
 int chunk_attrs[] = {3,4,1, 0};
@@ -23,97 +23,113 @@ int chunk_attrs[] = {3,4,1, 0};
 					buffer[INDEX+7] = (L);\
 					INDEX += VERTEX_SIZE;
 
-Renderer::Renderer(size_t capacity) : capacity(capacity) {
+Renderer::Renderer(size_t capacity, int shaderscount, int meshescount) : capacity(capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
+	shaders = new Shader*[shaderscount];
+	meshes = new Mesh*[meshescount];
+
+	_shaderindex = 0;
 }
 
 Renderer::~Renderer() {
 	delete[] buffer;
+	delete[] shaders;
+	delete[] meshes;
 }
 
-Mesh* Renderer::voxelRender(voxel_m* voxel) {
-	size_t index = 0;
-	float x, y, z;
+void Renderer::addShader(Shader* shader) {
+	shaders[_shaderindex] = shader;
+	_shaderindex++;
+}
 
-	glm::vec4 clr;
-	float l = 1.0f;
+void Renderer::addMesh(Mesh* mesh) {
+	meshes[_meshindex] = mesh;
+	_meshindex++;
+}
 
-	x = voxel->position.x;
-	y = voxel->position.y;
-	z = voxel->position.z;
-	clr = voxel->clr;
+// Mesh* Renderer::voxelRender(voxel_m* voxel) {
+// 	size_t index = 0;
+// 	float x, y, z;
 
-	//* 0.5f 0.5f 0.0f 1.0f -- vomit
-	//* 0.3f 0.3f 1.0f 0.5f -- water
-	//* 0.3f 0.7f 1.0f 0.5f -- water2
+// 	glm::vec4 clr;
+// 	float l = 1.0f;
+
+// 	x = voxel->position.x;
+// 	y = voxel->position.y;
+// 	z = voxel->position.z;
+// 	clr = voxel->clr;
+
+// 	//* 0.5f 0.5f 0.0f 1.0f -- vomit
+// 	//* 0.3f 0.3f 1.0f 0.5f -- water
+// 	//* 0.3f 0.7f 1.0f 0.5f -- water2
 	
-	//? Y
-	if (!IS_BLOCKED(x,y+1,z)) {
-		l = 1.0f;
-		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 	//? Y
+// 	if (!IS_BLOCKED(x,y+1,z)) {
+// 		l = 1.0f;
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
 
-		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-	} 
-	if (!IS_BLOCKED(x,y-1,z)) {
-		l = 0.75f;
-		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 	} 
+// 	if (!IS_BLOCKED(x,y-1,z)) {
+// 		l = 0.75f;
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
 
-		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-	}
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 	}
 
-	//? X
-	if (!IS_BLOCKED(x+1,y,z)) {
-		l = 0.95f;
-		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 	//? X
+// 	if (!IS_BLOCKED(x+1,y,z)) {
+// 		l = 0.95f;
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
 
-		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-	}
-	if (!IS_BLOCKED(x-1,y,z)) {
-		l = 0.85f;
-		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 	}
+// 	if (!IS_BLOCKED(x-1,y,z)) {
+// 		l = 0.85f;
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
 
-		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
-	}
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 	}
 
-	//? Z
-	if (!IS_BLOCKED(x,y,z+1)) {
-		l = 0.9f;
-		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 	//? Z
+// 	if (!IS_BLOCKED(x,y,z+1)) {
+// 		l = 0.9f;
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
 
-		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
-	}
-	if (!IS_BLOCKED(x,y,z-1)) {
-		l = 0.8f;
-		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
+// 	}
+// 	if (!IS_BLOCKED(x,y,z-1)) {
+// 		l = 0.8f;
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
 
-		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
-		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
-	}
-	return new Mesh(nullptr, buffer, index / VERTEX_SIZE, chunk_attrs);
-}
+// 		VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
+// 		VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
+// 	}
+// 	return new Mesh(nullptr, buffer, index / VERTEX_SIZE, chunk_attrs);
+// }
 
 Mesh* Renderer::render(_voxels* voxels) {
 	size_t index = 0;
@@ -129,10 +145,6 @@ Mesh* Renderer::render(_voxels* voxels) {
 		y = voxels->voxels[i].position.y;
 		z = voxels->voxels[i].position.z;
 		clr = voxels->voxels[i].clr;
-
-		//* 0.5f 0.5f 0.0f 1.0f -- vomit
-		//* 0.3f 0.3f 1.0f 0.5f -- water
-		//* 0.3f 0.7f 1.0f 0.5f -- water2
 		
 		//? Y
 		if (!IS_BLOCKED(x,y+1,z)) {
