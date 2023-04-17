@@ -130,7 +130,7 @@ int main() {
 
     GameObject* floorobj = new GameObject(renderer, "floor");
     floorobj->setCollision(SIMPLE_COLLISION);
-    floorobj->setPosition(vec3(-50, -1, -50));
+    floorobj->setPosition(vec3(-500, -1, -500));
 
     GameObject* nullobj = new GameObject(renderer, "null");
     nullobj->setPosition(vec3(15,0,0));
@@ -177,10 +177,16 @@ int main() {
         if (Input::jpressed(GLFW_KEY_ESCAPE)) Window::setShouldClose(true);
         if (Input::jpressed(GLFW_KEY_TAB)) Input::toggleCursor();
 
-        if (Input::pressed(GLFW_KEY_W)) { appleobj->translate(1.0f * speed, vec3(1, 0, 0)); camera->position += camera->front * deltaTime * speed; }
+        if (Input::pressed(GLFW_KEY_W)) camera->position += camera->front * deltaTime * speed;
         if (Input::pressed(GLFW_KEY_S)) camera->position -= camera->front * deltaTime * speed;
         if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
         if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
+        
+        if (Input::pressed(GLFW_KEY_UP)) appleobj->translate(-1.0f, vec3(1, 0, 0));
+        if (Input::pressed(GLFW_KEY_DOWN)) appleobj->translate(1.0f, vec3(1, 0, 0));
+        if (Input::pressed(GLFW_KEY_LEFT)) appleobj->translate(1.0f, vec3(0, 0, 1));
+        if (Input::pressed(GLFW_KEY_RIGHT)) appleobj->translate(-1.0f, vec3(0, 0, 1));
+        if (Input::jpressed(GLFW_KEY_SPACE)) appleobj->applyForce(vec3(0, 5000.0f, 0));
 
         if (Input::_cursor_locked) {
             cam.x += -Input::deltaX / Window::height; 
