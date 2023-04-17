@@ -9,7 +9,8 @@ public:
 
     static GLFWwindow * window;
     static int init(int width, int height, const char * title);
-    static void glInit();
+    static void _glInit();
+    static void _glClear();
     static void exit();
 
     static void setCursorMode(int mode);

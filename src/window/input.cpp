@@ -29,7 +29,7 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mode) {
-    if ( action == GLFW_PRESS) {
+    if ( action == GLFW_PRESS ) {
         Input::_keys[_MOUSE_BUTTONS + button] = true;
         Input::_frames[_MOUSE_BUTTONS + button] = Input::_current;
     } else if ( action == GLFW_PRESS) {

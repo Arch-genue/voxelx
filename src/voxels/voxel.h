@@ -21,14 +21,14 @@ struct _voxels {
     glm::vec3 m_size;
 };
 
-class Model {
-public:    
-    Model();
-    ~Model();
+// class Model {
+// public:    
+//     Model();
+//     ~Model();
 
-    void draw();
-private:
-    void load_vox(std::string filename);
-};
+//     void draw();
+// private:
+//     void load_vox(std::string filename);
+// };
 
 extern _voxels* load_model(std::string filename, const char* type);

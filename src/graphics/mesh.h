@@ -13,6 +13,7 @@ class Mesh {
     _voxels* voxels;
 public:
     Mesh(_voxels* voxs, const float* buffer, size_t vertices, const int* attrs);
+    Mesh(const float* buffer, size_t vertices, const int* attrs);
     ~Mesh();
 
     void draw(unsigned int primitive);

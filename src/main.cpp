@@ -1,3 +1,10 @@
+/*
+Voxel3D Engine 2023
+
+
+C++, OpenGL
+*/
+
 #include <iostream>
 
 #define GLEW_STATIC
@@ -10,7 +17,6 @@ using namespace glm;
 
 #include "window/window.h"
 #include "window/input.h"
-#include "gamesystems/camera.h"
 
 #include "graphics/shader.h"
 #include "graphics/texture.h"
@@ -22,6 +28,7 @@ using namespace glm;
 #include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
+#include "gamesystems/camera.h"
 #include "gamesystems/gameobject.h"
 #include "gamesystems/entity.h"
 
@@ -34,29 +41,15 @@ using namespace glm;
 int WIDTH = 800;
 int HEIGHT = 600;
 
-//Crosshair
-float vertices[] = {
-    //x     y
-    0.0f,-0.02f,
-    0.0f, 0.02f,
-
-    -0.015f, 0.0f,
-    0.015f,0.0f,
-};
-
-int attrs[2] = {
-	2,  0 //null terminator
-};
-
 int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D");
     Input::init();
 
     //TODO ResourceLoader
-    ResourceLoader::setPath("../res/");
-    ResourceLoader::loadShaders();
-    ResourceLoader::loadTextures();
-    ResourceLoader::loadModels();
+    // ResourceLoader::setPath("../res/");
+    // ResourceLoader::loadShaders();
+    // ResourceLoader::loadTextures();
+    // ResourceLoader::loadModels();
 
     Shader* voxshader = load_shader("../res/shaders/voxel.glslv", "../res/shaders/voxel.glslf");
     if (voxshader == nullptr) {
@@ -64,15 +57,18 @@ int main() {
         Window::exit();
         return 1;
     }
-
-    //Shader* fontshader = load_shader("../res/shaders/font.glslv", "../res/shaders/font.glslf");
-
     Shader* crosshairShader = load_shader("../res/shaders/crosshair.glslv", "../res/shaders/crosshair.glslf");
     if (crosshairShader == nullptr) {
         std::cerr << "Failed to load crosshair shader\n";
         Window::exit();
         return 1;
     }
+    // Shader* fontshader = load_shader("../res/shaders/font.glslv", "../res/shaders/font.glslf");
+    // if (fontshader == nullptr) {
+    //     std::cerr << "Failed to load font shader\n";
+    //     Window::exit();
+    //     return 1;
+    // }
 
     _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt");
 
@@ -109,8 +105,8 @@ int main() {
     vox.visible = true;
     nullvox->voxels.push_back(vox);
 
-    Renderer* renderer = new Renderer(1024*1024*10, 100, 100);
-    renderer->addShader(voxshader); // 0
+    Renderer* renderer = new Renderer(1024 * 1024 * 10, 100, 100);
+    renderer->addShader(voxshader);       // 0
     renderer->addShader(crosshairShader); // 1
 
     renderer->addRowModel("null", nullvox);
@@ -118,60 +114,58 @@ int main() {
 
     GameObject* nullobj = new GameObject(renderer, "null");
     nullobj->setPosition(vec3(15,0,0));
-
     GameObject* appleobj = new GameObject(renderer, "apple");
 
-    Window::glInit();
+    Window::_glInit();
 
-    Mesh* crosshair = new Mesh(new _voxels, vertices, 4, attrs);
+    //? Crosshair
+    float vertices[] = {
+        //x     y
+        0.0f,-0.02f,
+        0.0f, 0.02f,
+
+        -0.015f, 0.0f,
+        0.015f,0.0f,
+    };
+    int attrs[2] = { 2,  0 };
+    Mesh* crosshair = new Mesh(vertices, 4, attrs);
     Camera* camera = new Camera(vec3(3, 0, 0), radians(70.0f));
+
+    //!TESTING PARTICLES
+    //VoxelParticles** effects = new VoxelParticles*[50];
+    for (int i = 0; i < 50; i++) {
+        //effects[i] = new VoxelParticles(renderer, EFFECT_FLAME, 20);
+        //effects[i]->setPosition(vec3(i*10.0f, 20.0f, 30.0f));
+    }
+
+    VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
+    effect1->setPosition(vec3(4.0f, 13.5f, 1.5f));
 
     float lastTime = glfwGetTime();
     float deltaTime = 0.0f;
-
     vec2 cam(0.0f, 0.0f);
-
     float speed = 5;
-
-    //!TESTING PARTICLES
-    VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
-    effect1->setPosition(vec3(4.0f, 20.0f, 4.0f));
-
     while (!Window::isShouldClose()) {
-        float currentTime = glfwGetTime();
-        deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
+        deltaTime = glfwGetTime() - lastTime;
+        lastTime = glfwGetTime();
 
-        if (Input::jpressed(GLFW_KEY_ESCAPE)) {
-            Window::setShouldClose(true);
-        }
-        if (Input::jpressed(GLFW_KEY_TAB)) {
-            Input::toggleCursor();
-        }
-        
-        if (Input::pressed(GLFW_KEY_W)) {
-            camera->position += camera->front * deltaTime * speed;
-        }
-        if (Input::pressed(GLFW_KEY_S)) {
-            camera->position -= camera->front * deltaTime * speed;
-        }
-        if (Input::pressed(GLFW_KEY_A)) {
-            camera->position -= camera->right * deltaTime * speed;
-        }
-        if (Input::pressed(GLFW_KEY_D)) {
-            camera->position += camera->right * deltaTime * speed;
-        }
+        if (Input::jpressed(GLFW_KEY_ESCAPE)) Window::setShouldClose(true);
+        if (Input::jpressed(GLFW_KEY_TAB)) Input::toggleCursor();
+
+        if (Input::pressed(GLFW_KEY_W)) camera->position += camera->front * deltaTime * speed;
+        if (Input::pressed(GLFW_KEY_S)) camera->position -= camera->front * deltaTime * speed;
+        if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
+        if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
 
         if (Input::_cursor_locked) {
-            cam.x += -Input::deltaX / Window::height;
-            cam.y += -Input::deltaY / Window::height;
+            cam.x += -Input::deltaX / Window::height; cam.y += -Input::deltaY / Window::height;
             if (cam.y < -radians(89.0f)) cam.y = -radians(89.0f);
             if (cam.y > radians(89.0f)) cam.y = radians(89.0f);
 
             camera->rotation = mat4(1.0f);
             camera->rotate(cam, 0);
         }
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        Window::_glClear();
 
         voxshader->use();
         
@@ -179,10 +173,18 @@ int main() {
         voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
 
         appleobj->draw();
-        vec3 end;
-        vec3 norm;
-        vec3 iend;
+
+        //TODO PARTICLES!!!
+        for (int i = 0; i < 50; i++) {
+            //effects[i] = new VoxelParticles(renderer, EFFECT_FLAME, 20);
+            //effects[i]->setPosition(vec3(i*10.0f, 20.0f, 30.0f));
+            //effects[i]->draw(deltaTime);
+        }
+
         if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
+            vec3 end;
+            vec3 norm;
+            vec3 iend;
             if (appleobj->raycast(camera->getPosition(), camera->front, 10.0f, end, norm, iend) ) {
                 //std::cout << "Obj" << std::endl;
                 //chunks->set((int)(iend.x)+(int)(norm.x), (int)(iend.y)+(int)(norm.y), (int)(iend.z)+(int)(norm.z), 2);
@@ -191,7 +193,6 @@ int main() {
                 //objs[ind]->setPosition(vec3((int)(iend.x)+(int)(norm.x), (int)(iend.y)+(int)(norm.y), (int)(iend.z)+(int)(norm.z)));
             }
         }
-
         // std::cout << camera->getPosition().x << " " << camera->getPosition().y   << " " << camera->getPosition().z << " " << std::endl;
         // nullobj->draw();
 
@@ -214,7 +215,8 @@ int main() {
 
     delete nullobj;
     delete appleobj;
-    
+
     delete renderer;
+
     return 0;
 }

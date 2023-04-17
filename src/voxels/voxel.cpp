@@ -22,12 +22,12 @@ void split(std::string* bufstr, std::string str, char separator) {
 }
 
 //TODO !!!!!!!!!!!
-Model::Model() {
+// Model::Model() {
 
-}
-Model::~Model() {
-    //delete voxels;
-}
+// }
+// Model::~Model() {
+//     //delete voxels;
+// }
 
 _voxels* load_model(std::string filename, const char* type) {
     std::ifstream in(filename);

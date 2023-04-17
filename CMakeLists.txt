@@ -42,6 +42,7 @@ set(HEADER
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(OpenGL_GL_PREFERENCE GLVND)
 
 find_package(Freetype REQUIRED)
 if(NOT Freetype_FOUND)

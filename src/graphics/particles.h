@@ -34,7 +34,7 @@ class VoxelParticles {
     Mesh* mesh;
     _voxels* voxels;
     
-    //? 
+    //? Properties
     glm::vec3 m_gravity;
     glm::vec3 m_position;
     float m_size;

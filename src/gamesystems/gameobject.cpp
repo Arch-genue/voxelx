@@ -11,9 +11,6 @@
 GameObject::GameObject(Renderer* rndr, const char* model) {
     //
     renderer = rndr;
-    //_voxels* voxs = new _voxels;
-	//voxs->voxels = voxels.voxels;
-	//voxs->m_size = voxels.m_size;
 	
     //
     modelmatrix = glm::mat4(1.0f);;

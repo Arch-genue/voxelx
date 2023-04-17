@@ -8,11 +8,11 @@ class Shader;
 class Renderer;
 
 class GameObject {
-    //?OBJECTS
+    //? OBJECTS
     Renderer* renderer;
     Mesh* mesh;
 
-    //?POSITIONS
+    //? POSITIONS
     glm::mat4 modelmatrix;
     glm::vec3 position;
     glm::vec3 lastposition;
@@ -26,7 +26,7 @@ class GameObject {
     glm::vec3 impulse;
     float impulseTime;
 
-    //?PROPERTIES
+    //? PROPERTIES
     bool visible;
     float mass;
     bool collider;
