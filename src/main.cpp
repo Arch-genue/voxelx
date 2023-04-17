@@ -19,13 +19,13 @@ using namespace glm;
 #include "window/input.h"
 
 #include "graphics/shader.h"
-#include "graphics/texture.h"
+//#include "graphics/texture.h"
 #include "graphics/mesh.h"
 #include "graphics/renderer.h"
 #include "graphics/particles.h"
 
 #include "loaders/resourceloader.h"
-#include "loaders/png_loading.h"
+//#include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
 #include "gamesystems/camera.h"
@@ -177,7 +177,7 @@ int main() {
         if (Input::jpressed(GLFW_KEY_ESCAPE)) Window::setShouldClose(true);
         if (Input::jpressed(GLFW_KEY_TAB)) Input::toggleCursor();
 
-        if (Input::pressed(GLFW_KEY_W)) camera->position += camera->front * deltaTime * speed;
+        if (Input::pressed(GLFW_KEY_W)) { appleobj->translate(1.0f * speed, vec3(1, 0, 0)); camera->position += camera->front * deltaTime * speed; }
         if (Input::pressed(GLFW_KEY_S)) camera->position -= camera->front * deltaTime * speed;
         if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
         if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
@@ -215,7 +215,8 @@ int main() {
         }
 
         if (Input::jclicked(GLFW_MOUSE_BUTTON_2)) {
-            floorobj->translate(-15.0f, vec3(0, 1, 0));
+            //floorobj->translate(-15.0f, vec3(0, 1, 0));
+            appleobj->setPosition(vec3(0, 100, 0));
         }
         if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
             appleobj->translate(1.0f, vec3(0, 1, 0));

@@ -60,7 +60,7 @@ void GameObject::draw() {
 void GameObject::setCollision(_collision coll) {
 	switch(coll) {
 		case NO_COLLISION: _boundbox_size = glm::vec3(0, 0, 0); break;
-		case SIMPLE_COLLISION: 
+		case SIMPLE_COLLISION:
 			glm::vec3 sizes = mesh->getVoxels()->m_size;
 			_boundbox_size = glm::vec3(sizes.x, sizes.y, sizes.z);
 			bbox.min = getPosition()-0.5f;
