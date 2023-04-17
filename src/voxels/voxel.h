@@ -19,6 +19,7 @@ struct voxel_m {
 struct _voxels {
     std::vector<voxel_m> voxels;
     glm::vec3 m_size;
+    std::string renderSide;
 };
 
 // class Model {

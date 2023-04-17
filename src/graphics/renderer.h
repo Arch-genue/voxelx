@@ -3,9 +3,11 @@
 #include "stdlib.h"
 #include <string>
 #include <map>
+#include "../gamesystems/camera.h"
 
 class Mesh;
 class Shader;
+class Camera;
 
 class _voxels;
 class voxel_m;
@@ -21,6 +23,8 @@ class Renderer {
 	Mesh** meshes;
 
 	std::map<std::string, _voxels*> rowmodels;
+
+	Camera* camera;
 	
 	// _voxels** rowmodels;
 	// std::string modelnames;
@@ -31,10 +35,13 @@ public:
 	void addShader(Shader* shader);
 	void addRowModel(std::string name, _voxels* row);
 	void addMesh(Mesh* mesh);
+	void addCamera(Camera* cam);
 
 	Mesh* render(_voxels* voxels=nullptr);
 	Mesh* voxelRender(voxel_m* voxel);
 
 	Shader* getDefaultShader();
+	Shader* getBBOXShader();
 	_voxels* getRowModel(const char* model);
+	Camera* getCamera();
 };

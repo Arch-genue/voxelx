@@ -49,11 +49,17 @@ void Renderer::addMesh(Mesh* mesh) {
 	meshes[_meshindex] = mesh;
 	_meshindex++;
 }
+void Renderer::addCamera(Camera* cam) {
+	camera = cam;
+}
 
 Mesh* Renderer::render(_voxels* voxels) {
 	size_t index = 0;
 	float x, y, z, l;
 	glm::vec4 clr;
+	bool side[6]; //! top, bottom, left, right, front, back
+	
+	for(uint8_t i = 0; i < 6; i++) side[i] = false;
 
 	for (size_t i = 0; i < voxels->voxels.size(); i++) {
 		if (!voxels->voxels[i].visible) continue;
@@ -62,9 +68,17 @@ Mesh* Renderer::render(_voxels* voxels) {
 		y = voxels->voxels[i].position.y;
 		z = voxels->voxels[i].position.z;
 		clr = voxels->voxels[i].clr;
+
+		if (voxels->renderSide == "") {
+			for(uint8_t i = 0; i < 6; i++) side[i] = true;
+		} else if(voxels->renderSide == "top") {
+			side[0] = true;
+		}
+
+		//std::cout << voxels->renderSide << std::endl;
 		
 		//? Y
-		if (!IS_BLOCKED(x,y+1,z)) {
+		if (!IS_BLOCKED(x,y+1,z) && side[0] == true) {
 			l = 1.0f;
 			VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
 			VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
@@ -74,7 +88,7 @@ Mesh* Renderer::render(_voxels* voxels) {
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
 		} 
-		if (!IS_BLOCKED(x,y-1,z)) {
+		if (!IS_BLOCKED(x,y-1,z) && side[1] == true) {
 			l = 0.75f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
 			VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
@@ -86,7 +100,7 @@ Mesh* Renderer::render(_voxels* voxels) {
 		}
 
 		//? X
-		if (!IS_BLOCKED(x+1,y,z)) {
+		if (!IS_BLOCKED(x+1,y,z) && side[2] == true) {
 			l = 0.95f;
 			VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr,l);
@@ -96,7 +110,7 @@ Mesh* Renderer::render(_voxels* voxels) {
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
 			VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
 		}
-		if (!IS_BLOCKED(x-1,y,z)) {
+		if (!IS_BLOCKED(x-1,y,z) && side[3] == true) {
 			l = 0.85f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
 			VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr,l);
@@ -108,7 +122,7 @@ Mesh* Renderer::render(_voxels* voxels) {
 		}
 
 		//? Z
-		if (!IS_BLOCKED(x,y,z+1)) {
+		if (!IS_BLOCKED(x,y,z+1) && side[4] == true) {
 			l = 0.9f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
@@ -118,7 +132,7 @@ Mesh* Renderer::render(_voxels* voxels) {
 			VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr,l);
 			VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr,l);
 		}
-		if (!IS_BLOCKED(x,y,z-1)) {
+		if (!IS_BLOCKED(x,y,z-1) && side[5] == true) {
 			l = 0.8f;
 			VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr,l);
 			VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr,l);
@@ -135,6 +149,12 @@ Mesh* Renderer::render(_voxels* voxels) {
 Shader* Renderer::getDefaultShader() {
 	return shaders[0];		
 }
+Shader* Renderer::getBBOXShader() {
+	return shaders[2];		
+}
 _voxels* Renderer::getRowModel(const char* model) {
 	return rowmodels[model];
+}
+Camera* Renderer::getCamera() {
+	return camera;
 }

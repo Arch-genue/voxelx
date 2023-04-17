@@ -20,10 +20,10 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
     scaling = glm::vec3(0.1f);
 
     setVisible(true);
+	setCollision(NO_COLLISION);
 
     //
     mass = 100; //100Kg
-    collider = true; //Solid
 
     velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -42,10 +42,62 @@ void GameObject::draw() {
     //glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
     //modelmatrix = modelmatrix * rotateMatrix;
 
+	renderer->getDefaultShader()->use();
+	renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
     renderer->getDefaultShader()->uniformMatrix("model", modelmatrix);
     mesh->draw(GL_TRIANGLES);
 
+	if (collision == SIMPLE_COLLISION) {
+		renderer->getBBOXShader()->use();
+        renderer->getBBOXShader()->uniformMatrix("projview", renderer->getCamera()->getProjection() * renderer->getCamera()->getView());
+		renderer->getBBOXShader()->uniformMatrix("model", modelmatrix);
+		_boundingbox->draw(GL_LINES);
+	}
+
     modelmatrix = glm::mat4(1.0f);
+}
+
+void GameObject::setCollision(_collision coll) {
+	switch(coll) {
+		case NO_COLLISION: _boundbox_size = glm::vec3(0, 0, 0); break;
+		case SIMPLE_COLLISION: 
+			glm::vec3 sizes = mesh->getVoxels()->m_size;
+			_boundbox_size = glm::vec3(sizes.x, sizes.y, sizes.z);
+			bbox.min = getPosition()-0.5f;
+			bbox.max = _boundbox_size-0.5f;
+			float vertices[] = {
+				//x     y
+				getPosition().x-0.5f, -0.5f, -0.5f,
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+
+				
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+				_boundbox_size.x-0.5f, -0.5f, -0.5f,
+
+				getPosition().x-0.5f, -0.5f, _boundbox_size.z-0.5f,
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
+
+				
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
+				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
+			};
+			int attrs[2] = { 3,  0 };
+			_boundingbox = new Mesh(vertices, 8, attrs);
+		break;
+	}
+	collision = coll;
+}
+
+//TODO SIMPLE COLLISION
+glm::ivec3 GameObject::CheckCollision(BOUNDINGBOX b) {
+	glm::ivec3 collisionside(1);
+	if (bbox.max.x < b.min.x || bbox.min.x > b.max.x) collisionside.x = 0;
+	if (bbox.max.y < b.min.y || bbox.min.y > b.max.y) collisionside.y = 0;
+	if (bbox.max.z < b.min.z || bbox.min.z > b.max.z) collisionside.z = 0;
+	return collisionside;
+}
+BOUNDINGBOX GameObject::getBBOX() {
+	return bbox;
 }
 
 void GameObject::setImpulse(glm::vec3 force) {
@@ -58,31 +110,50 @@ void GameObject::applyForce(glm::vec3 force) {
 }
 
 void GameObject::updatePhysics(float deltaTime) {
-	velocity += acceleration * 500.0f * deltaTime;
-	position += velocity;
+	bbox.min = position;
+	bbox.max = _boundbox_size+position;
+
+	velocity += acceleration * 10.0f * deltaTime;
+	
 	acceleration = glm::vec3(0.0f);
-	if (position == lastposition) return;
-	_voxels* voxels = mesh->getVoxels();
+	
+	position += velocity;
+	//if (position == lastposition) return;
+	//_voxels* voxels = mesh->getVoxels();
 
-	for (size_t i = 0; i < voxels->voxels.size(); i++) {
-		voxels->voxels.at(i).position += velocity*deltaTime;
-	}
-	//delete mesh;
+	// for (size_t i = 0; i < voxels->voxels.size(); i++) {
+	// 	voxels->voxels.at(i).position += velocity*deltaTime;
+	// }
+	// //delete mesh;
 
-	mesh = renderer->render(voxels);
+	// mesh = renderer->render(voxels);
 	lastposition = position;
+}
+
+glm::vec3 GameObject::getVelocity() {
+	return velocity;
+}
+glm::vec3 GameObject::getAcceleration() {
+	return acceleration;
+}
+
+void GameObject::setVelocity(glm::vec3 vel) {
+	velocity = vel;
+}
+void GameObject::setAcceleration(glm::vec3 accel) {
+	acceleration = accel;
 }
 
 void GameObject::translate(float val, glm::vec3 vec) {
 	position += vec*val;
-	_voxels* voxels = mesh->getVoxels();
+	// _voxels* voxels = mesh->getVoxels();
 
-	for (size_t i = 0; i < voxels->voxels.size(); i++) {
-		voxels->voxels.at(i).position += position;
-	}
+	// for (size_t i = 0; i < voxels->voxels.size(); i++) {
+	// 	voxels->voxels.at(i).position += position;
+	// }
 	//delete mesh;
 
-	mesh = renderer->render(voxels);
+	//mesh = renderer->render(voxels);
 }
 
 void GameObject::rotate(float angle, glm::vec3 rot) {

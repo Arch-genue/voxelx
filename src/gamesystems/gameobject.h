@@ -7,6 +7,13 @@ class Mesh;
 class Shader;
 class Renderer;
 
+struct BOUNDINGBOX {
+    glm::vec3 min;
+    glm::vec3 max;
+};
+
+enum _collision {NO_COLLISION, SIMPLE_COLLISION};
+
 class GameObject {
     //? OBJECTS
     Renderer* renderer;
@@ -29,7 +36,12 @@ class GameObject {
     //? PROPERTIES
     bool visible;
     float mass;
-    bool collider;
+
+    //? Collision
+    _collision collision;
+    glm::vec3 _boundbox_size;
+    Mesh* _boundingbox;
+    BOUNDINGBOX bbox;
 public:
     GameObject(Renderer* rndr, const char* model);
     ~GameObject();
@@ -50,6 +62,13 @@ public:
     void draw();
     void updatePhysics(float deltaTime);
 
+    void setCollision(_collision coll);
+
+    void setVelocity(glm::vec3 vel);
+    void setAcceleration(glm::vec3 accel);
+    glm::vec3 getVelocity();
+    glm::vec3 getAcceleration();
+
     void setImpulse(glm::vec3 force);
     void applyForce(glm::vec3 force);
 
@@ -59,4 +78,7 @@ public:
 
     bool simpleRaycast(glm::vec3 rayOrigin, glm::vec3 rayDirection, float maxDistance);
     bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
+
+    glm::ivec3 CheckCollision(BOUNDINGBOX b);
+    BOUNDINGBOX getBBOX();
 };
