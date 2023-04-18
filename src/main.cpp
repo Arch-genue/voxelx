@@ -80,23 +80,50 @@ int main() {
 
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<float> clr_generator(0.1f, 0.9f);
-    _voxels* wallvox = new _voxels;
-    wallvox->m_size = vec3(30, 50, 30);
+    _voxels* wallvoxleft = new _voxels;
+    wallvoxleft->m_size = vec3(1, 50, 70);
+    wallvoxleft->renderSide = "right";
     float clr;
-    for (size_t y = 0; y < wallvox->m_size.y; y++) {
-        for (size_t z = 0; z < wallvox->m_size.z; z++) {
-            for (size_t x = 0; x < wallvox->m_size.x; x++) {
+    for (size_t y = 0; y < wallvoxleft->m_size.y; y++) {
+        for (size_t z = 0; z < wallvoxleft->m_size.z; z++) {
+            for (size_t x = 0; x < wallvoxleft->m_size.x; x++) {
                 voxel_m vox;
                 clr = clr_generator(rng);
                 vox.position = vec3(x, y, z);
                 vox.clr = vec4(clr, clr, clr, 1.0f);
                 vox.visible = false;
                 if (
-                    ( x == 0 || x == wallvox->m_size.x-1 ) ||
-                    ( y == 0 || y == wallvox->m_size.y-1 ) ||
-                    ( z == 0 || z == wallvox->m_size.z-1 )
+                    ( x == 0 || x == wallvoxleft->m_size.x-1 ) ||
+                    ( y == 0 || y == wallvoxleft->m_size.y-1 ) ||
+                    ( z == 0 || z == wallvoxleft->m_size.z-1 )
                 ) vox.visible = true;
-                wallvox->voxels.push_back(vox);
+                wallvoxleft->voxels.push_back(vox);
+            }
+        }
+    }
+
+    _voxels* wallvoxright = new _voxels;
+    wallvoxright->m_size = vec3(1, 50, 70);
+    wallvoxright->renderSide = "left";
+    wallvoxright->voxels = wallvoxleft->voxels;
+
+    _voxels* wallvoxtop = new _voxels;
+    wallvoxtop->m_size = vec3(50, 1, 70);
+    wallvoxtop->renderSide = "bottom";    
+    for (size_t y = 0; y < wallvoxtop->m_size.y; y++) {
+        for (size_t z = 0; z < wallvoxtop->m_size.z; z++) {
+            for (size_t x = 0; x < wallvoxtop->m_size.x; x++) {
+                voxel_m vox;
+                clr = clr_generator(rng);
+                vox.position = vec3(x, y, z);
+                vox.clr = vec4(clr, clr, clr, 1.0f);
+                vox.visible = false;
+                if (
+                    ( x == 0 || x == wallvoxtop->m_size.x-1 ) ||
+                    ( y == 0 || y == wallvoxtop->m_size.y-1 ) ||
+                    ( z == 0 || z == wallvoxtop->m_size.z-1 )
+                ) vox.visible = true;
+                wallvoxtop->voxels.push_back(vox);
             }
         }
     }
@@ -128,6 +155,22 @@ int main() {
     renderer->addRowModel("floor", floorvox);
     renderer->addRowModel("apple", applevox);
 
+    renderer->addRowModel("wallleft", wallvoxleft);
+    renderer->addRowModel("wallright", wallvoxright);
+    renderer->addRowModel("walltop", wallvoxtop);
+
+    GameObject* wallleftobj = new GameObject(renderer, "wallleft");
+    wallleftobj->setCollision(SIMPLE_COLLISION);
+    wallleftobj->setPosition(vec3(30, 0, 0));
+    GameObject* wallrightobj = new GameObject(renderer, "wallright");
+    wallrightobj->setCollision(SIMPLE_COLLISION);
+    wallrightobj->setPosition(vec3(-20, 0, 0));
+    GameObject* walltopobj = new GameObject(renderer, "walltop");
+    walltopobj->setCollision(SIMPLE_COLLISION);
+    walltopobj->setPosition(vec3(-20, 50, 0));
+
+
+
     GameObject* floorobj = new GameObject(renderer, "floor");
     floorobj->setCollision(SIMPLE_COLLISION);
     floorobj->setPosition(vec3(-500, -1, -500));
@@ -136,7 +179,7 @@ int main() {
     nullobj->setPosition(vec3(15,0,0));
     GameObject* appleobj = new GameObject(renderer, "apple");
     appleobj->setCollision(SIMPLE_COLLISION);
-    appleobj->setPosition(vec3(0, 50, 0));
+    appleobj->setPosition(vec3(0, 50, 40));
 
     Window::_glInit();
 
@@ -198,13 +241,20 @@ int main() {
             camera->rotate(cam, 0);
         }
         Window::_glClear();
+        renderer->getDefaultShader()->use();
+	    renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
         
-        //effect1->draw(deltaTime);
-        //voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
+        effect1->draw(deltaTime);
+        voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
         
-        floorobj->draw();
+        walltopobj->draw();
+        wallleftobj->draw();
+        wallrightobj->draw();
+        
         floorobj->updatePhysics(deltaTime);
         appleobj->updatePhysics(deltaTime);
+
+        floorobj->draw();
         appleobj->draw();
 
         if (appleobj->CheckCollision(floorobj->getBBOX()).y == 0) {

@@ -73,6 +73,16 @@ Mesh* Renderer::render(_voxels* voxels) {
 			for(uint8_t i = 0; i < 6; i++) side[i] = true;
 		} else if(voxels->renderSide == "top") {
 			side[0] = true;
+		} else if(voxels->renderSide == "bottom") {
+			side[1] = true;
+		} else if(voxels->renderSide == "left") {
+			side[2] = true;
+		} else if(voxels->renderSide == "right") {
+			side[3] = true;
+		} else if(voxels->renderSide == "front") {
+			side[4] = true;
+		} else if(voxels->renderSide == "back") {
+			side[5] = true;
 		}
 
 		//std::cout << voxels->renderSide << std::endl;

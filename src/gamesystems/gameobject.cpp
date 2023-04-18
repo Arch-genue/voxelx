@@ -42,14 +42,13 @@ void GameObject::draw() {
     //glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
     //modelmatrix = modelmatrix * rotateMatrix;
 
-	renderer->getDefaultShader()->use();
-	renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
+	
     renderer->getDefaultShader()->uniformMatrix("model", modelmatrix);
     mesh->draw(GL_TRIANGLES);
 
 	if (collision == SIMPLE_COLLISION) {
-		renderer->getBBOXShader()->use();
-        renderer->getBBOXShader()->uniformMatrix("projview", renderer->getCamera()->getProjection() * renderer->getCamera()->getView());
+		//renderer->getBBOXShader()->use();
+        //renderer->getBBOXShader()->uniformMatrix("projview", renderer->getCamera()->getProjection() * renderer->getCamera()->getView());
 		renderer->getBBOXShader()->uniformMatrix("model", modelmatrix);
 		_boundingbox->draw(GL_LINES);
 	}
