@@ -3,8 +3,9 @@
 
 #include <glm/ext.hpp>
 
-Camera::Camera(vec3 position, float fov) : position(position), fov(fov), rotation(1.0f) {
+Camera::Camera(vec3 pos, float fov) : fov(fov), rotation(1.0f) {
     updateVectors();
+    position = pos;
 }
 
 void Camera::updateVectors() {
@@ -20,7 +21,9 @@ void Camera::rotate(vec2 rot, float z) {
 
     updateVectors();
 }
-
+void Camera::setPosition(vec3 pos) {
+    position = pos;
+}
 vec3 Camera::getPosition() {
     return position*10.0f;
 }

@@ -18,8 +18,10 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
     rotAngle = 0.0f;
     rotAxis = glm::vec3(1);
     scaling = glm::vec3(0.1f);
+	campos = glm::vec3(0);
 
     setVisible(true);
+	setHidden(false);
 	setCollision(NO_COLLISION);
 
     //
@@ -34,24 +36,22 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
 }
 GameObject::~GameObject() {}
 
+void GameObject::attachCamera(Camera* cam, vec3 stdpos) {
+	camera = cam;
+	campos = stdpos;
+	camera->position = getPosition() + campos;
+}
+
 void GameObject::draw() {
+	//! Move Camera with object
+	//if (camera != nullptr) camera->setPosition( (getPosition() + campos) / 10.0f );
+
     if (visible == false) return;
     modelmatrix = glm::scale(modelmatrix, scaling);
     modelmatrix = glm::translate(modelmatrix, position);
-    
-    //glm::mat4 rotateMatrix = glm::rotate(glm::mat4(1.0f), rotAngle, rotAxis);
-    //modelmatrix = modelmatrix * rotateMatrix;
 
-	
     renderer->getDefaultShader()->uniformMatrix("model", modelmatrix);
-    mesh->draw(GL_TRIANGLES);
-
-	if (collision == SIMPLE_COLLISION) {
-		//renderer->getBBOXShader()->use();
-        //renderer->getBBOXShader()->uniformMatrix("projview", renderer->getCamera()->getProjection() * renderer->getCamera()->getView());
-		renderer->getBBOXShader()->uniformMatrix("model", modelmatrix);
-		_boundingbox->draw(GL_LINES);
-	}
+    if (!hidden && visible) mesh->draw(GL_TRIANGLES);
 
     modelmatrix = glm::mat4(1.0f);
 }
@@ -117,16 +117,6 @@ void GameObject::updatePhysics(float deltaTime) {
 	acceleration = glm::vec3(0.0f);
 	
 	position += velocity;
-	//if (position == lastposition) return;
-	//_voxels* voxels = mesh->getVoxels();
-
-	// for (size_t i = 0; i < voxels->voxels.size(); i++) {
-	// 	voxels->voxels.at(i).position += velocity*deltaTime;
-	// }
-	// //delete mesh;
-
-	// mesh = renderer->render(voxels);
-	lastposition = position;
 }
 
 glm::vec3 GameObject::getVelocity() {
@@ -145,14 +135,6 @@ void GameObject::setAcceleration(glm::vec3 accel) {
 
 void GameObject::translate(float val, glm::vec3 vec) {
 	position += vec*val;
-	// _voxels* voxels = mesh->getVoxels();
-
-	// for (size_t i = 0; i < voxels->voxels.size(); i++) {
-	// 	voxels->voxels.at(i).position += position;
-	// }
-	//delete mesh;
-
-	//mesh = renderer->render(voxels);
 }
 
 void GameObject::rotate(float angle, glm::vec3 rot) {
@@ -162,14 +144,6 @@ void GameObject::rotate(float angle, glm::vec3 rot) {
 
 void GameObject::setPosition(glm::vec3 pos) {
 	position = pos;
-	// _voxels* voxels = mesh->getVoxels();
-
-	// for (size_t i = 0; i < voxels->voxels.size(); i++) {
-	// 	voxels->voxels.at(i).position += position;
-	// }
-	//delete mesh;
-
-	//mesh = render->render(voxels);
 }
 void GameObject::setRotation(float angle, glm::vec3 rot) {
     rotAngle = angle;
@@ -180,6 +154,9 @@ void GameObject::setRotation(float angle, glm::vec3 rot) {
 }
 void GameObject::setVisible(bool vis) {
     visible = vis;
+}
+void GameObject::setHidden(bool hid) {
+    hidden = hid;
 }
 
 glm::vec3 GameObject::getPosition() {

@@ -26,7 +26,7 @@ VoxelParticles::VoxelParticles(Renderer* render, _effects ptype, int bufferSize)
 
 VoxelParticles::~VoxelParticles() {
     delete voxels;
-    delete mesh;
+    //delete mesh;
 }
 
 void VoxelParticles::setType(_effects ptype) {
@@ -76,7 +76,7 @@ void VoxelParticles::setSize(float size) {
 }
 
 void VoxelParticles::draw(float deltaTime) {
-    for (size_t i = 0; i < voxels->voxels.size(); i++) { //TODO for (auto it = voxels->voxels.begin(); it != voxels->voxels.end(); it++) {
+    for (size_t i = 0; i < voxels->voxels.size(); i++) {
         if (voxels->voxels[i].lifetime >= 0.0f) {
             voxels->voxels[i].position += voxels->voxels[i].velocity * deltaTime;
             
@@ -102,10 +102,10 @@ void VoxelParticles::draw(float deltaTime) {
         }
     }
     //* DRAW
-    delete mesh;
-    mesh = renderer->render(voxels);
     renderer->getDefaultShader()->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
+    mesh = renderer->render(voxels);
     mesh->draw(GL_TRIANGLES);
+    delete mesh;
 }
 
 //? Red Flame

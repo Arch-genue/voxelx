@@ -18,6 +18,7 @@ class GameObject {
     //? OBJECTS
     Renderer* renderer;
     Mesh* mesh;
+    Camera* camera;
 
     //? POSITIONS
     glm::mat4 modelmatrix;
@@ -26,6 +27,7 @@ class GameObject {
     glm::vec3 rotAxis;
     float rotAngle;
     glm::vec3 scaling;
+    vec3 campos;
 
     //! VoxPhysics v0.0.1
     glm::vec3 velocity;
@@ -35,6 +37,7 @@ class GameObject {
 
     //? PROPERTIES
     bool visible;
+    bool hidden;
     float mass;
 
     //? Collision
@@ -58,9 +61,12 @@ public:
     glm::mat4 getMatrix();
 
     void setVisible(bool vis);
+    void setHidden(bool hid);
 
     void draw();
     void updatePhysics(float deltaTime);
+
+    void attachCamera(Camera* cam, vec3 stdpos);
 
     void setCollision(_collision coll);
 

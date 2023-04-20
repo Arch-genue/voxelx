@@ -15,10 +15,11 @@ public:
     float fov;
     mat4 rotation;
     
-    Camera(vec3 position, float fov);
+    Camera(vec3 pos, float fov);
 
     void rotate(vec2 rot, float z);
 
+    void setPosition(vec3 pos);
     vec3 getPosition();
     mat4 getProjection();
     mat4 getView();
