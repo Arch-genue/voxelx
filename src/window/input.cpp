@@ -24,6 +24,7 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
     } else {
         Input::_cursor_started = true; 
     }
+    
     Input::x = xpos;
     Input::y = ypos;
 }

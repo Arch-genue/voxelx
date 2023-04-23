@@ -32,7 +32,6 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
 
     //!CREATE MESH!
 	mesh = renderer->render(renderer->getRowModel(model));
-	//delete voxs;
 }
 GameObject::~GameObject() {}
 
@@ -44,7 +43,6 @@ void GameObject::attachCamera(Camera* cam, vec3 stdpos) {
 
 void GameObject::draw() {
 	//! Move Camera with object
-	//if (camera != nullptr) camera->setPosition( (getPosition() + campos) / 10.0f );
 
     if (visible == false) return;
     modelmatrix = glm::scale(modelmatrix, scaling);

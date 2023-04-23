@@ -20,7 +20,9 @@ public:
     static void _glClear();
     static void exit();
 
-    static void setCursorMode(int mode);
+    static void setCursorMode(SDL_bool mode);
+    static SDL_bool getCursorMode();
+
     static void toggleFullscreen();
     static bool isShouldClose(SDL_Event event);
     static void setShouldClose(bool flag);

@@ -1,6 +1,7 @@
-#include <iostream>
 #include <GL/glew.h>
 #include "newwindow.h"
+
+#include <iostream>
 
 SDL_Window* Window::window;
 SDL_GLContext Window::glContext;
@@ -19,7 +20,7 @@ int Window::init(int width, int height, const char * title) {
 		return false;
 	}
 
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == NULL) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return false;
@@ -57,8 +58,11 @@ bool Window::swapBuffers() {
     return 1;
 }
 
-void Window::setCursorMode(int mode) {
-    //glfwSetInputMode(window, GLFW_CURSOR, mode);
+void Window::setCursorMode(SDL_bool mode) {
+    SDL_SetRelativeMouseMode(mode);
+}
+SDL_bool Window::getCursorMode() {
+    return SDL_GetRelativeMouseMode();
 }
 
 void Window::toggleFullscreen() {

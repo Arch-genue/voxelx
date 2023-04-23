@@ -6,6 +6,7 @@ C++, OpenGL
 */
 
 #include <iostream>
+#include <chrono>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -18,7 +19,7 @@ C++, OpenGL
 using namespace glm;
 
 #include "window/newwindow.h"
-//#include "window/newinput.h"
+#include "window/newinput.h"
 
 #include "graphics/shader.h"
 #include "graphics/mesh.h"
@@ -34,12 +35,13 @@ using namespace glm;
 
 int WIDTH = 1024;
 int HEIGHT = 768;
+float MOUSE_SPEED = 1.3f;
 
 bool quit;
 
-int main() { // int argc, char *argv[]
+int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D Alpha");
-    //Input::init();
+    Input::init();
 
     //TODO ResourceLoader
     // ResourceLoader::setPath("../res/");
@@ -142,7 +144,9 @@ int main() { // int argc, char *argv[]
         }
     }
 
+    //! Global renderer
     Renderer* renderer = new Renderer(1024 * 1024 * 10, 100, 100);
+
     renderer->addShader(voxshader);       // 0
     renderer->addShader(crosshairShader); // 1
     renderer->addShader(bboxshader);      // 2
@@ -188,7 +192,7 @@ int main() { // int argc, char *argv[]
     };
     int attrs[2] = { 2,  0 };
     Mesh* crosshair = new Mesh(vertices, 4, attrs);
-    Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f));
+    Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f)); 
     renderer->addCamera(camera);
     appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to Apple
 
@@ -202,149 +206,125 @@ int main() { // int argc, char *argv[]
     VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
     effect1->setPosition(vec3(4.0f, 13.5f, 1.5f));
 
-    //float lastTime = glfwGetTime();
-    float lastTime = SDL_GetTicks();
-    double deltaTime = 0.0f;
+    float deltaTime = 0.0f;
     vec2 cam(0.0f, 0.0f);
     float speed = 50;
 
-    uint64 NOW = SDL_GetPerformanceCounter();
-    uint64 LAST = 0;
+    auto lastTimePoint = std::chrono::system_clock::now();
 
     Window::_glInit();
 
-    //! ===MAIN LOOP===
+    bool test = false;
+
+    //! ===MAIN-LOOP===
     quit = false;
 	while (!quit) {
-        LAST = NOW;
-        NOW = SDL_GetPerformanceCounter();
-
-        deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );// / 10000;
-
-		while (SDL_PollEvent(&Window::sdlEvent) != 0) {
-			if (Window::sdlEvent.type == SDL_QUIT) {
-				quit = true;
-			}
-		}
-        Window::_glClear();
+        auto newTimePoint = std::chrono::system_clock::now();
+        auto dtMsec = std::chrono::duration_cast<std::chrono::milliseconds>(newTimePoint - lastTimePoint);
+        lastTimePoint = newTimePoint;
+        deltaTime = 0.001f * float(dtMsec.count());
         
+		while (SDL_PollEvent(&Window::sdlEvent) != 0) {
+            Uint8 b = Window::sdlEvent.button.button;
+            int x1;int y1; SDL_GetMouseState(&x1, &y1);
+			if (Window::sdlEvent.type == SDL_QUIT) quit = true;
+            else if (Window::sdlEvent.type == SDL_WINDOWEVENT) {
+                if (Window::sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED ) Input::window_size_callback(Window::sdlEvent.window.data1, Window::sdlEvent.window.data2);
+            }
+
+            else if (Window::sdlEvent.type == SDL_MOUSEMOTION) Input::cursor_position_callback(Window::sdlEvent.motion);
+
+            else if (Window::sdlEvent.type == SDL_MOUSEBUTTONDOWN) Input::mouse_button_callback(b, 1);
+            else if (Window::sdlEvent.type == SDL_MOUSEBUTTONUP) Input::mouse_button_callback(b, 0);
+            else if (Window::sdlEvent.type == SDL_KEYDOWN) Input::key_callback(Window::sdlEvent.key.keysym.sym, 1);
+            else if (Window::sdlEvent.type == SDL_KEYUP) Input::key_callback(Window::sdlEvent.key.keysym.sym, 0);
+		}
+
+        if (Input::_cursor_locked) {
+            cam.x += -Input::deltaX*MOUSE_SPEED / Window::height; cam.y += -Input::deltaY*MOUSE_SPEED / Window::height;
+            if (cam.y < -radians(89.0f)) cam.y = -radians(89.0f);
+            if (cam.y > radians(89.0f)) cam.y = radians(89.0f);
+
+            camera->rotation = mat4(1.0f);
+            camera->rotate(cam, 0);
+        }
+
+        if (Input::jpressed(SDLK_ESCAPE)) quit = true;
+        if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
+        if (Input::pressed(SDLK_w)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(1, 0, 0));
+        if (Input::pressed(SDLK_s)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(1, 0, 0));
+        if (Input::pressed(SDLK_a)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(0, 0, 1));
+        if (Input::pressed(SDLK_d)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(0, 0, 1));
+        if (Input::jpressed(SDLK_SPACE)) { 
+            //if (!appleobj->onGround()) 
+            appleobj->applyForce(vec3(0, 20000.0f, 0)); 
+        }
+
+        if (Input::jclicked(SDL_BUTTON_RIGHT)) {
+            appleobj->setPosition(vec3(0, 100, 0));
+        }
+        if (Input::jclicked(SDL_BUTTON_LEFT)) {
+            appleobj->translate(1.0f, vec3(0, 1, 0));
+            vec3 end; vec3 norm; vec3 iend;
+            if (appleobj->raycast(camera->getPosition(), camera->front, 10.0f, end, norm, iend) ) appleobj->setVisible(false);
+        }
+
+        Window::_glClear();
 
         renderer->getDefaultShader()->use();
         renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
         
         effect1->draw(deltaTime);
 
-        // walltopobj->draw();
-        // wallleftobj->draw();
-        // wallrightobj->draw();
+        walltopobj->draw();
+        wallleftobj->draw();
+        wallrightobj->draw();
         
         floorobj->updatePhysics(deltaTime);
         appleobj->updatePhysics(deltaTime);
 
         floorobj->draw();
+        camera->setPosition( (appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f );
         appleobj->draw();
+
+        if (appleobj->CheckCollision(floorobj->getBBOX()).y == 0) {
+            appleobj->applyForce(vec3(0, -9.8, 0));
+            test = false;
+        } else {
+            appleobj->setVelocity(glm::vec3(0, 0, 0));
+            appleobj->setAcceleration(glm::vec3(0, 0, 0));
+            if (!test) {
+                appleobj->setPosition(vec3(appleobj->getPosition().x, floorobj->getBBOX().max.y, appleobj->getPosition().z));
+                test = true;
+            }
+        }
 
         crosshairShader->use();
         crosshair->draw(GL_LINES);
 
 	    Window::swapBuffers();
+        Input::pullEvents();
 	}
     Window::exit();
 
-    // while (Window::isShouldClose(event)) {
-    
-    //     // if (Input::jpressed(GLFW_KEY_ESCAPE)) Window::setShouldClose(true);
-    //     // if (Input::jpressed(GLFW_KEY_TAB)) Input::toggleCursor();
+    //! FLYING
+    // if (Input::pressed(GLFW_KEY_W)) camera->position += camera->front * deltaTime * speed;
+    // if (Input::pressed(GLFW_KEY_S)) camera->position -= camera->front * deltaTime * speed;
+    // if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
+    // if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
 
-    //     // // if (Input::pressed(GLFW_KEY_W)) camera->position += camera->front * deltaTime * speed;
-    //     // // if (Input::pressed(GLFW_KEY_S)) camera->position -= camera->front * deltaTime * speed;
-    //     // // if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
-    //     // // if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
-        
-    //     // if (Input::pressed(GLFW_KEY_W)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(1, 0, 0));
-    //     // if (Input::pressed(GLFW_KEY_S)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(1, 0, 0));
-    //     // if (Input::pressed(GLFW_KEY_A)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(0, 0, 1));
-    //     // if (Input::pressed(GLFW_KEY_D)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(0, 0, 1));
-    //     // if (Input::jpressed(GLFW_KEY_SPACE)) { 
-    //         // if (!appleobj->onGround()) 
-    //     //     appleobj->applyForce(vec3(0, 10000.0f, 0)); 
-    //     // }
+    //delete voxshader;
+    //delete crosshairShader;
 
-    //     // if (Input::_cursor_locked) {
-    //     //     cam.x += -Input::deltaX / Window::height; 
-    //     //     cam.y += -Input::deltaY / Window::height;
-    //     //     if (cam.y < -radians(89.0f)) cam.y = -radians(89.0f);
-    //     //     if (cam.y > radians(89.0f)) cam.y = radians(89.0f);
+    delete nullvox;
+    delete applevox;
 
-    //     //     camera->rotation = mat4(1.0f);
-    //     //     camera->rotate(cam, 0);
-    //     // }
+    delete effect1;
 
-    //     Window::_glClear();
-    //     renderer->getDefaultShader()->use();
-	//     renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
-        
-    //     effect1->draw(deltaTime);
-    //     voxshader->uniformMatrix("projview", camera->getProjection()*camera->getView());
-        
-    //     walltopobj->draw();
-    //     wallleftobj->draw();
-    //     wallrightobj->draw();
-        
-    //     floorobj->updatePhysics(deltaTime);
-    //     appleobj->updatePhysics(deltaTime);
+    delete nullobj;
+    delete appleobj;
 
-    //     floorobj->draw();
-    //     appleobj->draw();
-
-    //     if (appleobj->CheckCollision(floorobj->getBBOX()).y == 0) {
-    //         appleobj->applyForce(vec3(0, -9.8, 0));
-    //         test = false;
-    //     } else {
-    //         appleobj->setVelocity(glm::vec3(0, 0, 0));
-    //         appleobj->setAcceleration(glm::vec3(0, 0, 0));
-    //         if (!test) {
-    //             appleobj->setPosition(vec3(appleobj->getPosition().x, floorobj->getBBOX().max.y, appleobj->getPosition().z));
-    //             test = true;
-    //         }
-            
-    //     }
-
-    //     // if (Input::jclicked(GLFW_MOUSE_BUTTON_2)) {
-    //     //     //floorobj->translate(-15.0f, vec3(0, 1, 0));
-    //     //     appleobj->setPosition(vec3(0, 100, 0));
-    //     // }
-    //     // if (Input::jclicked(GLFW_MOUSE_BUTTON_1)) {
-    //     //     appleobj->translate(1.0f, vec3(0, 1, 0));
-
-    //     //     vec3 end; vec3 norm; vec3 iend;
-    //     //     if (appleobj->raycast(camera->getPosition(), camera->front, 10.0f, end, norm, iend) ) {
-    //     //         appleobj->setVisible(false);
-    //     //     }
-    //     // }
-    //     // std::cout << camera->getPosition().x << " " << camera->getPosition().y   << " " << camera->getPosition().z << " " << std::endl;
-    //     // nullobj->draw();
-
-    //     crosshairShader->use();
-    //     crosshair->draw(GL_LINES);    
-    //     Window::swapBuffers();
-    //     //Input::pullEvents();
-    // }
-
-    // Window::exit();
-    // // delete voxshader;
-    // // delete crosshairShader;
-
-    // // delete nullvox;
-    // // delete wallvox;
-    // // delete applevox;
-
-    // delete effect1;
-
-    // delete nullobj;
-    // delete appleobj;
-
-    // delete renderer;
+    delete renderer;
 
     return 0;
 }
