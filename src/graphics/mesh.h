@@ -11,11 +11,13 @@ class Mesh {
     
     size_t vertices;
     _voxels* voxels;
+    size_t vertexSize;
 public:
     Mesh(_voxels* voxs, const float* buffer, size_t vertices, const int* attrs);
     Mesh(const float* buffer, size_t vertices, const int* attrs);
     ~Mesh();
 
+    void reload(const float* buffer, size_t vertices);
     void draw(unsigned int primitive);
     void clear();
 

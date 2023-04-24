@@ -3,6 +3,7 @@
 #define NO_SDL_GLEXT
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_ttf.h>
 
 class SDL_Window;
 
@@ -12,6 +13,7 @@ public:
     static int height;
 
     static SDL_Window * window;
+    static SDL_Renderer* guirenderer;
     static SDL_GLContext glContext;
     static SDL_Event sdlEvent;
     

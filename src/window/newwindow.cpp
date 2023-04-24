@@ -1,9 +1,10 @@
 #include <GL/glew.h>
 #include "newwindow.h"
 
-#include <iostream>
+// #include <iostream>
 
 SDL_Window* Window::window;
+SDL_Renderer* Window::guirenderer;
 SDL_GLContext Window::glContext;
 SDL_Event Window::sdlEvent;
 
@@ -25,7 +26,7 @@ int Window::init(int width, int height, const char * title) {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
-
+    
     glContext = SDL_GL_CreateContext(window);
 
     if (glContext == NULL) {
@@ -33,6 +34,11 @@ int Window::init(int width, int height, const char * title) {
         return false;
     }
     glewInit();
+
+    if (TTF_Init() != 0) {
+        printf("SDL_TTF could not initialize!");
+        return false;
+    }
 
     Window::width = width;
     Window::height = height;    
@@ -70,6 +76,7 @@ void Window::toggleFullscreen() {
 }
 
 void Window::exit() {
+    SDL_DestroyRenderer(guirenderer);
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
     SDL_Quit();

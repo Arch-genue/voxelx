@@ -25,9 +25,6 @@ class Renderer {
 	std::map<std::string, _voxels*> rowmodels;
 
 	Camera* camera;
-	
-	// _voxels** rowmodels;
-	// std::string modelnames;
 public:
 	Renderer(size_t capacity, int shaderscount, int meshescount);
 	~Renderer();
@@ -42,6 +39,8 @@ public:
 
 	Shader* getDefaultShader();
 	Shader* getBBOXShader();
+	Shader* getUIShader();
+	Shader* getCrosshairShader();
 	_voxels* getRowModel(const char* model);
 	Camera* getCamera();
 };

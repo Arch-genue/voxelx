@@ -12,6 +12,14 @@ void Camera::updateVectors() {
     front = vec3(rotation * vec4(0, 0, -1, 1));
     right = vec3(rotation * vec4(1, 0, 0, 1));
     up = vec3(rotation * vec4(0, 1, 0, 1));
+
+	dir = vec3(rotation * vec4(0, 0, -1, 1));
+	dir.y = 0;
+	float len = length(dir);
+	if (len > 0.0f) {
+		dir.x /= len;
+		dir.z /= len;
+	}
 }
 
 void Camera::rotate(vec2 rot, float z) {

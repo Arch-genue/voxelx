@@ -12,7 +12,7 @@ C++, OpenGL
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-// #include <GLFW/glfw3.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -22,9 +22,11 @@ using namespace glm;
 #include "window/newinput.h"
 
 #include "graphics/shader.h"
+#include "graphics/texture.h"
 #include "graphics/mesh.h"
 #include "graphics/renderer.h"
 #include "graphics/particles.h"
+#include "graphics/gui.h"
 
 #include "loaders/resourceloader.h"
 
@@ -42,8 +44,9 @@ bool quit;
 int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D Alpha");
     Input::init();
+    // ResourceLoader::init();
 
-    //TODO ResourceLoader
+    // TODO ResourceLoader
     // ResourceLoader::setPath("../res/");
     // ResourceLoader::loadShaders();
     // ResourceLoader::loadTextures();
@@ -61,6 +64,12 @@ int main() {
         Window::exit();
         return 1;
     }
+    Shader* textureShader = load_shader("../res/shaders/texture.glslv", "../res/shaders/texture.glslf");
+    if (textureShader == nullptr) {
+        std::cerr << "Failed to load texture shader\n";
+        Window::exit();
+        return 1;
+    }
     Shader* bboxshader = load_shader("../res/shaders/bbox.glslv", "../res/shaders/bbox.glslf");
     if (bboxshader == nullptr) {
         std::cerr << "Failed to load bbox shader\n";
@@ -68,9 +77,11 @@ int main() {
         return 1;
     }
 
+    TTF_Font* defaultFont = TTF_OpenFont("../res/fonts/arial.ttf", 24);
+
     _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt");
 
-     _voxels* nullvox = new _voxels;
+    _voxels* nullvox = new _voxels;
     nullvox->m_size = vec3(1, 1, 1);
     voxel_m vox;
     vox.position = vec3(0, 0, 0);
@@ -92,8 +103,7 @@ int main() {
                 vox.position = vec3(x, y, z);
                 vox.clr = vec4(clr, clr, clr, 1.0f);
                 vox.visible = false;
-                if (
-                    ( x == 0 || x == wallvoxleft->m_size.x-1 ) ||
+                if (( x == 0 || x == wallvoxleft->m_size.x-1 ) ||
                     ( y == 0 || y == wallvoxleft->m_size.y-1 ) ||
                     ( z == 0 || z == wallvoxleft->m_size.z-1 )
                 ) vox.visible = true;
@@ -150,6 +160,7 @@ int main() {
     renderer->addShader(voxshader);       // 0
     renderer->addShader(crosshairShader); // 1
     renderer->addShader(bboxshader);      // 2
+    renderer->addShader(textureShader);   // 3
 
     renderer->addRowModel("null", nullvox);
     renderer->addRowModel("floor", floorvox);
@@ -181,27 +192,16 @@ int main() {
     appleobj->setPosition(vec3(0, 50, 40));
     appleobj->setHidden(true);
 
-    //? Crosshair
-    float vertices[] = {
-        //x     y
-        0.0f,-0.02f,
-        0.0f, 0.02f,
-
-        -0.015f, 0.0f,
-        0.015f,0.0f,
-    };
-    int attrs[2] = { 2,  0 };
-    Mesh* crosshair = new Mesh(vertices, 4, attrs);
     Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f)); 
     renderer->addCamera(camera);
-    appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to Apple
+    appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
 
     //!TESTING PARTICLES
-    //VoxelParticles** effects = new VoxelParticles*[50];
-    for (int i = 0; i < 50; i++) {
-        //effects[i] = new VoxelParticles(renderer, EFFECT_FLAME, 20);
-        //effects[i]->setPosition(vec3(i*10.0f, 20.0f, 30.0f));
-    }
+    // VoxelParticles** effects = new VoxelParticles*[50];
+    // for (int i = 0; i < 50; i++) {
+    //     effects[i] = new VoxelParticles(renderer, EFFECT_FLAME, 20);
+    //     effects[i]->setPosition(vec3(i*10.0f, 20.0f, 30.0f));
+    // }
 
     VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
     effect1->setPosition(vec3(4.0f, 13.5f, 1.5f));
@@ -209,12 +209,18 @@ int main() {
     float deltaTime = 0.0f;
     vec2 cam(0.0f, 0.0f);
     float speed = 50;
+    bool test = false;
 
     auto lastTimePoint = std::chrono::system_clock::now();
 
     Window::_glInit();
 
-    bool test = false;
+    //!TEST
+    GUI gui;
+    gui.setRenderer(renderer);
+    gui.setFont(defaultFont);
+    SDL_Color clr1 = {255, 0, 255};
+    Texture* text = gui.renderText(clr1, "Hello");
 
     //! ===MAIN-LOOP===
     quit = false;
@@ -257,7 +263,7 @@ int main() {
         if (Input::pressed(SDLK_d)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(0, 0, 1));
         if (Input::jpressed(SDLK_SPACE)) { 
             //if (!appleobj->onGround()) 
-            appleobj->applyForce(vec3(0, 20000.0f, 0)); 
+            appleobj->applyForce(vec3(0, 5000.0f, 0)); 
         }
 
         if (Input::jclicked(SDL_BUTTON_RIGHT)) {
@@ -270,6 +276,8 @@ int main() {
         }
 
         Window::_glClear();
+
+        gui.draw(text);
 
         renderer->getDefaultShader()->use();
         renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
@@ -298,10 +306,7 @@ int main() {
                 test = true;
             }
         }
-
-        crosshairShader->use();
-        crosshair->draw(GL_LINES);
-
+        
 	    Window::swapBuffers();
         Input::pullEvents();
 	}
@@ -313,9 +318,6 @@ int main() {
     // if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
     // if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
 
-    //delete voxshader;
-    //delete crosshairShader;
-
     delete nullvox;
     delete applevox;
 
@@ -325,6 +327,5 @@ int main() {
     delete appleobj;
 
     delete renderer;
-
     return 0;
 }
