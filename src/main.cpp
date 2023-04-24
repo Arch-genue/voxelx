@@ -28,7 +28,7 @@ using namespace glm;
 #include "graphics/particles.h"
 #include "graphics/gui.h"
 
-#include "loaders/resourceloader.h"
+#include "loaders/resourcemanager.h"
 #include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
@@ -45,39 +45,19 @@ bool quit;
 int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D Alpha");
     Input::init();
-    // ResourceLoader::init();
+    ResourceManager::init("../res/");
+
+    //! Global renderer
+    Renderer* renderer = new Renderer(1024 * 1024 * 10);
 
     // TODO ResourceLoader
-    // ResourceLoader::setPath("../res/");
-    // ResourceLoader::loadShaders();
+    ResourceManager::loadShader("voxel");
+    ResourceManager::loadShader("crosshair");
+    ResourceManager::loadShader("bbox");
+    ResourceManager::loadShader("ui");
+
     // ResourceLoader::loadTextures();
     // ResourceLoader::loadModels();
-
-    Shader* voxshader = load_shader("../res/shaders/voxel.glslv", "../res/shaders/voxel.glslf");
-    if (voxshader == nullptr) {
-        std::cerr << "Failed to load VOXEL shader\n";
-        Window::exit();
-        return 1;
-    }
-    Shader* crosshairShader = load_shader("../res/shaders/crosshair.glslv", "../res/shaders/crosshair.glslf");
-    if (crosshairShader == nullptr) {
-        std::cerr << "Failed to load crosshair shader\n";
-        Window::exit();
-        return 1;
-    }
-    Shader* bboxshader = load_shader("../res/shaders/bbox.glslv", "../res/shaders/bbox.glslf");
-    if (bboxshader == nullptr) {
-        std::cerr << "Failed to load bbox shader\n";
-        Window::exit();
-        return 1;
-    }
-
-    Shader* uiShader = load_shader("../res/shaders/ui.glslv", "../res/shaders/ui.glslf");
-    if (uiShader == nullptr) {
-        std::cerr << "Failed to load ui shader\n";
-        Window::exit();
-        return 1;
-    }
 
     Texture* texture = load_texture("../res/textures/slot.png");
     if (texture == nullptr) {
@@ -85,8 +65,6 @@ int main() {
         Window::exit();
         return 1;
     }
-
-    TTF_Font* defaultFont = TTF_OpenFont("../res/fonts/arial.ttf", 24);
 
     _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt");
 
@@ -163,28 +141,22 @@ int main() {
         }
     }
 
-    //! Global renderer
-    Renderer* renderer = new Renderer(1024 * 1024 * 10, 100, 100);
+    ResourceManager::addRowModel(nullvox, "null");
+    ResourceManager::addRowModel(floorvox, "floor");
+    ResourceManager::addRowModel(applevox, "apple");
 
-    renderer->addShader(voxshader);       // 0
-    renderer->addShader(crosshairShader); // 1
-    renderer->addShader(bboxshader);      // 2
-    renderer->addShader(uiShader);   // 3
-
-    renderer->addRowModel("null", nullvox);
-    renderer->addRowModel("floor", floorvox);
-    renderer->addRowModel("apple", applevox);
-
-    renderer->addRowModel("wallleft", wallvoxleft);
-    renderer->addRowModel("wallright", wallvoxright);
-    renderer->addRowModel("walltop", wallvoxtop);
+    ResourceManager::addRowModel(wallvoxleft, "wallleft");
+    ResourceManager::addRowModel(wallvoxright, "wallright");
+    ResourceManager::addRowModel(wallvoxtop, "walltop");
 
     GameObject* wallleftobj = new GameObject(renderer, "wallleft");
     wallleftobj->setCollision(SIMPLE_COLLISION);
     wallleftobj->setPosition(vec3(30, 0, 0));
+
     GameObject* wallrightobj = new GameObject(renderer, "wallright");
     wallrightobj->setCollision(SIMPLE_COLLISION);
     wallrightobj->setPosition(vec3(-20, 0, 0));
+
     GameObject* walltopobj = new GameObject(renderer, "walltop");
     walltopobj->setCollision(SIMPLE_COLLISION);
     walltopobj->setPosition(vec3(-20, 50, 0));
@@ -208,33 +180,26 @@ int main() {
     renderer->addCamera(camera);
     appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
 
-    //!TESTING PARTICLES
-    // VoxelParticles** effects = new VoxelParticles*[50];
-    // for (int i = 0; i < 50; i++) {
-    //     effects[i] = new VoxelParticles(renderer, EFFECT_FLAME, 20);
-    //     effects[i]->setPosition(vec3(i*10.0f, 20.0f, 30.0f));
-    // }
-
     VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
-    effect1->setPosition(vec3(4.0f, 20.0f, 1.5f));
+    effect1->setPosition(vec3(4.0f, 30.0f, 1.5f));
+
+    VoxelParticles* effect2 = new VoxelParticles(renderer, EFFECT_CURSED_FLAME, 30);
+    effect2->setPosition(vec3(15.0f, 30.0f, 1.5f));
 
     float deltaTime = 0.0f;
     vec2 cam(0.0f, 0.0f);
     float speed = 50;
     bool test = false;
-    bool zoom = false;
 
     auto lastTimePoint = std::chrono::system_clock::now();
 
     //!TEST
     GUI gui;
-    gui.setRenderer(renderer);
-    gui.setFont(defaultFont);
-    //SDL_Color clr1 = {255, 0, 255};
-    //Texture* text = gui.renderText(clr1, "Hello");
 
     //! ===MAIN-LOOP===
     quit = false;
+    Window::setPause(false);
+    // Input::toggleCursor();
 	while (!quit) {
         auto newTimePoint = std::chrono::system_clock::now();
         auto dtMsec = std::chrono::duration_cast<std::chrono::milliseconds>(newTimePoint - lastTimePoint);
@@ -258,7 +223,7 @@ int main() {
 		}
 
         if (Input::_cursor_locked) {
-            cam.x += -Input::deltaX*MOUSE_SPEED / Window::height; cam.y += -Input::deltaY*MOUSE_SPEED / Window::height;
+            cam.x += -Input::deltaX * MOUSE_SPEED / Window::height; cam.y += -Input::deltaY * MOUSE_SPEED / Window::height;
             if (cam.y < -radians(89.0f)) cam.y = -radians(89.0f);
             if (cam.y > radians(89.0f)) cam.y = radians(89.0f);
 
@@ -266,7 +231,13 @@ int main() {
             camera->rotate(cam, 0);
         }
 
-        if (Input::jpressed(SDLK_ESCAPE)) quit = true;
+        if (Input::jpressed(SDLK_ESCAPE)) {
+            quit = true; 
+        }
+        if (Input::jpressed(SDLK_p)) {
+            Window::setPause(!Window::getPause());
+            Input::toggleCursor();
+        }
         if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
         if (Input::pressed(SDLK_w)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(1, 0, 0));
         if (Input::pressed(SDLK_s)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(1, 0, 0));
@@ -276,7 +247,7 @@ int main() {
             //if (!appleobj->onGround()) 
             appleobj->applyForce(vec3(0, 5000.0f, 0)); 
         }
-        if (Input::pressed(SDLK_b)) camera->zoom = 0.5f;
+        if (Input::pressed(SDLK_c)) camera->zoom = 0.5f;
         else camera->zoom = 1.0f;
 
         if (Input::jclicked(SDL_BUTTON_RIGHT)) {
@@ -289,11 +260,10 @@ int main() {
         }
 
         Window::_glClear();
-
-        renderer->getDefaultShader()->use();
-        renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
-        
+        ResourceManager::getShader("voxel")->use();
+        ResourceManager::getShader("voxel")->uniformMatrix("projview", renderer->getCamera()->getProjection() * renderer->getCamera()->getView());
         effect1->draw(deltaTime);
+        effect2->draw(deltaTime);
 
         walltopobj->draw();
         wallleftobj->draw();

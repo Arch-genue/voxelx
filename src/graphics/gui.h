@@ -16,12 +16,11 @@ class Mesh;
 
 class GUI {
     TTF_Font* defaultFont;
-    Renderer* gui;
     Batch2D* batch;
 	Camera* uicamera;
 	Mesh* crosshair;
 
-    Renderer* renderer;
+    Texture* blocks;
 public:
     GUI();
     ~GUI();
@@ -29,10 +28,9 @@ public:
     void draw(Texture * text);
 	void drawDebug(Level* level, Assets* assets, int fps, bool occlusion);
 
-    void setRenderer(Renderer* render);
     void setFont(TTF_Font* font);
 
-    Texture* renderText(SDL_Color clr, char* string);
+    Texture* renderText(SDL_Color clr, const char* string);
     void renderButton(double x, double y);
     void renderTexture(double x, double y);
 };

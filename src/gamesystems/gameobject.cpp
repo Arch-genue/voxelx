@@ -5,6 +5,7 @@
 #include "../graphics/mesh.h"
 #include "../graphics/shader.h"
 #include "../voxels/voxel.h"
+#include "../loaders/resourcemanager.h"
 
 #include <iostream>
 
@@ -31,7 +32,7 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
     //!CREATE MESH!
-	mesh = renderer->render(renderer->getRowModel(model));
+	mesh = renderer->render(ResourceManager::getRowModel(model));
 }
 GameObject::~GameObject() {}
 
@@ -47,8 +48,7 @@ void GameObject::draw() {
     if (visible == false) return;
     modelmatrix = glm::scale(modelmatrix, scaling);
     modelmatrix = glm::translate(modelmatrix, position);
-
-    renderer->getDefaultShader()->uniformMatrix("model", modelmatrix);
+    ResourceManager::getShader("voxel")->uniformMatrix("model", modelmatrix);
     if (!hidden && visible) mesh->draw(GL_TRIANGLES);
 
     modelmatrix = glm::mat4(1.0f);

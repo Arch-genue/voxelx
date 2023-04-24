@@ -20,12 +20,9 @@ enum _effects {
     EFFECT_IMPORT,
 
     EFFECT_FLAME,
+    EFFECT_CURSED_FLAME,
     EFFECT_VOMIT,
     EFFECT_WATER,
-};
-
-struct _particles {
-
 };
 
 class VoxelParticles {
@@ -45,6 +42,9 @@ class VoxelParticles {
     std::uniform_real_distribution<float> vel_generator;
     std::uniform_real_distribution<float> clr_generator;
     std::uniform_real_distribution<float> lifetime_generator;
+
+    //--
+    float _val;
 public:
     VoxelParticles(Renderer* render, _effects ptype, int bufferSize);
     ~VoxelParticles();
@@ -59,6 +59,8 @@ public:
 
     //Default Particles
     void effect_flame(voxel_m* vox);
+    void effect_cursed_flame(voxel_m* vox);
+    
     void effect_vomit(voxel_m* vox);
     void effect_water(voxel_m* vox);
 };

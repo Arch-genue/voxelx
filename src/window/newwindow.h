@@ -12,6 +12,8 @@ public:
     static int width;
     static int height;
 
+    static bool _pause;
+
     static SDL_Window * window;
     static SDL_Renderer* guirenderer;
     static SDL_GLContext glContext;
@@ -24,6 +26,9 @@ public:
 
     static void setCursorMode(SDL_bool mode);
     static SDL_bool getCursorMode();
+
+    static void setPause(bool pa);
+    static bool getPause();
 
     static void toggleFullscreen();
     static bool isShouldClose(SDL_Event event);

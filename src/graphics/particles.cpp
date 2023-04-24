@@ -1,4 +1,5 @@
 #include "particles.h"
+#include "../loaders/resourcemanager.h"
 
 #include <iostream>
 
@@ -12,6 +13,7 @@ VoxelParticles::VoxelParticles(Renderer* render, _effects ptype, int bufferSize)
     setType(ptype);
     setPosition(glm::vec3(0));
     setSize(0.05f);
+    _val = 0.0f;
 
     for (int i = 0; i < bufferSize; ++i) {
         voxel_m particle;
@@ -46,6 +48,12 @@ void VoxelParticles::setType(_effects ptype) {
             clrvals = glm::vec2(0.05f, 0.3f);
             lifetimevals = glm::vec2(0.05f, 0.3f);
         break;
+        case EFFECT_CURSED_FLAME:
+            posvals = glm::vec2(-1.0f, 1.0f);
+            velvals = glm::vec2(7.5f, 30.0f);
+            clrvals = glm::vec2(0.05f, 0.3f);
+            lifetimevals = glm::vec2(0.2f, 0.4f);
+        break;
         case EFFECT_VOMIT:
             posvals = glm::vec2(0.0f, 1.0f);
             velvals = glm::vec2(10.0f, 20.0f);
@@ -79,15 +87,23 @@ void VoxelParticles::draw(float deltaTime) {
     for (size_t i = 0; i < voxels->voxels.size(); i++) {
         if (voxels->voxels[i].lifetime >= 0.0f) {
             voxels->voxels[i].position += voxels->voxels[i].velocity * deltaTime;
-            
+        
             voxels->voxels[i].lifetime -= deltaTime;
+            _val += 0.01f;
+            if (type == EFFECT_CURSED_FLAME) {
+                voxels->voxels[i].clr = glm::vec4(voxels->voxels[i].clr.x, voxels->voxels[i].clr.y-0.01f, voxels->voxels[i].clr.z+0.005f, 1.0f);
+            }
         } else {
+            _val = 0.0f;
             switch(type) {
                 case EFFECT_IMPORT:
 
                 break;
                 case EFFECT_FLAME:
                     effect_flame(&voxels->voxels[i]);
+                break;
+                case EFFECT_CURSED_FLAME:
+                    effect_cursed_flame(&voxels->voxels[i]); //? Innovation
                 break;
                 case EFFECT_VOMIT:
                     effect_vomit(&voxels->voxels[i]);
@@ -99,14 +115,33 @@ void VoxelParticles::draw(float deltaTime) {
                     continue;
                 break;
             }
+            
         }
     }
     //* DRAW
-    renderer->getDefaultShader()->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
+    ResourceManager::getShader("voxel")->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
     mesh = renderer->render(voxels);
     mesh->draw(GL_TRIANGLES);
     delete mesh;
 }
+
+//? Cursed Black-Violet Flame
+void VoxelParticles::effect_cursed_flame(voxel_m* vox) {
+    vox->position = m_position + glm::vec3(pos_generator(rng), 0, pos_generator(rng));
+    vox->velocity = glm::vec3(0, vel_generator(rng), 0);
+    float clr = clr_generator(rng);
+    vox->clr = glm::vec4(clr, clr, clr, 1.0f);
+    vox->lifetime = lifetime_generator(rng);
+}
+
+//? Dead Flame
+// void VoxelParticles::effect_cursed_flame(voxel_m* vox) {
+//     vox->position = m_position + glm::vec3(pos_generator(rng), 0, pos_generator(rng));
+//     vox->velocity = glm::vec3(0, vel_generator(rng), 0);
+//     float clr = clr_generator(rng);
+//     vox->clr = glm::vec4(clr, clr, clr, 1.0f);
+//     vox->lifetime = lifetime_generator(rng);
+// }
 
 //? Red Flame
 void VoxelParticles::effect_flame(voxel_m* vox) {

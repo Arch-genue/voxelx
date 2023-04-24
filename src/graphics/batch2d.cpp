@@ -64,9 +64,9 @@ void Batch2D::texture(Texture* new_texture){
 		return;
 	render();
 	_texture = new_texture;
-	if (new_texture == nullptr)
+	if (new_texture == nullptr) {
 		blank->bind();
-	else
+	}else
 		new_texture->bind();
 }
 
@@ -197,12 +197,16 @@ void Batch2D::sprite(Sprite* sprite) {
 		sprite->color);
 }
 
-void Batch2D::sprite(float x, float y, float w, float h, int atlasRes, int index, vec4 tint){
+void Batch2D::sprite(float x, float y, float w, float h, int atlasRes, int index, vec4 tint) {
 	float scale = 1.0f / (float)atlasRes;
 	float u = (index % atlasRes) * scale;
 	float v = 1.0f - ((index / atlasRes) * scale) - scale;
 	rect(x, y, w, h, u, v, scale, scale, tint.r, tint.g, tint.b, tint.a);
 }
+
+// void Batch2D::supsprite(float x, float y, float w, float h, int index, vec4 tint){
+// 	rect(x, y, w, h, tint.r, tint.g, tint.b, tint.a);
+// }
 
 void Batch2D::blockSprite(float x, float y, float w, float h, int atlasRes, int index[6], vec4 tint){
 	float scale = 1.0f / (float)atlasRes;
@@ -262,9 +266,9 @@ void Batch2D::blockSprite(float x, float y, float w, float h, int atlasRes, int 
 
 void Batch2D::rect(float x, float y, float w, float h,
 					float u, float v, float tx, float ty,
-					float r, float g, float b, float a){
-	if (index + 6 * VERTEX_SIZE >= capacity)
-		render();
+					float r, float g, float b, float a) {
+	if (index + 6 * VERTEX_SIZE >= capacity) render();
+
 	vertex(x, y, u, v+ty, r,g,b,a);
 	vertex(x+w, y+h, u+tx, v, r,g,b,a);
 	vertex(x, y+h, u, v, r,g,b,a);

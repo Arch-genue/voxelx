@@ -33,7 +33,7 @@ set(SOURCE
 
 	src/voxels/voxel.cpp
 
-	src/loaders/resourceloader.cpp
+	src/loaders/resourcemanager.cpp
 	src/loaders/png_loading.cpp
 	
 	src/gamesystems/camera.cpp
@@ -58,7 +58,7 @@ set(HEADER
 
 	src/voxels/voxel.h
 
-	src/loaders/resourceloader.h
+	src/loaders/resourcemanager.h
 	src/loaders/png_loading.h
 
 	src/gamesystems/camera.h

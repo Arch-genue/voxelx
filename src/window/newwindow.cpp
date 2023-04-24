@@ -8,10 +8,12 @@ SDL_Renderer* Window::guirenderer;
 SDL_GLContext Window::glContext;
 SDL_Event Window::sdlEvent;
 
+bool Window::_pause;
+
 int Window::width = 0;
 int Window::height = 0;
 
-int Window::init(int width, int height, const char * title) {
+int Window::init(int width, int height, const char* title) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -71,6 +73,13 @@ void Window::setCursorMode(SDL_bool mode) {
 }
 SDL_bool Window::getCursorMode() {
     return SDL_GetRelativeMouseMode();
+}
+
+void Window::setPause(bool pause) {
+    _pause = pause;
+}
+bool Window::getPause() {
+    return _pause;
 }
 
 void Window::toggleFullscreen() {

@@ -23,32 +23,17 @@ int chunk_attrs[] = {3,4,1, 0};
 					buffer[INDEX+7] = (L);\
 					INDEX += VERTEX_SIZE;
 
-Renderer::Renderer(size_t capacity, int shaderscount, int meshescount) : capacity(capacity) {
+Renderer::Renderer(size_t capacity) : capacity(capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
-	shaders = new Shader*[shaderscount];
-	meshes = new Mesh*[meshescount];
 
 	_shaderindex = 0;
 }
 
 Renderer::~Renderer() {
 	delete[] buffer;
-	delete[] shaders;
-	delete[] meshes;
+
 }
 
-void Renderer::addShader(Shader* shader) {
-	shaders[_shaderindex] = shader;
-	_shaderindex++;
-}
-void Renderer::addRowModel(std::string name, _voxels* row) {
-	rowmodels[name] = row;
-}
-
-void Renderer::addMesh(Mesh* mesh) {
-	meshes[_meshindex] = mesh;
-	_meshindex++;
-}
 void Renderer::addCamera(Camera* cam) {
 	camera = cam;
 }
@@ -156,21 +141,6 @@ Mesh* Renderer::render(_voxels* voxels) {
 	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 
-Shader* Renderer::getDefaultShader() {
-	return shaders[0];		
-}
-Shader* Renderer::getBBOXShader() {
-	return shaders[2];		
-}
-Shader* Renderer::getUIShader() {
-	return shaders[3];		
-}
-Shader* Renderer::getCrosshairShader() {
-	return shaders[1];		
-}
-_voxels* Renderer::getRowModel(const char* model) {
-	return rowmodels[model];
-}
 Camera* Renderer::getCamera() {
 	return camera;
 }

@@ -1,6 +1,7 @@
 #include "texture.h"
 
 #include <GL/glew.h>
+#include <iostream>
 
 Texture::Texture(unsigned int id, int width, int height) :
 id(id),
