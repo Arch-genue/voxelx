@@ -32,7 +32,9 @@ set(SOURCE
 	src/graphics/batch2d.cpp
 
 	src/voxels/voxel.cpp
+
 	src/loaders/resourceloader.cpp
+	src/loaders/png_loading.cpp
 	
 	src/gamesystems/camera.cpp
 	src/gamesystems/gameobject.cpp
@@ -55,7 +57,9 @@ set(HEADER
 	src/graphics/batch2d.h
 
 	src/voxels/voxel.h
+
 	src/loaders/resourceloader.h
+	src/loaders/png_loading.h
 
 	src/gamesystems/camera.h
 	src/gamesystems/gameobject.h
@@ -98,7 +102,16 @@ if(NOT OpenGL_FOUND)
 else()
 	include_directories(${OpenGL_INCLUDE_DIR})
 endif()
+
 find_package(GLU REQUIRED)
+
+find_package(PNG REQUIRED)
+if(NOT PNG_FOUND)
+	message(SEND_ERROR "Failed to find Libpng")
+	return()
+else()
+	include_directories(${PNG_INCLUDE_DIR})
+endif()
 
 add_executable(voxel3d ${SOURCE})
 target_link_libraries(voxel3d 
@@ -107,4 +120,5 @@ ${SDL2_TTF_LIBRARIES}
 ${GLEW_LIBRARIES}
 ${OPENGL_gl_LIBRARY}
 ${GLU_LIBRARY}
+${PNG_LIBRARY}
 )

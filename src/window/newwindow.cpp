@@ -43,10 +43,12 @@ int Window::init(int width, int height, const char * title) {
     Window::width = width;
     Window::height = height;    
 
+    _glInit();
+
     return 0;
 }
 void Window::_glInit() {
-    glViewport(0, 0, Window::width, Window::height);
+    glViewport(0, 0, width, height);
 
     glClearColor(0.6f, 0.6f, 0.6f, 1.0f);
     

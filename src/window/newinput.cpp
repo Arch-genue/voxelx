@@ -57,6 +57,8 @@ void Input::key_callback(SDL_Keycode key, int action) {
 
 void Input::window_size_callback(int width, int height) {
     glViewport(0, 0, width, height);
+    Window::width = width;
+    Window::height = height;
 }
 
 int Input::init() {
@@ -65,7 +67,6 @@ int Input::init() {
 
     memset(_keys, false, 1032*sizeof(bool));
     memset(_frames, 0, 1032*sizeof(uint));
-
     return 0;
 }
 

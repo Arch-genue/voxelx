@@ -29,6 +29,7 @@ using namespace glm;
 #include "graphics/gui.h"
 
 #include "loaders/resourceloader.h"
+#include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
 #include "gamesystems/camera.h"
@@ -64,15 +65,23 @@ int main() {
         Window::exit();
         return 1;
     }
-    Shader* textureShader = load_shader("../res/shaders/texture.glslv", "../res/shaders/texture.glslf");
-    if (textureShader == nullptr) {
-        std::cerr << "Failed to load texture shader\n";
-        Window::exit();
-        return 1;
-    }
     Shader* bboxshader = load_shader("../res/shaders/bbox.glslv", "../res/shaders/bbox.glslf");
     if (bboxshader == nullptr) {
         std::cerr << "Failed to load bbox shader\n";
+        Window::exit();
+        return 1;
+    }
+
+    Shader* uiShader = load_shader("../res/shaders/ui.glslv", "../res/shaders/ui.glslf");
+    if (uiShader == nullptr) {
+        std::cerr << "Failed to load ui shader\n";
+        Window::exit();
+        return 1;
+    }
+
+    Texture* texture = load_texture("../res/textures/slot.png");
+    if (texture == nullptr) {
+        std::cerr << "Failed to load texture\n";
         Window::exit();
         return 1;
     }
@@ -160,7 +169,7 @@ int main() {
     renderer->addShader(voxshader);       // 0
     renderer->addShader(crosshairShader); // 1
     renderer->addShader(bboxshader);      // 2
-    renderer->addShader(textureShader);   // 3
+    renderer->addShader(uiShader);   // 3
 
     renderer->addRowModel("null", nullvox);
     renderer->addRowModel("floor", floorvox);
@@ -193,6 +202,9 @@ int main() {
     appleobj->setHidden(true);
 
     Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f)); 
+    camera->perspective = true;
+    camera->flipped = false;
+    camera->zoom = 1.0f;
     renderer->addCamera(camera);
     appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
 
@@ -204,23 +216,22 @@ int main() {
     // }
 
     VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
-    effect1->setPosition(vec3(4.0f, 13.5f, 1.5f));
+    effect1->setPosition(vec3(4.0f, 20.0f, 1.5f));
 
     float deltaTime = 0.0f;
     vec2 cam(0.0f, 0.0f);
     float speed = 50;
     bool test = false;
+    bool zoom = false;
 
     auto lastTimePoint = std::chrono::system_clock::now();
-
-    Window::_glInit();
 
     //!TEST
     GUI gui;
     gui.setRenderer(renderer);
     gui.setFont(defaultFont);
-    SDL_Color clr1 = {255, 0, 255};
-    Texture* text = gui.renderText(clr1, "Hello");
+    //SDL_Color clr1 = {255, 0, 255};
+    //Texture* text = gui.renderText(clr1, "Hello");
 
     //! ===MAIN-LOOP===
     quit = false;
@@ -265,6 +276,8 @@ int main() {
             //if (!appleobj->onGround()) 
             appleobj->applyForce(vec3(0, 5000.0f, 0)); 
         }
+        if (Input::pressed(SDLK_b)) camera->zoom = 0.5f;
+        else camera->zoom = 1.0f;
 
         if (Input::jclicked(SDL_BUTTON_RIGHT)) {
             appleobj->setPosition(vec3(0, 100, 0));
@@ -276,8 +289,6 @@ int main() {
         }
 
         Window::_glClear();
-
-        gui.draw(text);
 
         renderer->getDefaultShader()->use();
         renderer->getDefaultShader()->uniformMatrix("projview", renderer->getCamera()->getProjection()*renderer->getCamera()->getView());
@@ -306,6 +317,8 @@ int main() {
                 test = true;
             }
         }
+
+        gui.draw(texture);
         
 	    Window::swapBuffers();
         Input::pullEvents();

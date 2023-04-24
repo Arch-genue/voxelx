@@ -263,7 +263,7 @@ void Batch2D::blockSprite(float x, float y, float w, float h, int atlasRes, int 
 void Batch2D::rect(float x, float y, float w, float h,
 					float u, float v, float tx, float ty,
 					float r, float g, float b, float a){
-	if (index + 6*VERTEX_SIZE >= capacity)
+	if (index + 6 * VERTEX_SIZE >= capacity)
 		render();
 	vertex(x, y, u, v+ty, r,g,b,a);
 	vertex(x+w, y+h, u+tx, v, r,g,b,a);

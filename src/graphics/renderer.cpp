@@ -163,7 +163,7 @@ Shader* Renderer::getBBOXShader() {
 	return shaders[2];		
 }
 Shader* Renderer::getUIShader() {
-	//return shaders[3];		
+	return shaders[3];		
 }
 Shader* Renderer::getCrosshairShader() {
 	return shaders[1];		
