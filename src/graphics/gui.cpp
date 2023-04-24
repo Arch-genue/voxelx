@@ -39,7 +39,7 @@ GUI::~GUI() {
 	delete uicamera;
 }
 
-void GUI::draw(Texture* text) {
+void GUI::draw() {
 	uicamera->fov = Window::height;
 
 	glDisable(GL_DEPTH_TEST);
@@ -48,7 +48,7 @@ void GUI::draw(Texture* text) {
 	ResourceManager::getShader("ui")->use();
 	ResourceManager::getShader("ui")->uniformMatrix("u_projview", uicamera->getProjection() * uicamera->getView());
 
-	Texture* sprite = text;
+	Texture* sprite = ResourceManager::getTexture("slot");
 
 	if (Window::getPause()) {
 		batch->texture(nullptr);

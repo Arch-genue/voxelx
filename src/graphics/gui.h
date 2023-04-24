@@ -25,7 +25,7 @@ public:
     GUI();
     ~GUI();
 
-    void draw(Texture * text);
+    void draw();
 	void drawDebug(Level* level, Assets* assets, int fps, bool occlusion);
 
     void setFont(TTF_Font* font);

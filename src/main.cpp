@@ -22,14 +22,14 @@ using namespace glm;
 #include "window/newinput.h"
 
 #include "graphics/shader.h"
-#include "graphics/texture.h"
+//#include "graphics/texture.h"
 #include "graphics/mesh.h"
 #include "graphics/renderer.h"
 #include "graphics/particles.h"
 #include "graphics/gui.h"
 
 #include "loaders/resourcemanager.h"
-#include "loaders/png_loading.h"
+//#include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
 #include "gamesystems/camera.h"
@@ -56,17 +56,8 @@ int main() {
     ResourceManager::loadShader("bbox");
     ResourceManager::loadShader("ui");
 
-    // ResourceLoader::loadTextures();
-    // ResourceLoader::loadModels();
-
-    Texture* texture = load_texture("../res/textures/slot.png");
-    if (texture == nullptr) {
-        std::cerr << "Failed to load texture\n";
-        Window::exit();
-        return 1;
-    }
-
-    _voxels* applevox = load_model("../res/models/apple.voxtxt", "voxtxt");
+    ResourceManager::loadTexture("slot");
+    ResourceManager::loadModel("apple", "voxtxt"); //? voxtxt, generic, voxlap
 
     _voxels* nullvox = new _voxels;
     nullvox->m_size = vec3(1, 1, 1);
@@ -141,13 +132,12 @@ int main() {
         }
     }
 
-    ResourceManager::addRowModel(nullvox, "null");
-    ResourceManager::addRowModel(floorvox, "floor");
-    ResourceManager::addRowModel(applevox, "apple");
+    ResourceManager::addModel(nullvox, "null");
+    ResourceManager::addModel(floorvox, "floor");
 
-    ResourceManager::addRowModel(wallvoxleft, "wallleft");
-    ResourceManager::addRowModel(wallvoxright, "wallright");
-    ResourceManager::addRowModel(wallvoxtop, "walltop");
+    ResourceManager::addModel(wallvoxleft, "wallleft");
+    ResourceManager::addModel(wallvoxright, "wallright");
+    ResourceManager::addModel(wallvoxtop, "walltop");
 
     GameObject* wallleftobj = new GameObject(renderer, "wallleft");
     wallleftobj->setCollision(SIMPLE_COLLISION);
@@ -288,7 +278,7 @@ int main() {
             }
         }
 
-        gui.draw(texture);
+        gui.draw();
         
 	    Window::swapBuffers();
         Input::pullEvents();
@@ -302,7 +292,6 @@ int main() {
     // if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
 
     delete nullvox;
-    delete applevox;
 
     delete effect1;
 

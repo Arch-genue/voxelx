@@ -32,7 +32,7 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
     //!CREATE MESH!
-	mesh = renderer->render(ResourceManager::getRowModel(model));
+	mesh = renderer->render(ResourceManager::getModel(model));
 }
 GameObject::~GameObject() {}
 
