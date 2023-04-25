@@ -59,7 +59,6 @@ Shader* ResourceManager::getShader(std::string name) {
 Texture* ResourceManager::getTexture(std::string name) {
 	return textures[name];
 }
-
 _voxels* ResourceManager::getModel(std::string model) {
 	return rowmodels[model];
 }

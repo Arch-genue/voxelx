@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <string.h>
 #include <cstring>
 
 void split(std::string* bufstr, std::string str, char separator) {
@@ -20,14 +19,6 @@ void split(std::string* bufstr, std::string str, char separator) {
     }
     bufstr[d] = s;
 }
-
-//TODO !!!!!!!!!!!
-// Model::Model() {
-
-// }
-// Model::~Model() {
-//     //delete voxels;
-// }
 
 _voxels* load_model(std::string filename, const char* type) {
     std::ifstream in(filename);

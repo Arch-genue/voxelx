@@ -18,13 +18,16 @@ GameObject::GameObject(const char* model) {
     rotAxis = glm::vec3(1);
     scaling = glm::vec3(0.1f);
 	campos = glm::vec3(0);
+	onGround = false;
 
     setVisible(true);
 	setHidden(false);
 	setCollision(NO_COLLISION);
 
+	rigidbody = false;
+
     //
-    mass = 100; //100Kg
+    mass = 100; //100 Kg
 
     velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -81,14 +84,30 @@ void GameObject::setCollision(_collision coll) {
 	collision = coll;
 }
 
+bool GameObject::getCollision() {
+	return (collision == SIMPLE_COLLISION);
+}
+
+void GameObject::setRigidBody(bool rigid) {
+	rigidbody = rigid;
+}
+
+bool GameObject::getRigidBody() {
+	return rigidbody;
+}
+
 //TODO SIMPLE COLLISION
-glm::ivec3 GameObject::CheckCollision(BOUNDINGBOX b) {
+glm::ivec3 GameObject::checkCollision(BOUNDINGBOX b) {
 	glm::ivec3 collisionside(1);
 	if (bbox.max.x < b.min.x || bbox.min.x > b.max.x) collisionside.x = 0;
-	if (bbox.max.y < b.min.y || bbox.min.y > b.max.y) collisionside.y = 0;
+	if (bbox.max.y < b.min.y || bbox.min.y > b.max.y) { collisionside.y = 0; onGround = false; } else onGround = true;
 	if (bbox.max.z < b.min.z || bbox.min.z > b.max.z) collisionside.z = 0;
 	return collisionside;
 }
+bool GameObject::checkGround() {
+	return onGround;
+}
+
 BOUNDINGBOX GameObject::getBBOX() {
 	return bbox;
 }

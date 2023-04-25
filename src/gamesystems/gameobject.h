@@ -28,11 +28,14 @@ class GameObject {
     glm::vec3 scaling;
     vec3 campos;
 
+    bool onGround;
+
     //! VoxPhysics v0.0.1
     glm::vec3 velocity;
     glm::vec3 acceleration;
     glm::vec3 impulse;
     float impulseTime;
+    bool rigidbody;
 
     //? PROPERTIES
     bool visible;
@@ -68,6 +71,10 @@ public:
     void attachCamera(Camera* cam, vec3 stdpos);
 
     void setCollision(_collision coll);
+    bool getCollision();
+
+    void setRigidBody(bool rigid);
+    bool getRigidBody();
 
     void setVelocity(glm::vec3 vel);
     void setAcceleration(glm::vec3 accel);
@@ -84,6 +91,7 @@ public:
     bool simpleRaycast(glm::vec3 rayOrigin, glm::vec3 rayDirection, float maxDistance);
     bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 
-    glm::ivec3 CheckCollision(BOUNDINGBOX b);
+    glm::ivec3 checkCollision(BOUNDINGBOX b);
+    bool checkGround();
     BOUNDINGBOX getBBOX();
 };

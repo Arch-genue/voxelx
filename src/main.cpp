@@ -29,6 +29,7 @@ using namespace glm;
 #include "graphics/gui.h"
 
 #include "loaders/resourcemanager.h"
+#include "gamesystems/gamemanager.h"
 //#include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
@@ -60,6 +61,8 @@ int main() {
 
     ResourceManager::loadModel("apple", "voxtxt"); //? voxtxt, generic, null, voxlap
     ResourceManager::loadModel("null", "null");
+
+    GameManager gm(100);
 
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<float> clr_generator(0.1f, 0.9f);
@@ -152,9 +155,17 @@ int main() {
     nullobj->setPosition(vec3(15,0,0));
     
     GameObject* appleobj = new GameObject("apple");
+    appleobj->setRigidBody(true);
     appleobj->setCollision(SIMPLE_COLLISION);
     appleobj->setPosition(vec3(0, 50, 40));
     appleobj->setHidden(true);
+
+    // gm.addGameObject(wallleftobj);
+    // gm.addGameObject(wallrightobj);
+    // gm.addGameObject(walltopobj);
+    gm.addGameObject(floorobj);
+    gm.addGameObject(nullobj);
+    gm.addGameObject(appleobj);
 
     //! Camera
     Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f)); 
@@ -186,7 +197,6 @@ int main() {
         auto dtMsec = std::chrono::duration_cast<std::chrono::milliseconds>(newTimePoint - lastTimePoint);
         lastTimePoint = newTimePoint;
         deltaTime = 0.001f * float(dtMsec.count());
-        //std::cout << (1 / deltaTime) << std::endl;
         
 		while (SDL_PollEvent(&Window::sdlEvent) != 0) {
             Uint8 b = Window::sdlEvent.button.button;
@@ -197,7 +207,6 @@ int main() {
             }
 
             else if (Window::sdlEvent.type == SDL_MOUSEMOTION) Input::cursor_position_callback(Window::sdlEvent.motion);
-
             else if (Window::sdlEvent.type == SDL_MOUSEBUTTONDOWN) Input::mouse_button_callback(b, 1);
             else if (Window::sdlEvent.type == SDL_MOUSEBUTTONUP) Input::mouse_button_callback(b, 0);
             else if (Window::sdlEvent.type == SDL_KEYDOWN) Input::key_callback(Window::sdlEvent.key.keysym.sym, 1);
@@ -221,16 +230,20 @@ int main() {
             Input::toggleCursor();
         }
         if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
+        
         if (Input::pressed(SDLK_w)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); 
         if (Input::pressed(SDLK_s)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed);
         if (Input::pressed(SDLK_a)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
         if (Input::pressed(SDLK_d)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
-        if (Input::jpressed(SDLK_SPACE)) { 
-            //if (!appleobj->onGround()) 
-            appleobj->applyForce(vec3(0, 5000.0f, 0)); 
+        
+        if (appleobj->checkGround()) { 
+            if (Input::jpressed(SDLK_SPACE)) {
+                appleobj->applyForce(vec3(0, 5000.0f, 0));
+            }
+             
         }
-        if (Input::pressed(SDLK_c)) camera->zoom = 0.5f;
-        else camera->zoom = 1.0f;
+
+        if (Input::pressed(SDLK_c)) camera->zoom = 0.5f; else camera->zoom = 1.0f;
 
         if (Input::jclicked(SDL_BUTTON_RIGHT)) {
             appleobj->setPosition(vec3(0, 100, 0));
@@ -246,31 +259,13 @@ int main() {
         ResourceManager::getShader("voxel")->use();
         ResourceManager::getShader("voxel")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
 
+        gm.UpdatePhysics(deltaTime);
+        gm.Update();
+
         effect1->draw(deltaTime);
         effect2->draw(deltaTime);
 
-        walltopobj->draw();
-        wallleftobj->draw();
-        wallrightobj->draw();
-        
-        floorobj->updatePhysics(deltaTime);
-        appleobj->updatePhysics(deltaTime);
-
-        floorobj->draw();
         camera->setPosition( (appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f );
-        appleobj->draw();
-
-        if (appleobj->CheckCollision(floorobj->getBBOX()).y == 0) {
-            appleobj->applyForce(vec3(0, -9.8, 0));
-            test = false;
-        } else {
-            appleobj->setVelocity(glm::vec3(0, 0, 0));
-            appleobj->setAcceleration(glm::vec3(0, 0, 0));
-            if (!test) {
-                appleobj->setPosition(vec3(appleobj->getPosition().x, floorobj->getBBOX().max.y, appleobj->getPosition().z));
-                test = true;
-            }
-        }
 
         gui.draw();
         
@@ -280,9 +275,5 @@ int main() {
     Window::exit();
 
     delete effect1;
-
-    delete nullobj;
-    delete appleobj;
-
     return 0;
 }
