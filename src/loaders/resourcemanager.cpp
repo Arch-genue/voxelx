@@ -29,10 +29,16 @@ void ResourceManager::loadTexture(std::string str) {
     addTexture(texture, str.c_str());
 }
 void ResourceManager::loadModel(std::string str, std::string type) {
-	_voxels* voxs = load_model(path + "models/" + str + ".voxtxt", type.c_str());
-	if (voxs == nullptr) {
-        std::cerr << "Failed to load model: " << str << "\n";
-        return;
+    _voxels* voxs;
+    if (type == "voxtxt") {
+        voxs = load_model(path + "models/" + str + ".voxtxt", type.c_str());
+        if (voxs == nullptr) {
+            std::cerr << "Failed to load model: " << str << "\n";
+            delete voxs;
+            return;
+        }
+    } else if(type == "null") {
+        voxs = genVoxel();
     }
 	addModel(voxs, str);
 }

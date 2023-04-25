@@ -6,29 +6,24 @@
 #include "../gamesystems/camera.h"
 
 class Mesh;
-class Shader;
 class Camera;
 
 class _voxels;
 class voxel_m;
 
 class Renderer {
-	float* buffer;
-	size_t capacity;
+	static float* buffer;
+	static size_t capacity;
 
-	//? GLOBAL ARRAYS
-	int _shaderindex;
-	int _meshindex;
-
-	Camera* camera;
+	static Camera* camera;
 public:
-	Renderer(size_t capacity);
-	~Renderer();
+	static void init(size_t capacity);
+	static void free();
+	
+	static void addCamera(Camera* cam);
 
-	void addCamera(Camera* cam);
+	static Mesh* render(_voxels* voxels=nullptr);
+	static Mesh* voxelRender(voxel_m* voxel);
 
-	Mesh* render(_voxels* voxels=nullptr);
-	Mesh* voxelRender(voxel_m* voxel);
-
-	Camera* getCamera();
+	static Camera* getCamera();
 };

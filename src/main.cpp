@@ -46,26 +46,20 @@ int main() {
     Window::init(WIDTH, HEIGHT, "Voxel3D Alpha");
     Input::init();
     ResourceManager::init("../res/");
+    GUI gui;
 
     //! Global renderer
-    Renderer* renderer = new Renderer(1024 * 1024 * 10);
+    Renderer::init(1024 * 1024 * 5);
 
-    // TODO ResourceLoader
+    //! ResourceLoader
     ResourceManager::loadShader("voxel");
     ResourceManager::loadShader("crosshair");
-    ResourceManager::loadShader("bbox");
     ResourceManager::loadShader("ui");
 
     ResourceManager::loadTexture("slot");
-    ResourceManager::loadModel("apple", "voxtxt"); //? voxtxt, generic, voxlap
 
-    _voxels* nullvox = new _voxels;
-    nullvox->m_size = vec3(1, 1, 1);
-    voxel_m vox;
-    vox.position = vec3(0, 0, 0);
-    vox.clr = vec4(0.5f, 1.0f, 0.5f, 1.0f);
-    vox.visible = true;
-    nullvox->voxels.push_back(vox);
+    ResourceManager::loadModel("apple", "voxtxt"); //? voxtxt, generic, null, voxlap
+    ResourceManager::loadModel("null", "null");
 
     std::mt19937 rng(std::random_device{}());
     std::uniform_real_distribution<float> clr_generator(0.1f, 0.9f);
@@ -132,60 +126,57 @@ int main() {
         }
     }
 
-    ResourceManager::addModel(nullvox, "null");
     ResourceManager::addModel(floorvox, "floor");
-
     ResourceManager::addModel(wallvoxleft, "wallleft");
     ResourceManager::addModel(wallvoxright, "wallright");
     ResourceManager::addModel(wallvoxtop, "walltop");
 
-    GameObject* wallleftobj = new GameObject(renderer, "wallleft");
+    //! GameObjects
+    GameObject* wallleftobj = new GameObject("wallleft");
     wallleftobj->setCollision(SIMPLE_COLLISION);
     wallleftobj->setPosition(vec3(30, 0, 0));
 
-    GameObject* wallrightobj = new GameObject(renderer, "wallright");
+    GameObject* wallrightobj = new GameObject("wallright");
     wallrightobj->setCollision(SIMPLE_COLLISION);
     wallrightobj->setPosition(vec3(-20, 0, 0));
 
-    GameObject* walltopobj = new GameObject(renderer, "walltop");
+    GameObject* walltopobj = new GameObject("walltop");
     walltopobj->setCollision(SIMPLE_COLLISION);
     walltopobj->setPosition(vec3(-20, 50, 0));
 
-    GameObject* floorobj = new GameObject(renderer, "floor");
+    GameObject* floorobj = new GameObject("floor");
     floorobj->setCollision(SIMPLE_COLLISION);
     floorobj->setPosition(vec3(-500, -1, -500));
 
-    GameObject* nullobj = new GameObject(renderer, "null");
+    GameObject* nullobj = new GameObject("null");
     nullobj->setPosition(vec3(15,0,0));
     
-    GameObject* appleobj = new GameObject(renderer, "apple");
+    GameObject* appleobj = new GameObject("apple");
     appleobj->setCollision(SIMPLE_COLLISION);
     appleobj->setPosition(vec3(0, 50, 40));
     appleobj->setHidden(true);
 
+    //! Camera
     Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f)); 
     camera->perspective = true;
     camera->flipped = false;
     camera->zoom = 1.0f;
-    renderer->addCamera(camera);
+    Renderer::addCamera(camera);
     appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
 
-    VoxelParticles* effect1 = new VoxelParticles(renderer, EFFECT_FLAME, 20);
+    //! Particles
+    VoxelParticles* effect1 = new VoxelParticles(EFFECT_FLAME, 20);
     effect1->setPosition(vec3(4.0f, 30.0f, 1.5f));
 
-    VoxelParticles* effect2 = new VoxelParticles(renderer, EFFECT_CURSED_FLAME, 30);
+    VoxelParticles* effect2 = new VoxelParticles(EFFECT_CURSED_FLAME, 30);
     effect2->setPosition(vec3(15.0f, 30.0f, 1.5f));
 
     float deltaTime = 0.0f;
+    auto lastTimePoint = std::chrono::system_clock::now();
     vec2 cam(0.0f, 0.0f);
     float speed = 50;
     bool test = false;
-
-    auto lastTimePoint = std::chrono::system_clock::now();
-
-    //!TEST
-    GUI gui;
-
+    
     //! ===MAIN-LOOP===
     quit = false;
     Window::setPause(false);
@@ -195,6 +186,7 @@ int main() {
         auto dtMsec = std::chrono::duration_cast<std::chrono::milliseconds>(newTimePoint - lastTimePoint);
         lastTimePoint = newTimePoint;
         deltaTime = 0.001f * float(dtMsec.count());
+        //std::cout << (1 / deltaTime) << std::endl;
         
 		while (SDL_PollEvent(&Window::sdlEvent) != 0) {
             Uint8 b = Window::sdlEvent.button.button;
@@ -229,10 +221,10 @@ int main() {
             Input::toggleCursor();
         }
         if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
-        if (Input::pressed(SDLK_w)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(1, 0, 0));
-        if (Input::pressed(SDLK_s)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(1, 0, 0));
-        if (Input::pressed(SDLK_a)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(1.0f, vec3(0, 0, 1));
-        if (Input::pressed(SDLK_d)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed); //appleobj->translate(-1.0f, vec3(0, 0, 1));
+        if (Input::pressed(SDLK_w)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); 
+        if (Input::pressed(SDLK_s)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed);
+        if (Input::pressed(SDLK_a)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
+        if (Input::pressed(SDLK_d)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
         if (Input::jpressed(SDLK_SPACE)) { 
             //if (!appleobj->onGround()) 
             appleobj->applyForce(vec3(0, 5000.0f, 0)); 
@@ -250,8 +242,10 @@ int main() {
         }
 
         Window::_glClear();
+        
         ResourceManager::getShader("voxel")->use();
-        ResourceManager::getShader("voxel")->uniformMatrix("projview", renderer->getCamera()->getProjection() * renderer->getCamera()->getView());
+        ResourceManager::getShader("voxel")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
+
         effect1->draw(deltaTime);
         effect2->draw(deltaTime);
 
@@ -285,19 +279,10 @@ int main() {
 	}
     Window::exit();
 
-    //! FLYING
-    // if (Input::pressed(GLFW_KEY_W)) camera->position += camera->front * deltaTime * speed;
-    // if (Input::pressed(GLFW_KEY_S)) camera->position -= camera->front * deltaTime * speed;
-    // if (Input::pressed(GLFW_KEY_A)) camera->position -= camera->right * deltaTime * speed;
-    // if (Input::pressed(GLFW_KEY_D)) camera->position += camera->right * deltaTime * speed;
-
-    delete nullvox;
-
     delete effect1;
 
     delete nullobj;
     delete appleobj;
 
-    delete renderer;
     return 0;
 }

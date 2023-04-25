@@ -23,17 +23,19 @@ int chunk_attrs[] = {3,4,1, 0};
 					buffer[INDEX+7] = (L);\
 					INDEX += VERTEX_SIZE;
 
-Renderer::Renderer(size_t capacity) : capacity(capacity) {
+float* Renderer::buffer;
+size_t Renderer::capacity;
+
+Camera* Renderer::camera;
+
+void Renderer::init(size_t capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
-
-	_shaderindex = 0;
+	Renderer::capacity = capacity;
 }
-
-Renderer::~Renderer() {
+void Renderer::free() {
 	delete[] buffer;
 
 }
-
 void Renderer::addCamera(Camera* cam) {
 	camera = cam;
 }

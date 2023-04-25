@@ -16,7 +16,6 @@ enum _collision {NO_COLLISION, SIMPLE_COLLISION};
 
 class GameObject {
     //? OBJECTS
-    Renderer* renderer;
     Mesh* mesh;
     Camera* camera;
 
@@ -46,7 +45,7 @@ class GameObject {
     Mesh* _boundingbox;
     BOUNDINGBOX bbox;
 public:
-    GameObject(Renderer* rndr, const char* model);
+    GameObject(const char* model);
     ~GameObject();
 
     void translate(float val, glm::vec3 vec);

@@ -1,12 +1,12 @@
 #include "particles.h"
 #include "../loaders/resourcemanager.h"
+#include "renderer.h"
 
 #include <iostream>
 
 std::mt19937 rng(std::random_device{}());
 
-VoxelParticles::VoxelParticles(Renderer* render, _effects ptype, int bufferSize) {
-    renderer = render;
+VoxelParticles::VoxelParticles(_effects ptype, int bufferSize) {
     m_gravity = glm::vec3(0, -9.8, 0);
     voxels = new _voxels;
     
@@ -120,7 +120,7 @@ void VoxelParticles::draw(float deltaTime) {
     }
     //* DRAW
     ResourceManager::getShader("voxel")->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
-    mesh = renderer->render(voxels);
+    mesh = Renderer::render(voxels);
     mesh->draw(GL_TRIANGLES);
     delete mesh;
 }

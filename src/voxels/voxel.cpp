@@ -103,3 +103,14 @@ _voxels* load_model(std::string filename, const char* type) {
         return nullptr;
     }
 }
+
+_voxels* genVoxel() {
+    _voxels* nullvox = new _voxels;
+    nullvox->m_size = glm::vec3(1, 1, 1);
+    voxel_m vox;
+    vox.position = glm::vec3(0, 0, 0);
+    vox.clr = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    vox.visible = true;
+    nullvox->voxels.push_back(vox);
+    return nullvox;
+}

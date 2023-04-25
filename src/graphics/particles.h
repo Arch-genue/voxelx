@@ -2,16 +2,12 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include <vector>
 #include <random>
 #include <algorithm>
 
-#include "renderer.h"
 #include "mesh.h"
-#include "shader.h"
 #include "../voxels/voxel.h"
 
-class Renderer;
 class Mesh;
 class Shader;
 class voxel_m;
@@ -27,7 +23,6 @@ enum _effects {
 
 class VoxelParticles {
     //? Objects
-    Renderer* renderer;
     Mesh* mesh;
     _voxels* voxels;
     
@@ -46,7 +41,7 @@ class VoxelParticles {
     //--
     float _val;
 public:
-    VoxelParticles(Renderer* render, _effects ptype, int bufferSize);
+    VoxelParticles(_effects ptype, int bufferSize);
     ~VoxelParticles();
 
     void addParticle(voxel_m& particle);

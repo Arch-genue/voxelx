@@ -6,13 +6,11 @@
 #include "../graphics/shader.h"
 #include "../voxels/voxel.h"
 #include "../loaders/resourcemanager.h"
+#include "../graphics/renderer.h"
 
 #include <iostream>
 
-GameObject::GameObject(Renderer* rndr, const char* model) {
-    //
-    renderer = rndr;
-	
+GameObject::GameObject(const char* model) {
     //
     modelmatrix = glm::mat4(1.0f);;
     position = glm::vec3(0);
@@ -32,7 +30,7 @@ GameObject::GameObject(Renderer* rndr, const char* model) {
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
     //!CREATE MESH!
-	mesh = renderer->render(ResourceManager::getModel(model));
+	mesh = Renderer::render(ResourceManager::getModel(model));
 }
 GameObject::~GameObject() {}
 
@@ -43,8 +41,6 @@ void GameObject::attachCamera(Camera* cam, vec3 stdpos) {
 }
 
 void GameObject::draw() {
-	//! Move Camera with object
-
     if (visible == false) return;
     modelmatrix = glm::scale(modelmatrix, scaling);
     modelmatrix = glm::translate(modelmatrix, position);

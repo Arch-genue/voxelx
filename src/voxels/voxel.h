@@ -33,3 +33,4 @@ struct _voxels {
 // };
 
 extern _voxels* load_model(std::string filename, const char* type);
+extern _voxels* genVoxel();
