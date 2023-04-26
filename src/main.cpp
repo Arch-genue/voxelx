@@ -172,10 +172,11 @@ int main() {
         }
 
         Window::_glClear();
-        gm.UpdatePhysics(deltaTime);
+        
         ResourceManager::getShader("voxel")->use();
         ResourceManager::getShader("voxel")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
 
+        gm.UpdatePhysics(deltaTime);
         gm.Update();
 
         ResourceManager::getShader("particle")->use();
