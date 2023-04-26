@@ -16,6 +16,13 @@ class Renderer {
 	static size_t capacity;
 
 	static Camera* camera;
+
+	static void top(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light);
+	static void bottom(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light);
+	static void left(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light);
+	static void right(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light);
+	static void front(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light);
+	static void back(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light);
 public:
 	static void init(size_t capacity);
 	static void free();

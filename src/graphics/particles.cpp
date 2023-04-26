@@ -9,6 +9,7 @@ std::mt19937 rng(std::random_device{}());
 VoxelParticles::VoxelParticles(_effects ptype, int bufferSize) {
     m_gravity = glm::vec3(0, -9.8, 0);
     voxels = new _voxels;
+    for(uint16_t i = 0; i < 6; i++) voxels->light[i] = glm::vec3(1);
     
     setType(ptype);
     setPosition(glm::vec3(0));
@@ -119,7 +120,6 @@ void VoxelParticles::draw(float deltaTime) {
         }
     }
     //* DRAW
-    ResourceManager::getShader("voxel")->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
     mesh = Renderer::render(voxels);
     mesh->draw(GL_TRIANGLES);
     delete mesh;

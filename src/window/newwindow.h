@@ -17,7 +17,6 @@ public:
     static SDL_Window * window;
     static SDL_Renderer* guirenderer;
     static SDL_GLContext glContext;
-    static SDL_Event sdlEvent;
     
     static int init(int width, int height, const char * title);
     static void _glInit();

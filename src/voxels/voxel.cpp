@@ -32,6 +32,7 @@ _voxels* load_model(std::string filename, const char* type) {
         float clr_r = 0.0f, clr_g = 0.0f, clr_b = 0.0f, clr_a = 0.0f;
         
         _voxels* voxels = new _voxels;
+        for(uint16_t i = 0; i < 6; i++) voxels->light[i] = glm::vec3(1);
 
         std::string str[5];
 
@@ -65,6 +66,8 @@ _voxels* load_model(std::string filename, const char* type) {
             vox.position = glm::vec3(x_coord, y_coord, z_coord);
             vox.clr = glm::vec4(clr_r, clr_g, clr_b, clr_a);
             voxels->voxels.push_back(vox);
+
+            
         }
         if ( x_min == 999 ) x_min = 0;
         if ( y_min == 999 ) y_min = 0;

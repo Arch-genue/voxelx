@@ -6,7 +6,6 @@
 SDL_Window* Window::window;
 SDL_Renderer* Window::guirenderer;
 SDL_GLContext Window::glContext;
-SDL_Event Window::sdlEvent;
 
 bool Window::_pause;
 

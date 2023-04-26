@@ -13,6 +13,8 @@ float Input::y = 0.0f;
 bool Input::_cursor_locked = false;
 bool Input::_cursor_started = false;
 
+SDL_Event Input::sdlEvent;
+
 #define _MOUSE_BUTTONS 1024
 
 void Input::cursor_position_callback(SDL_MouseMotionEvent e) {
@@ -93,9 +95,25 @@ void Input::toggleCursor() {
     Window::setCursorMode(_cursor_locked ? SDL_TRUE : SDL_FALSE);
 }
 
+void Input::processEvents(bool &quit) {
+    while (SDL_PollEvent(&sdlEvent) != 0) {
+        Uint8 b = sdlEvent.button.button;
+        int x1;int y1; SDL_GetMouseState(&x1, &y1);
+        if (sdlEvent.type == SDL_QUIT) quit = true;
+        if (sdlEvent.type == SDL_WINDOWEVENT) {
+            if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED ) window_size_callback(sdlEvent.window.data1, sdlEvent.window.data2);
+        }
+
+        else if (sdlEvent.type == SDL_MOUSEMOTION) cursor_position_callback(sdlEvent.motion);
+        else if (sdlEvent.type == SDL_MOUSEBUTTONDOWN) mouse_button_callback(b, 1);
+        else if (sdlEvent.type == SDL_MOUSEBUTTONUP) mouse_button_callback(b, 0);
+        else if (sdlEvent.type == SDL_KEYDOWN) key_callback(sdlEvent.key.keysym.sym, 1);
+        else if (sdlEvent.type == SDL_KEYUP) key_callback(sdlEvent.key.keysym.sym, 0);
+    }
+}
+
 void Input::pullEvents() {
     _current++;
     deltaX = 0.0f;
     deltaY = 0.0f;
-    //glfwPollEvents();
 }

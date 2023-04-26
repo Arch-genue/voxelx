@@ -6,7 +6,10 @@
 Camera::Camera(vec3 pos, float fov) : fov(fov), rotation(1.0f) {
     updateVectors();
     position = pos;
-    aspect == 0.0f;
+    aspect = 0.0f;
+    perspective = true;
+    flipped = false;
+    zoom = 1.0f;
 }
 
 void Camera::updateVectors() {

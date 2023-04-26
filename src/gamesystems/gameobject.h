@@ -18,6 +18,7 @@ class GameObject {
     //? OBJECTS
     Mesh* mesh;
     Camera* camera;
+    _voxels* voxels;
 
     //? POSITIONS
     glm::mat4 modelmatrix;
@@ -50,6 +51,9 @@ class GameObject {
 public:
     GameObject(const char* model);
     ~GameObject();
+
+    void setLight(glm::vec3 *light);
+    glm::vec3* getLight();
 
     void translate(float val, glm::vec3 vec);
     void rotate(float val, glm::vec3 rot);

@@ -6,6 +6,8 @@
 typedef unsigned int uint;
 
 class Input {
+    static SDL_Event sdlEvent;
+
     public:
         static bool* _keys;
         static uint* _frames;
@@ -18,6 +20,7 @@ class Input {
         static bool _cursor_started;
 
         static int init();
+        static void processEvents(bool &quit);
         static void pullEvents();
         static bool pressed(int keycode);
         static bool jpressed(int keycode);

@@ -23,19 +23,26 @@ GameObject::GameObject(const char* model) {
     setVisible(true);
 	setHidden(false);
 	setCollision(NO_COLLISION);
+	setRigidBody(false);
 
-	rigidbody = false;
-
-    //
     mass = 100; //100 Kg
 
     velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
+	voxels = ResourceManager::getModel(model);
+
     //!CREATE MESH!
-	mesh = Renderer::render(ResourceManager::getModel(model));
+	mesh = Renderer::render(voxels);
 }
 GameObject::~GameObject() {}
+
+void GameObject::setLight(glm::vec3 *light) {
+	for (uint16_t i = 0; i < 6; i++) voxels->light[i] = light[i];
+}
+glm::vec3* GameObject::getLight() {
+	return voxels->light;
+}
 
 void GameObject::attachCamera(Camera* cam, vec3 stdpos) {
 	camera = cam;
