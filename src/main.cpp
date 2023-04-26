@@ -172,8 +172,8 @@ int main() {
         gm.Update();
 
         ResourceManager::getShader("particle")->use();
-        ResourceManager::getShader("particle")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
-        ResourceManager::getShader("particle")->uniformMatrix("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
+        ResourceManager::getShader("particle")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
+        //ResourceManager::getShader("particle")->uniformMatrix("", );
         effect1->draw(deltaTime);
         effect2->draw(deltaTime);
 

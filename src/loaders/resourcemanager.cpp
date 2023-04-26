@@ -37,9 +37,7 @@ void ResourceManager::loadModel(std::string str, std::string type) {
             delete voxs;
             return;
         }
-    } else if(type == "null") {
-        voxs = genVoxel();
-    }
+    } else if(type == "null") voxs = genVoxel();
 	addModel(voxs, str);
 }
 
