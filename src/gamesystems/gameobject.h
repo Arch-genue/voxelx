@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "../graphics/renderer.h"
+#include "../physics/physics.h"
 
 class Mesh;
 class Shader;
@@ -19,6 +20,7 @@ class GameObject {
     Mesh* mesh;
     Camera* camera;
     _voxels* voxels;
+    PhysicsObject* _physobject;
 
     //? POSITIONS
     glm::mat4 modelmatrix;
@@ -55,6 +57,8 @@ public:
     void setLight(glm::vec3 *light);
     glm::vec3* getLight();
 
+    PhysicsObject* getPhysicsObject();
+
     void translate(float val, glm::vec3 vec);
     void rotate(float val, glm::vec3 rot);
     void scale(float val, glm::vec3 scalevec);
@@ -80,19 +84,10 @@ public:
     void setRigidBody(bool rigid);
     bool getRigidBody();
 
-    void setVelocity(glm::vec3 vel);
-    void setAcceleration(glm::vec3 accel);
-    glm::vec3 getVelocity();
-    glm::vec3 getAcceleration();
-
-    void setImpulse(glm::vec3 force);
-    void applyForce(glm::vec3 force);
-
     //* Voxel operations
     void setVoxelState(uint8_t i, bool state);
     bool getVoxel(glm::vec3 pos);
 
-    bool simpleRaycast(glm::vec3 rayOrigin, glm::vec3 rayDirection, float maxDistance);
     bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 
     glm::ivec3 checkCollision(BOUNDINGBOX b);

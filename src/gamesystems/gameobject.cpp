@@ -22,10 +22,9 @@ GameObject::GameObject(const char* model) {
 
     setVisible(true);
 	setHidden(false);
-	setCollision(NO_COLLISION);
-	setRigidBody(false);
+	_physobject = new PhysicsObject();
 
-    mass = 100; //100 Kg
+    mass = 10; //100 Kg
 
     velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -60,9 +59,15 @@ void GameObject::draw() {
     modelmatrix = glm::mat4(1.0f);
 }
 
+PhysicsObject* GameObject::getPhysicsObject() {
+	return _physobject;
+}
+
 void GameObject::setCollision(_collision coll) {
 	switch(coll) {
-		case NO_COLLISION: _boundbox_size = glm::vec3(0, 0, 0); break;
+		case NO_COLLISION: 
+			_boundbox_size = glm::vec3(0, 0, 0); 
+		break;
 		case SIMPLE_COLLISION:
 			glm::vec3 sizes = mesh->getVoxels()->m_size;
 			_boundbox_size = glm::vec3(sizes.x, sizes.y, sizes.z);
@@ -85,7 +90,10 @@ void GameObject::setCollision(_collision coll) {
 				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
 			};
 			int attrs[2] = { 3,  0 };
-			_boundingbox = new Mesh(vertices, 8, attrs);
+			//_boundingbox = new Mesh(vertices, 8, attrs);
+			//_physobject = new PhysicsObject(getPosition(), , mass);
+			_physobject->setType(getRigidBody() ? DYNAMIC_PHYSICS : STATIC_PHYSICS);
+			_physobject->setMass(mass);
 		break;
 	}
 	collision = coll;
@@ -119,40 +127,6 @@ BOUNDINGBOX GameObject::getBBOX() {
 	return bbox;
 }
 
-void GameObject::setImpulse(glm::vec3 force) {
-    impulse += (force*100.0f) / mass;
-    impulseTime = 1.0f;
-}
-
-void GameObject::applyForce(glm::vec3 force) {
-	acceleration += force / mass;
-}
-
-void GameObject::updatePhysics(float deltaTime) {
-	bbox.min = position;
-	bbox.max = _boundbox_size+position;
-
-	velocity += acceleration * 10.0f * deltaTime;
-	
-	acceleration = glm::vec3(0.0f);
-	
-	position += velocity;
-}
-
-glm::vec3 GameObject::getVelocity() {
-	return velocity;
-}
-glm::vec3 GameObject::getAcceleration() {
-	return acceleration;
-}
-
-void GameObject::setVelocity(glm::vec3 vel) {
-	velocity = vel;
-}
-void GameObject::setAcceleration(glm::vec3 accel) {
-	acceleration = accel;
-}
-
 void GameObject::translate(float val, glm::vec3 vec) {
 	position += vec*val;
 }
@@ -164,6 +138,7 @@ void GameObject::rotate(float angle, glm::vec3 rot) {
 
 void GameObject::setPosition(glm::vec3 pos) {
 	position = pos;
+	_physobject->setPosition(pos);
 }
 void GameObject::setRotation(float angle, glm::vec3 rot) {
     rotAngle = angle;

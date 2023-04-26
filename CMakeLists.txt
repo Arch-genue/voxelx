@@ -23,7 +23,7 @@ set(SOURCE
 	src/graphics/texture.cpp
 	src/graphics/mesh.cpp
 	src/graphics/renderer.cpp
-	src/graphics/particles.cpp
+	src/graphics/voxelparticles.cpp
 	src/graphics/gui.cpp
 
 	src/graphics/uvregion.cpp
@@ -35,6 +35,9 @@ set(SOURCE
 
 	src/loaders/resourcemanager.cpp
 	src/loaders/png_loading.cpp
+
+	src/physics/physics.cpp
+	src/physics/physicsengine.cpp
 	
 	src/gamesystems/camera.cpp
 	src/gamesystems/gameobject.cpp
@@ -49,7 +52,7 @@ set(HEADER
 	src/graphics/texture.h 
 	src/graphics/mesh.h
 	src/graphics/renderer.h
-	src/graphics/particles.h
+	src/graphics/voxelparticles.h
 	src/graphics/gui.h
 
 	src/graphics/uvregion.h
@@ -61,6 +64,9 @@ set(HEADER
 
 	src/loaders/resourcemanager.h
 	src/loaders/png_loading.h
+
+	src/physics/physics.h
+	src/physics/physicsengine.h
 
 	src/gamesystems/camera.h
 	src/gamesystems/gameobject.h

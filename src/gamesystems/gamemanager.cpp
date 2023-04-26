@@ -6,33 +6,39 @@ GameManager::GameManager(uint16_t size) {
     this->size = size;
     _size_incr = 0;
     gameobjects = new GameObject*[size];
+
+    physicsengine = new PhysicsEngine();
 }
 GameManager::~GameManager() {
     for(uint16_t i = 0; i < _size_incr; i++) delete gameobjects[i];
 }
 
-void GameManager::addGameObject(GameObject* gm) {
-    gameobjects[_size_incr] = gm;
+void GameManager::addGameObject(GameObject* gameobj) {
+    gameobjects[_size_incr] = gameobj;
+    if (gameobj->getPhysicsObject() != nullptr) { 
+        physicsengine->addObject(gameobj->getPhysicsObject());
+    }
     _size_incr++;
 }
 
 void GameManager::UpdatePhysics(float deltaTime) {
-    for(uint16_t i = 0; i < _size_incr; i++) {
-        gameobjects[i]->updatePhysics(deltaTime);
+    glm::vec3 gravity(0, -9.81f, 0);
+    physicsengine->update(deltaTime);
 
-        bool physobj =  (gameobjects[i]->getRigidBody() && gameobjects[i]->getCollision());
-        for(uint16_t i2 = 0; i2 < _size_incr; i2++) {
-            if (i == i2) continue;
-            if (physobj && gameobjects[i2]->getCollision()) {
-                gameobjects[i]->checkCollision(gameobjects[i2]->getBBOX()).y;
-                if (!gameobjects[i]->checkGround()) {
-                    gameobjects[i]->applyForce(vec3(0, -9.8, 0));
-                } else {
-                    gameobjects[i]->setVelocity(glm::vec3(0, 0, 0));
-                    gameobjects[i]->setAcceleration(glm::vec3(0, 0, 0));
-                }
-            }
+    for(uint16_t i = 0; i < _size_incr; i++) {
+        if (gameobjects[i]->getPhysicsObject() == nullptr) continue;
+
+        PhysicsObject* phs = gameobjects[i]->getPhysicsObject();
+
+        if (gameobjects[i]->getPhysicsObject()->type == DYNAMIC_PHYSICS) { 
+            phs->applyForce(gravity);
         }
+
+        glm::vec3 surfacePosition, surfaceNormal;
+        if (physicsengine->checkCollision(phs, surfacePosition, surfaceNormal)) {
+            physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
+        }
+        gameobjects[i]->setPosition(phs->position);
     }
 }
 void GameManager::Update() {

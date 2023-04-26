@@ -17,6 +17,7 @@ enum _effects {
 
     EFFECT_FLAME,
     EFFECT_CURSED_FLAME,
+    EFFECT_DEAD_FLAME,
     EFFECT_VOMIT,
     EFFECT_WATER,
 };
@@ -52,9 +53,10 @@ public:
 
     void draw(float deltaTime);
 
-    //Default Particles
+    //? Default Particles
     void effect_flame(voxel_m* vox);
     void effect_cursed_flame(voxel_m* vox);
+    void effect_dead_flame(voxel_m* vox);
     
     void effect_vomit(voxel_m* vox);
     void effect_water(voxel_m* vox);

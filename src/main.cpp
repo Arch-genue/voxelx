@@ -21,16 +21,12 @@ using namespace glm;
 #include "window/newwindow.h"
 #include "window/newinput.h"
 
-#include "graphics/shader.h"
-//#include "graphics/texture.h"
-#include "graphics/mesh.h"
 #include "graphics/renderer.h"
-#include "graphics/particles.h"
+#include "graphics/voxelparticles.h"
 #include "graphics/gui.h"
 
 #include "loaders/resourcemanager.h"
 #include "gamesystems/gamemanager.h"
-//#include "loaders/png_loading.h"
 
 #include "voxels/voxel.h"
 #include "gamesystems/camera.h"
@@ -84,20 +80,23 @@ int main() {
 
     //! GameObjects
     GameObject* floorobj = new GameObject("floor");
-    floorobj->setCollision(SIMPLE_COLLISION);
     floorobj->setPosition(vec3(-500, -1, -500));
+    floorobj->setRigidBody(false);
+    floorobj->setCollision(SIMPLE_COLLISION);
 
     GameObject* nullobj = new GameObject("null");
     nullobj->setPosition(vec3(15,0,0));
     
     GameObject* appleobj = new GameObject("apple");
+    appleobj->setPosition(vec3(0, 50, 40));
     appleobj->setRigidBody(true);
     appleobj->setCollision(SIMPLE_COLLISION);
-    appleobj->setPosition(vec3(0, 50, 40));
     appleobj->setHidden(true);
 
     GameObject* appleobj1 = new GameObject("apple");
     appleobj1->setPosition(vec3(0, 10, 0));
+    appleobj1->setRigidBody(true);
+    appleobj1->setCollision(SIMPLE_COLLISION);
 
     gm.addGameObject(floorobj);
     gm.addGameObject(appleobj);
@@ -114,6 +113,9 @@ int main() {
 
     VoxelParticles* effect2 = new VoxelParticles(EFFECT_CURSED_FLAME, 30);
     effect2->setPosition(vec3(15.0f, 30.0f, 1.5f));
+
+    VoxelParticles* effect3 = new VoxelParticles(EFFECT_DEAD_FLAME, 30);
+    effect3->setPosition(vec3(-10.0f, 30.0f, 1.5f));
 
     float deltaTime = 0.0f;
     auto lastTimePoint = std::chrono::system_clock::now();
@@ -139,6 +141,7 @@ int main() {
             camera->rotation = mat4(1.0f);
             camera->rotate(cam, 0);
         }
+        gm.UpdatePhysics(deltaTime);
 
         if (Input::jpressed(SDLK_ESCAPE)) quit = true;
         if (Input::jpressed(SDLK_p)) {
@@ -146,14 +149,15 @@ int main() {
             Input::toggleCursor();
         }
         if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
-        if (Input::pressed(SDLK_w)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); 
-        if (Input::pressed(SDLK_s)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed);
-        if (Input::pressed(SDLK_a)) appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
-        if (Input::pressed(SDLK_d)) appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
+
+        if (Input::pressed(SDLK_w)) appleobj->getPhysicsObject()->position = appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed; // appleobj->setPosition(appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed); 
+        if (Input::pressed(SDLK_s)) appleobj->getPhysicsObject()->position = appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed; // appleobj->setPosition(appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed);
+        if (Input::pressed(SDLK_a)) appleobj->getPhysicsObject()->position = appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed; // appleobj->setPosition(appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
+        if (Input::pressed(SDLK_d)) appleobj->getPhysicsObject()->position = appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed; // appleobj->setPosition(appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed);
         
-        if (appleobj->checkGround()) {
-            if (Input::jpressed(SDLK_SPACE)) appleobj->applyForce(vec3(0, 5000.0f, 0));
-        }
+        //if (appleobj->checkGround()) {
+        if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysicsObject()->applyForce(vec3(0, 300.0f, 0));
+        //}
 
         if (Input::pressed(SDLK_c)) camera->zoom = 0.5f; else camera->zoom = 1.0f;
         if (Input::jclicked(SDL_BUTTON_RIGHT)) appleobj->setPosition(vec3(0, 100, 0));
@@ -168,14 +172,14 @@ int main() {
         ResourceManager::getShader("voxel")->use();
         ResourceManager::getShader("voxel")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
 
-        gm.UpdatePhysics(deltaTime);
         gm.Update();
 
         ResourceManager::getShader("particle")->use();
         ResourceManager::getShader("particle")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
-        //ResourceManager::getShader("particle")->uniformMatrix("", );
+        
         effect1->draw(deltaTime);
         effect2->draw(deltaTime);
+        effect3->draw(deltaTime);
 
         camera->setPosition( (appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f );
 

@@ -1,4 +1,4 @@
-#include "particles.h"
+#include "voxelparticles.h"
 #include "../loaders/resourcemanager.h"
 #include "renderer.h"
 
@@ -43,7 +43,7 @@ void VoxelParticles::setType(_effects ptype) {
         case EFFECT_IMPORT:
             //flame(it);
         break;
-        case EFFECT_FLAME:
+        case EFFECT_DEAD_FLAME: case EFFECT_FLAME:
             posvals = glm::vec2(-1.0f, 1.0f);
             velvals = glm::vec2(7.5f, 30.0f);
             clrvals = glm::vec2(0.05f, 0.3f);
@@ -106,6 +106,9 @@ void VoxelParticles::draw(float deltaTime) {
                 case EFFECT_CURSED_FLAME:
                     effect_cursed_flame(&voxels->voxels[i]); //? Innovation
                 break;
+                case EFFECT_DEAD_FLAME:
+                    effect_dead_flame(&voxels->voxels[i]);
+                break;
                 case EFFECT_VOMIT:
                     effect_vomit(&voxels->voxels[i]);
                 break;
@@ -116,7 +119,6 @@ void VoxelParticles::draw(float deltaTime) {
                     continue;
                 break;
             }
-            
         }
     }
     //* DRAW
@@ -135,13 +137,13 @@ void VoxelParticles::effect_cursed_flame(voxel_m* vox) {
 }
 
 //? Dead Flame
-// void VoxelParticles::effect_cursed_flame(voxel_m* vox) {
-//     vox->position = m_position + glm::vec3(pos_generator(rng), 0, pos_generator(rng));
-//     vox->velocity = glm::vec3(0, vel_generator(rng), 0);
-//     float clr = clr_generator(rng);
-//     vox->clr = glm::vec4(clr, clr, clr, 1.0f);
-//     vox->lifetime = lifetime_generator(rng);
-// }
+void VoxelParticles::effect_dead_flame(voxel_m* vox) {
+    vox->position = m_position + glm::vec3(pos_generator(rng), 0, pos_generator(rng));
+    vox->velocity = glm::vec3(0, vel_generator(rng), 0);
+    float clr = clr_generator(rng);
+    vox->clr = glm::vec4(clr, clr, clr, 1.0f);
+    vox->lifetime = lifetime_generator(rng);
+}
 
 //? Red Flame
 void VoxelParticles::effect_flame(voxel_m* vox) {
