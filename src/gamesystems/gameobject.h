@@ -20,8 +20,7 @@ class GameObject {
     Mesh* mesh;
     Camera* camera;
     _voxels* voxels;
-    PhysicsObject* _physobject;
-
+    
     //? POSITIONS
     glm::mat4 modelmatrix;
     glm::vec3 position;
@@ -31,14 +30,10 @@ class GameObject {
     glm::vec3 scaling;
     vec3 campos;
 
-    bool onGround;
-
-    //! VoxPhysics v0.0.1
-    glm::vec3 velocity;
-    glm::vec3 acceleration;
-    glm::vec3 impulse;
-    float impulseTime;
+    //! Voxel Physics v0.1.0
+    PhysicsObject* _physobject;
     bool rigidbody;
+    bool onGround;
 
     //? PROPERTIES
     bool visible;
@@ -48,7 +43,6 @@ class GameObject {
     //? Collision
     _collision collision;
     glm::vec3 _boundbox_size;
-    Mesh* _boundingbox;
     BOUNDINGBOX bbox;
 public:
     GameObject(const char* model);
@@ -57,7 +51,7 @@ public:
     void setLight(glm::vec3 *light);
     glm::vec3* getLight();
 
-    PhysicsObject* getPhysicsObject();
+    PhysicsObject* getPhysics();
 
     void translate(float val, glm::vec3 vec);
     void rotate(float val, glm::vec3 rot);

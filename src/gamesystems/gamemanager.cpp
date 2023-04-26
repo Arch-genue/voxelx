@@ -15,8 +15,8 @@ GameManager::~GameManager() {
 
 void GameManager::addGameObject(GameObject* gameobj) {
     gameobjects[_size_incr] = gameobj;
-    if (gameobj->getPhysicsObject() != nullptr) { 
-        physicsengine->addObject(gameobj->getPhysicsObject());
+    if (gameobj->getPhysics() != nullptr) { 
+        physicsengine->addObject(gameobj->getPhysics());
     }
     _size_incr++;
 }
@@ -26,11 +26,11 @@ void GameManager::UpdatePhysics(float deltaTime) {
     physicsengine->update(deltaTime);
 
     for(uint16_t i = 0; i < _size_incr; i++) {
-        if (gameobjects[i]->getPhysicsObject() == nullptr) continue;
+        if (gameobjects[i]->getPhysics() == nullptr) continue;
 
-        PhysicsObject* phs = gameobjects[i]->getPhysicsObject();
+        PhysicsObject* phs = gameobjects[i]->getPhysics();
 
-        if (gameobjects[i]->getPhysicsObject()->type == DYNAMIC_PHYSICS) { 
+        if (gameobjects[i]->getPhysics()->type == DYNAMIC_PHYSICS) { 
             phs->applyForce(gravity);
         }
 

@@ -18,16 +18,14 @@ GameObject::GameObject(const char* model) {
     rotAxis = glm::vec3(1);
     scaling = glm::vec3(0.1f);
 	campos = glm::vec3(0);
-	onGround = false;
 
     setVisible(true);
 	setHidden(false);
+
 	_physobject = new PhysicsObject();
+	onGround = false;
 
     mass = 10; //100 Kg
-
-    velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-    acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	voxels = ResourceManager::getModel(model);
 
@@ -59,7 +57,7 @@ void GameObject::draw() {
     modelmatrix = glm::mat4(1.0f);
 }
 
-PhysicsObject* GameObject::getPhysicsObject() {
+PhysicsObject* GameObject::getPhysics() {
 	return _physobject;
 }
 
@@ -73,23 +71,23 @@ void GameObject::setCollision(_collision coll) {
 			_boundbox_size = glm::vec3(sizes.x, sizes.y, sizes.z);
 			bbox.min = getPosition()-0.5f;
 			bbox.max = _boundbox_size-0.5f;
-			float vertices[] = {
-				//x     y
-				getPosition().x-0.5f, -0.5f, -0.5f,
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+			// float vertices[] = {
+			// 	//x     y
+			// 	getPosition().x-0.5f, -0.5f, -0.5f,
+			// 	getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
 
 				
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-				_boundbox_size.x-0.5f, -0.5f, -0.5f,
+			// 	_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+			// 	_boundbox_size.x-0.5f, -0.5f, -0.5f,
 
-				getPosition().x-0.5f, -0.5f, _boundbox_size.z-0.5f,
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
+			// 	getPosition().x-0.5f, -0.5f, _boundbox_size.z-0.5f,
+			// 	getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
 
 				
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
-				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
-			};
-			int attrs[2] = { 3,  0 };
+			// 	_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
+			// 	_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
+			// };
+			// int attrs[2] = { 3,  0 };
 			//_boundingbox = new Mesh(vertices, 8, attrs);
 			//_physobject = new PhysicsObject(getPosition(), , mass);
 			_physobject->setType(getRigidBody() ? DYNAMIC_PHYSICS : STATIC_PHYSICS);
