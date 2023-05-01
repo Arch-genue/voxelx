@@ -19,8 +19,10 @@ bool PhysicsEngine::checkCollision(PhysicsObject* object, glm::vec3& surfacePosi
     if (object->position.y <= 0) {
         surfacePosition = glm::vec3(object->position.x, 0, object->position.z);
         surfaceNormal = glm::vec3(0, 1, 0);
+        object->ground = true;
         return true;
     }
+    object->ground = false;
     return false;
 }
 
@@ -30,20 +32,20 @@ void PhysicsEngine::handleCollision(PhysicsObject* object, glm::vec3 surfacePosi
     glm::vec3 velocity = object->velocity;
     glm::vec3 acceleration = object->acceleration;
 
-    // Изменяем скорость объекта в направлении, перпендикулярном поверхности
-    glm::vec3 normalVelocity = glm::dot(velocity, surfaceNormal) * surfaceNormal;
-    glm::vec3 tangentVelocity = velocity - normalVelocity;
+    // // Изменяем скорость объекта в направлении, перпендикулярном поверхности
+    // glm::vec3 normalVelocity = glm::dot(velocity, surfaceNormal) * surfaceNormal;
+    // glm::vec3 tangentVelocity = velocity - normalVelocity;
     velocity = glm::vec3(0.0f); //tangentVelocity - 0.8f * normalVelocity;
 
-    // Изменяем ускорение объекта в направлении, перпендикулярном поверхности
-    glm::vec3 normalAcceleration = glm::dot(acceleration, surfaceNormal) * surfaceNormal;
-    glm::vec3 tangentAcceleration = acceleration - normalAcceleration;
+    // // Изменяем ускорение объекта в направлении, перпендикулярном поверхности
+    // glm::vec3 normalAcceleration = glm::dot(acceleration, surfaceNormal) * surfaceNormal;
+    // glm::vec3 tangentAcceleration = acceleration - normalAcceleration;
     acceleration = glm::vec3(0.0f);// tangentAcceleration - 0.8f * normalAcceleration;
 
     // Обновляем скорость и ускорение объекта
     object->velocity = velocity;
     object->acceleration = acceleration;
-    object->position = surfacePosition + surfaceNormal * 0.0f;
+    object->position = (surfacePosition + surfaceNormal * 0.0f);
 
     // // Применяем реакцию на столкновение
     // glm::vec3 velocity = object->velocity;

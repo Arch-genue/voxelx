@@ -33,26 +33,37 @@ using namespace glm;
 #include "gamesystems/gameobject.h"
 #include "gamesystems/entity.h"
 
+#define _VERSION "0.1.6 Alpha"
+
+#define _RENDERERSIZE 1024*1024
+
+#define TITLE "Voxel3D DEMO"
+
 int WIDTH = 1024;
 int HEIGHT = 768;
 float MOUSE_SPEED = 1.3f;
 
 int main() {
-    Window::init(WIDTH, HEIGHT, "Voxel3D Alpha");
+    std::cout << "Voxel 3D: " << _VERSION << std::endl;
+    Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();
     ResourceManager::init("../res/");
 
-    GUI gui;
-
     //! Global renderer
-    Renderer::init(1024*1024);
+    Renderer::init(_RENDERERSIZE);
+    std::cout << "Inititialization..." << std::endl;
+    std::cout << std::endl;
 
     ResourceManager::loadShader("voxel");
     ResourceManager::loadShader("particle");
     ResourceManager::loadShader("crosshair");
     ResourceManager::loadShader("ui");
 
+    std::cout << std::endl;
+
     ResourceManager::loadTexture("slot");
+
+    std::cout << std::endl;
 
     ResourceManager::loadModel("apple", "voxtxt"); //? voxtxt, generic, null, voxlap
     ResourceManager::loadModel("null", "null");
@@ -125,7 +136,9 @@ int main() {
     auto lastTimePoint = std::chrono::system_clock::now();
     vec2 cam(0.0f, 0.0f);
     float speed = 50;
+    float jumpforce = 200.0f;
     
+    GUI gui;
     //! ===MAIN-LOOP===
     bool quit {false};
     Window::setPause(false);
@@ -145,30 +158,36 @@ int main() {
             camera->rotation = mat4(1.0f);
             camera->rotate(cam, 0);
         }
-        
 
         if (Input::jpressed(SDLK_ESCAPE)) quit = true;
         if (Input::jpressed(SDLK_p)) {
             Window::setPause(!Window::getPause());
             Input::toggleCursor();
         }
-        if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
+        if (!Window::getPause()) {
+            if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
 
-        if (Input::pressed(SDLK_w)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed );
-        if (Input::pressed(SDLK_s)) appleobj->setPosition( appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed );
-        if (Input::pressed(SDLK_a)) appleobj->setPosition( appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
-        if (Input::pressed(SDLK_d)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
-        
-        //if (appleobj->checkGround()) {
-        if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysics()->applyForce(vec3(0, 300.0f, 0));
-        //}
+            if (Input::pressed(SDLK_w)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed );
+            if (Input::pressed(SDLK_s)) appleobj->setPosition( appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed );
+            if (Input::pressed(SDLK_a)) appleobj->setPosition( appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
+            if (Input::pressed(SDLK_d)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
+            
+            if (appleobj->getPhysics()->ground) {
+                if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysics()->applyForce(vec3(0, jumpforce, 0));
+            }
 
-        if (Input::pressed(SDLK_c)) camera->zoom = 0.5f; else camera->zoom = 1.0f;
-        if (Input::jclicked(SDL_BUTTON_RIGHT)) appleobj->setPosition(vec3(0, 100, 0));
-        if (Input::jclicked(SDL_BUTTON_LEFT)) {
-            appleobj->translate(1.0f, vec3(0, 1, 0));
-            vec3 end; vec3 norm; vec3 iend;
-            if (appleobj->raycast(camera->getPosition(), camera->front, 10.0f, end, norm, iend) ) appleobj->setVisible(false);
+            if (Input::pressed(SDLK_c)) camera->zoom = 0.5f; else camera->zoom = 1.0f;
+            if (Input::jclicked(SDL_BUTTON_RIGHT)) appleobj->setPosition(vec3(0, 100, 0));
+            //if (Input::jclicked(SDL_BUTTON_LEFT)) {
+                //appleobj->translate(1.0f, vec3(0, 1, 0));
+                vec3 end; vec3 norm; vec3 iend;
+                if (appleobj1->raycast(camera->getPosition(), camera->front, 20.0f, end, norm, iend) ) {
+                    //appleobj1->setBorder(true);
+                    //appleobj1->setVisible(false);
+                    std::cout << "see" << std::endl;
+                }// } else //appleobj1->setBorder(true);
+                //std::cout << "ddd" << std::endl;
+            //}
         }
 
         Window::_glClear();
@@ -187,7 +206,7 @@ int main() {
         effect2->draw(deltaTime);
         effect3->draw(deltaTime);
 
-        camera->setPosition( (appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f );
+        camera->setPosition( (appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f );        
 
         gui.draw();
         
@@ -198,5 +217,6 @@ int main() {
 
     delete effect1;
     delete effect2;
+    delete effect3;
     return 0;
 }

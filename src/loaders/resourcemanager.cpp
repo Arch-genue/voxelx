@@ -19,6 +19,7 @@ void ResourceManager::loadShader(std::string str) {
         return;
     }
     addShader(shader, str);
+    std::cout << "Shader loaded: " << str << std::endl;
 }
 void ResourceManager::loadTexture(std::string str) {
 	Texture* texture = load_texture(path + "textures/" + str + ".png");
@@ -27,6 +28,7 @@ void ResourceManager::loadTexture(std::string str) {
         return;
     }
     addTexture(texture, str.c_str());
+    std::cout << "Texture loaded: " << str << std::endl;
 }
 void ResourceManager::loadModel(std::string str, std::string type) {
     _voxels* voxs;
@@ -39,6 +41,7 @@ void ResourceManager::loadModel(std::string str, std::string type) {
         }
     } else if(type == "null") voxs = genVoxel();
 	addModel(voxs, str);
+    std::cout << "Model loaded: " << str << std::endl;
 }
 
 void ResourceManager::addShader(Shader* shader, std::string name) {

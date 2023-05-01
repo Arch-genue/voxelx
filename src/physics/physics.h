@@ -20,6 +20,8 @@ public:
     glm::vec3 acceleration;
     float mass;
 
+    bool ground;
+
     PhysicsObject(glm::vec3 position = glm::vec3(0), _physicsmodel type = NO_PHYSICS, float mass = 1.0f);
     ~PhysicsObject();
 
