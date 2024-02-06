@@ -7,6 +7,8 @@
 class Mesh;
 class Shader;
 class Renderer;
+class PhysicsObject;
+class GameManager;
 
 struct BOUNDINGBOX {
     glm::vec3 min;
@@ -20,6 +22,8 @@ class GameObject {
     Mesh* mesh;
     Camera* camera;
     _voxels* voxels;
+
+    GameManager* gm;
     
     //? POSITIONS
     glm::mat4 modelmatrix;
@@ -30,7 +34,7 @@ class GameObject {
     glm::vec3 scaling;
     vec3 campos;
 
-    //! Voxel Physics v0.1.0
+    //! Voxel Physics
     PhysicsObject* _physobject;
     bool rigidbody;
     bool onGround;
@@ -47,6 +51,7 @@ class GameObject {
 public:
     GameObject(const char* model);
     ~GameObject();
+    void setGameManager(GameManager* gamemanager);
 
     void setLight(glm::vec3 *light);
     glm::vec3* getLight();
@@ -83,6 +88,11 @@ public:
     bool getVoxel(glm::vec3 pos);
 
     bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
+
+    void setMesh(Mesh* newmesh);
+    Mesh* getMesh();
+
+    GameManager* getGameManager();
 
     glm::ivec3 checkCollision(BOUNDINGBOX b);
     bool checkGround();

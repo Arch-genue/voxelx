@@ -2,8 +2,10 @@
 
 #include <vector>
 #include <glm/glm.hpp>
+#include "../gamesystems/gameobject.h"
 
 #include <iostream>
+class GameObject;
 
 enum _physicsmodel {
     NO_PHYSICS, 
@@ -22,6 +24,7 @@ public:
 
     bool ground;
 
+    PhysicsObject(GameObject* gmobj);
     PhysicsObject(glm::vec3 position = glm::vec3(0), _physicsmodel type = NO_PHYSICS, float mass = 1.0f);
     ~PhysicsObject();
 
@@ -30,6 +33,9 @@ public:
     void setMass(float mass);
 
     void applyForce(glm::vec3 force);
+    void explode(uint16_t explodeForce);
 
     void update(float deltaTime);
+private:
+    GameObject* pGameObject;
 };

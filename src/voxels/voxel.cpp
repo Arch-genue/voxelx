@@ -4,22 +4,6 @@
 #include <fstream>
 #include <cstring>
 
-void split(std::string* bufstr, std::string str, char separator) {
-    uint16_t len = strlen(str.data());
-    uint8_t d = 0;
-
-    std::string s;
-    for (uint8_t i = 0; i < len; i++) {
-        if (str.data()[i] != separator) s += str.data()[i];
-        else {
-            bufstr[d] = s;
-            s.clear();
-            d++;
-        }
-    }
-    bufstr[d] = s;
-}
-
 _voxels* load_model(std::string filename, const char* type) {
     std::ifstream in(filename);
     if (in.is_open()) {

@@ -42,6 +42,8 @@ set(SOURCE
 	src/gamesystems/camera.cpp
 	src/gamesystems/gameobject.cpp
 	src/gamesystems/gamemanager.cpp
+
+	src/utils.cpp
 )
 
 set(HEADER
@@ -130,3 +132,4 @@ ${OPENGL_gl_LIBRARY}
 ${GLU_LIBRARY}
 ${PNG_LIBRARY}
 )
+target_compile_options(voxel3d PRIVATE -g)

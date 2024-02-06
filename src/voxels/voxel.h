@@ -3,6 +3,7 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <vector>
+#include "../utils.cpp"
 
 struct voxel_m {
     glm::vec3 position;

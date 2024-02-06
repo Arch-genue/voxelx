@@ -59,8 +59,6 @@ Mesh* Renderer::render(_voxels* voxels) {
 		z = voxels->voxels[i].position.z;
 		clr = voxels->voxels[i].clr;
 
-		//glm::vec3(0.0f, 0.0f, 0.0f);
-
 		if (voxels->renderSide == "") {
 			for(uint8_t i = 0; i < 6; i++) side[i] = true;
 		} else if(voxels->renderSide == "top") {

@@ -22,7 +22,6 @@ using namespace glm;
 #include "window/newinput.h"
 
 #include "graphics/renderer.h"
-#include "graphics/voxelparticles.h"
 #include "graphics/gui.h"
 
 #include "loaders/resourcemanager.h"
@@ -30,10 +29,10 @@ using namespace glm;
 
 #include "voxels/voxel.h"
 #include "gamesystems/camera.h"
-#include "gamesystems/gameobject.h"
+// #include "gamesystems/gameobject.h"
 #include "gamesystems/entity.h"
 
-#define _VERSION "0.1.6 Alpha"
+#define _VERSION "0.1.6"
 
 #define _RENDERERSIZE 1024*1024
 
@@ -68,7 +67,11 @@ int main() {
     ResourceManager::loadModel("apple", "voxtxt"); //? voxtxt, generic, null, voxlap
     ResourceManager::loadModel("null", "null");
 
-    GameManager gm(100);
+    std::cout << std::endl;
+
+    ResourceManager::loadVoxelParticles("testgravity");
+
+    GameManager* gm = new GameManager(100);
 
     _voxels* floorvox = new _voxels;
     for(uint16_t i = 0; i < 6; i++) floorvox->light[i] = glm::vec3(1);
@@ -109,9 +112,9 @@ int main() {
     appleobj1->setRigidBody(true);
     appleobj1->setCollision(SIMPLE_COLLISION);
 
-    gm.addGameObject(floorobj);
-    gm.addGameObject(appleobj);
-    gm.addGameObject(appleobj1);
+    gm->addGameObject(floorobj);
+    gm->addGameObject(appleobj);
+    gm->addGameObject(appleobj1);
 
     //! Camera
     Camera* camera = new Camera(vec3(3, 1, 0), radians(70.0f)); 
@@ -119,18 +122,18 @@ int main() {
     appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
 
     //! Particles
-    VoxelParticles* effect1 = new VoxelParticles(EFFECT_FLAME, 20);
+    VoxelParticles* effect1 = new VoxelParticles(EFFECT_FLAME, 20, false);
     effect1->setPosition(vec3(4.0f, 30.0f, 1.5f));
 
-    VoxelParticles* effect2 = new VoxelParticles(EFFECT_CURSED_FLAME, 30);
+    VoxelParticles* effect2 = new VoxelParticles(EFFECT_CURSED_FLAME, 30, true);
     effect2->setPosition(vec3(15.0f, 30.0f, 1.5f));
 
-    VoxelParticles* effect3 = new VoxelParticles(EFFECT_DEAD_FLAME, 30);
+    VoxelParticles* effect3 = new VoxelParticles(EFFECT_DEAD_FLAME, 30, true);
     effect3->setPosition(vec3(-10.0f, 30.0f, 1.5f));
 
-    // gm.addEffect();
-    // gm.addEffect();
-    // gm.addEffect();
+    gm->addVoxelParticles(effect1);
+    gm->addVoxelParticles(effect2);
+    gm->addVoxelParticles(effect3);
 
     float deltaTime = 0.0f;
     auto lastTimePoint = std::chrono::system_clock::now();
@@ -173,12 +176,17 @@ int main() {
             if (Input::pressed(SDLK_d)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
             
             if (appleobj->getPhysics()->ground) {
-                if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysics()->applyForce(vec3(0, jumpforce, 0));
+                if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysics()->applyForce(vec3(0, jumpforce*5, 0));
             }
 
             if (Input::pressed(SDLK_c)) camera->zoom = 0.5f; else camera->zoom = 1.0f;
-            if (Input::jclicked(SDL_BUTTON_RIGHT)) appleobj->setPosition(vec3(0, 100, 0));
-            //if (Input::jclicked(SDL_BUTTON_LEFT)) {
+            if (Input::jclicked(SDL_BUTTON_RIGHT)) {
+                appleobj->setPosition(vec3(0, 100, 0));
+            }
+            if (Input::jclicked(SDL_BUTTON_LEFT)) {
+                appleobj1->getPhysics()->applyForce(vec3(0, jumpforce*5, 0));
+                appleobj1->getPhysics()->explode(5);
+            }
                 //appleobj->translate(1.0f, vec3(0, 1, 0));
                 vec3 end; vec3 norm; vec3 iend;
                 if (appleobj1->raycast(camera->getPosition(), camera->front, 20.0f, end, norm, iend) ) {
@@ -195,16 +203,18 @@ int main() {
         ResourceManager::getShader("voxel")->use();
         ResourceManager::getShader("voxel")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
 
-        gm.UpdatePhysics(deltaTime);
-        gm.Update();
+        gm->UpdatePhysics(deltaTime);
+        gm->Update();
 
         ResourceManager::getShader("particle")->use();
         ResourceManager::getShader("particle")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
-        
+        gm->UpdateParticles(deltaTime);
+
         // gm.UpdateEffect();
-        effect1->draw(deltaTime);
-        effect2->draw(deltaTime);
-        effect3->draw(deltaTime);
+        // effect1->draw(deltaTime);
+        // effect2->draw(deltaTime);
+        // effect3->draw(deltaTime);
+        // effect4->draw(deltaTime);
 
         camera->setPosition( (appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f );        
 
@@ -215,8 +225,5 @@ int main() {
 	}
     Window::exit();
 
-    delete effect1;
-    delete effect2;
-    delete effect3;
     return 0;
 }

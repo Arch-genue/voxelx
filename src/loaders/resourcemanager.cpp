@@ -7,6 +7,7 @@ std::string ResourceManager::path = "";
 std::map<std::string, Shader*> ResourceManager::shaders;
 std::map<std::string, _voxels*> ResourceManager::rowmodels;
 std::map<std::string, Texture*> ResourceManager::textures;
+std::map<std::string, Particles*> ResourceManager::particles;
 
 void ResourceManager::init(std::string str) {
     path = str;
@@ -42,6 +43,15 @@ void ResourceManager::loadModel(std::string str, std::string type) {
     } else if(type == "null") voxs = genVoxel();
 	addModel(voxs, str);
     std::cout << "Model loaded: " << str << std::endl;
+}
+void ResourceManager::loadVoxelParticles(std::string str) {
+	Particles* particles = VoxelParticles::load_voxel_particles(path + "particles/" + str + ".voxpart");
+	if (particles == nullptr) {
+        std::cerr << "Failed to load voxel particles: " << str << "\n";
+        return;
+    }
+    // addParticles(texture, str.c_str());
+    std::cout << "Particles loaded: " << str << std::endl;
 }
 
 void ResourceManager::addShader(Shader* shader, std::string name) {

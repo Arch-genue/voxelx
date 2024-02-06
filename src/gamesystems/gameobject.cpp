@@ -11,8 +11,7 @@
 #include <iostream>
 
 GameObject::GameObject(const char* model) {
-    //
-    modelmatrix = glm::mat4(1.0f);;
+    modelmatrix = glm::mat4(1.0f);
     position = glm::vec3(0);
     rotAngle = 0.0f;
     rotAxis = glm::vec3(1);
@@ -22,17 +21,21 @@ GameObject::GameObject(const char* model) {
     setVisible(true);
 	setHidden(false);
 
-	_physobject = new PhysicsObject();
+	_physobject = new PhysicsObject(this);
 	onGround = false;
 
-    mass = 10; //100 Kg
+    mass = 10; // 100 Kg
 
 	voxels = ResourceManager::getModel(model);
 
-    //!CREATE MESH!
+    // !CREATE MESH!
 	mesh = Renderer::render(voxels);
 }
 GameObject::~GameObject() {}
+
+void GameObject::setGameManager(GameManager* gamemanager) {
+	gm = gamemanager;
+}
 
 void GameObject::setLight(glm::vec3 *light) {
 	for (uint16_t i = 0; i < 6; i++) voxels->light[i] = light[i];
@@ -176,6 +179,15 @@ bool GameObject::getVoxel(glm::vec3 point) {
 	}
 	return false;
 }
+
+void GameObject::setMesh(Mesh* newmesh) {
+	mesh = newmesh;
+}
+
+Mesh* GameObject::getMesh() {
+	return mesh;
+}
+
 bool GameObject::raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend) {
     if (visible == false) return false;
 
@@ -267,4 +279,8 @@ bool GameObject::raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3&
 	end.z = pz + t * dz;
 	norm.x = norm.y = norm.z = 0.0f;
 	return false;
+}
+
+GameManager* GameObject::getGameManager() {
+	return gm;
 }
