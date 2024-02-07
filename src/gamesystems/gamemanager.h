@@ -10,23 +10,22 @@ class PhysicsEngine;
 class VoxelParticles;
 
 class GameManager {
-    GameObject** gameobjects;
-    PhysicsEngine* physicsengine;
-    VoxelParticles** voxelparticles;
+    public:
+        GameManager();
+        ~GameManager();
 
-    uint16_t size;
+        void addGameObject(GameObject* gameobject);
+        void addVoxelParticles(VoxelParticles* voxelparticles);
 
-    //* sys
-    uint16_t _gameobjects_size_incr;
-    uint16_t _voxparticles_size_incr;
-public:
-    GameManager(uint16_t size);
-    ~GameManager();
+        void Update();
+        void UpdatePhysics(float deltaTime);
+        void UpdateParticles(float deltaTime);
 
-    void addGameObject(GameObject* gm);
-    void addVoxelParticles(VoxelParticles* voxparticles);
+        void clearParticles();
+    
+    private:
+        std::vector<GameObject*> _gameobjects;
+        std::vector<VoxelParticles*> _voxelparticles;
 
-    void Update();
-    void UpdatePhysics(float deltaTime);
-    void UpdateParticles(float deltaTime);
+        PhysicsEngine* _physicsengine;
 };

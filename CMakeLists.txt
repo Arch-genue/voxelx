@@ -73,6 +73,8 @@ set(HEADER
 	src/gamesystems/camera.h
 	src/gamesystems/gameobject.h
 	src/gamesystems/gamemanager.h
+
+	src/utils.h
 )
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")

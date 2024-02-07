@@ -31,12 +31,12 @@ void PhysicsObject::applyForce(glm::vec3 force) {
 void PhysicsObject::explode(uint16_t explodeForce) {
     GameManager* gm = pGameObject->getGameManager();
     if (gm != nullptr) {
-        VoxelParticles* explosionEffect = new VoxelParticles(EFFECT_EXPLOSION, 70, false);
-        std::cout << "obj.pos " << pGameObject->getPosition().x << " " << pGameObject->getPosition().y << " " << pGameObject->getPosition().z << "\n";
-        std::cout << "effect.pos " << explosionEffect->getPosition().x << " " << explosionEffect->getPosition().y << " " << explosionEffect->getPosition().z << "\n";
-        // explosionEffect->setPosition(pGameObject->getPosition());
-        gm->addVoxelParticles(explosionEffect);
-        explosionEffect->setReady(true);
+        // VoxelParticles* explosionEffect = new VoxelParticles(EFFECT_EXPLOSION, 70, false);
+        // std::cout << "obj.pos " << pGameObject->getPosition().x << " " << pGameObject->getPosition().y << " " << pGameObject->getPosition().z << "\n";
+        // std::cout << "effect.pos " << explosionEffect->getPosition().x << " " << explosionEffect->getPosition().y << " " << explosionEffect->getPosition().z << "\n";
+        // explosionEffect->setPosition(glm::vec3(15.0f, 30.0f, 1.5f));
+        // gm->addVoxelParticles(explosionEffect);
+        // explosionEffect->setReady(true);
     }
 
     // Mesh* mesh = pGameObject->getMesh();

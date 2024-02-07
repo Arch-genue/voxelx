@@ -3,61 +3,64 @@
 #include <iostream>
 
 
-GameManager::GameManager(uint16_t size) : size(size) {
-    _gameobjects_size_incr = 0;
-    _voxparticles_size_incr = 0;
-
-    gameobjects = new GameObject*[size];
-    physicsengine = new PhysicsEngine();
-    voxelparticles = new VoxelParticles*[50];
+GameManager::GameManager(){
+    // gameobjects = new GameObject*[size];
+    _physicsengine = new PhysicsEngine();
+    // voxelparticles = new VoxelParticles*[50];
 }
 GameManager::~GameManager() {
-    for(uint16_t i = 0; i < size; i++) delete gameobjects[i];
-    for(uint16_t i = 0; i < 50; i++) delete voxelparticles[i];
+    _gameobjects.clear();
+    _voxelparticles.clear();
 }
 
-void GameManager::addGameObject(GameObject* gameobj) {
-    gameobjects[_gameobjects_size_incr] = gameobj;
-    gameobjects[_gameobjects_size_incr]->setGameManager(this);
-    if (gameobj->getPhysics() != nullptr) { 
-        physicsengine->addObject(gameobj->getPhysics());
+void GameManager::addGameObject(GameObject* gameobject) {
+    gameobject->setGameManager(this);
+    
+    _gameobjects.push_back(gameobject);
+    if (gameobject->getPhysics() != nullptr) { 
+        _physicsengine->addObject(gameobject->getPhysics());
     }
-    _gameobjects_size_incr++;
 }
 void GameManager::addVoxelParticles(VoxelParticles* voxparticles) {
-    voxelparticles[_voxparticles_size_incr] = voxparticles;
-    _voxparticles_size_incr++;
+    _voxelparticles.push_back(voxparticles);
 }
 
 void GameManager::Update() {
-    for(uint16_t i = 0; i < _gameobjects_size_incr; i++) {
-        gameobjects[i]->draw();
+    for(uint16_t i = 0; i < _gameobjects.size(); i++) {
+        _gameobjects[i]->draw();
     }
 }
 
 void GameManager::UpdatePhysics(float deltaTime) {
     glm::vec3 gravity(0, -9.81f, 0);
-    physicsengine->update(deltaTime);
+    _physicsengine->update(deltaTime);
 
-    for(uint16_t i = 0; i < _gameobjects_size_incr; i++) {
-        if (gameobjects[i]->getPhysics() == nullptr) continue;
+    for(uint16_t i = 0; i < _gameobjects.size(); i++) {
+        if (_gameobjects[i]->getPhysics() == nullptr) continue;
 
-        PhysicsObject* phs = gameobjects[i]->getPhysics();
+        PhysicsObject* phs = _gameobjects[i]->getPhysics();
 
-        if (gameobjects[i]->getPhysics()->type == DYNAMIC_PHYSICS) { 
+        if (_gameobjects[i]->getPhysics()->type == DYNAMIC_PHYSICS) { 
             phs->applyForce(gravity);
         }
 
         glm::vec3 surfacePosition, surfaceNormal;
-        if (physicsengine->checkCollision(phs, surfacePosition, surfaceNormal)) {
-            physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
+        if (_physicsengine->checkCollision(phs, surfacePosition, surfaceNormal)) {
+            _physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
         }
-        gameobjects[i]->setPosition(phs->position);
+        _gameobjects[i]->setPosition(phs->position);
     }
 }
 
 void GameManager::UpdateParticles(float deltaTime) {
-    for (uint16_t i = 0; i < _voxparticles_size_incr; i++) {
-        voxelparticles[i]->draw(deltaTime);
-    } 
+    for (uint16_t i = 0; i < _voxelparticles.size(); i++) {
+        _voxelparticles[i]->update(deltaTime);
+    }
+}
+
+void GameManager::clearParticles() {
+    for (int i = 0; i < _voxelparticles.size(); i++) {
+        delete &_voxelparticles[i];
+    }
+    _voxelparticles.clear();
 }

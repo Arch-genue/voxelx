@@ -1,7 +1,7 @@
 #include "mesh.h"
 #include <GL/glew.h>
 
-Mesh::Mesh(_voxels* voxs, float* buffer, size_t vertices, int* attrs) : voxels(voxs), _meshBuffer(buffer), vertices(vertices), _meshAttributes(attrs) {
+Mesh::Mesh(VoxelModel* voxs, float* buffer, size_t vertices, int* attrs) : voxels(voxs), _meshBuffer(buffer), vertices(vertices), _meshAttributes(attrs) {
     create_mesh_buff();
 }
 
@@ -61,18 +61,18 @@ void Mesh::create_empty_mesh_buff() {
 }
 
 
-_voxels* Mesh::getVoxels() {
+VoxelModel* Mesh::getVoxels() {
     return voxels;
 }
 
-void Mesh::setVoxel(uint num, voxel_m vox) {
-    voxels->voxels[num] = vox;
+void Mesh::setVoxel(uint num, Voxel* vox) {
+    voxels->setVoxel(num, vox);
 }
-voxel_m Mesh::getVoxel(int num) {
-    return voxels->voxels[num];
+Voxel* Mesh::getVoxel(int num) {
+    return voxels->getVoxel(num);
 }
 
-void Mesh::setVoxels(_voxels* voxs) {
+void Mesh::setVoxels(VoxelModel* voxels) {
     // voxels = voxs;
 }
 

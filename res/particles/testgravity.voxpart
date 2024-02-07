@@ -1,13 +1,12 @@
 !VOXEL3D PARTICLES FILE!
 :vars:
-colorred: random(150, 255)
-colorgreen: 0
-colorblue: random(150, 255)
-
+colorred: random(0.5,0.7)
+colorgreen: 0.43
+colorblue: random(0.2,0.8)
 position: static
 recursive: false
 gravity: true
 start_force: true
-force_direction: z-up
-force: random(500, 700)
+force_direction: (0,1,0)
+force: random(5.0,7.0)
 lifetime: all

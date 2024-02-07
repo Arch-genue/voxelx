@@ -2,31 +2,51 @@
 
 #include <glm/glm.hpp>
 
-using namespace glm;
-
 class Camera {
-    void updateVectors();
-public:
-    vec3 front;
-    vec3 up;
-    vec3 right;
-    vec3 dir;
+    public:
+        Camera(glm::vec3 position, float fov);
+        ~Camera();
 
-    vec3 position;
-    float fov;
-    float zoom;
-    mat4 rotation;
-	bool perspective = true;
-	bool flipped = false;
-	float aspect = 0.0f;
+        void rotate(glm::vec2 rotation, float z);
 
-    Camera(vec3 pos, float fov);
+        void setPosition(glm::vec3 position);
+        glm::vec3 getPosition();
 
-    void rotate(vec2 rot, float z);
+        void setRotation(glm::mat4 rotation);
+        glm::mat4 getRotation();
 
-    void setPosition(vec3 pos);
-    vec3 getPosition();
+        void setFOV(float fov);
+        float getFOV();
 
-    mat4 getProjection();
-    mat4 getView();
+        void setZoom(float zoom);
+        float getZoom();
+
+        void setPerspective(bool perspective);
+        bool getPerspective();
+
+        void setFlipped(bool flipped);
+        bool getFlipped();
+
+        glm::vec3 getFrontVector();
+        glm::vec3 getUpVector();
+        glm::vec3 getRightVector();
+
+        glm::mat4 getProjection();
+        glm::mat4 getView();
+    private:
+        void _updateVectors();
+        
+        glm::vec3 _front;
+        glm::vec3 _up;
+        glm::vec3 _right;
+        glm::vec3 _dir;
+
+        glm::vec3 _position;
+        glm::mat4 _rotation;
+
+        float _fov;
+        float _zoom;
+        bool _perspective = true;
+        bool _flipped = false;
+        float _aspect = 0.0f;
 };

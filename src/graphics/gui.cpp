@@ -24,8 +24,8 @@ GUI::GUI() {
 
 	batch = new Batch2D(1024);
 	uicamera = new Camera(glm::vec3(), Window::height / 1.0f);
-	uicamera->perspective = false;
-	uicamera->flipped = true;
+	uicamera->setPerspective(false);
+	uicamera->setFlipped(true);
 
 	defaultFont = TTF_OpenFont("../res/fonts/arial.ttf", 24);
 
@@ -40,7 +40,8 @@ GUI::~GUI() {
 }
 
 void GUI::draw() {
-	uicamera->fov = Window::height;
+	float fov = uicamera->getFOV();
+	fov = Window::height;
 
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -59,11 +60,11 @@ void GUI::draw() {
 	batch->color = vec4(1.0f);
 	batch->texture(sprite);
 	
-	batch->sprite(16, uicamera->fov - 80, 64, 64, 16, 0, vec4(1.0f));
+	batch->sprite(16, fov - 80, 64, 64, 16, 0, vec4(1.0f));
 	int size = 48;
 	int step = 54;
 	int defposx = (Window::width / 2 - 4 * step);
-	int y = uicamera->fov - 56;
+	int y = fov - 56;
 
 	for (unsigned i = 1; i < 10; i++) {
 		int x = defposx + (i-1) * step;

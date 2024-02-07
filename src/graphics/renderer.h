@@ -8,8 +8,8 @@
 class Mesh;
 class Camera;
 
-class _voxels;
-class voxel_m;
+class VoxelModel;
+class Voxel;
 
 class Renderer {
 	static float* buffer;
@@ -29,8 +29,8 @@ public:
 	
 	static void addCamera(Camera* cam);
 
-	static Mesh* render(_voxels* voxels=nullptr);
-	static Mesh* voxelRender(voxel_m* voxel);
+	static Mesh* render(VoxelModel* voxels=nullptr);
+	static Mesh* voxelRender(Voxel* voxel);
 
 	static Camera* getCamera();
 };

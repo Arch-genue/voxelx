@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "../voxels/voxel.h"
 
-class _voxels;
+class VoxelModel;
 
 class Mesh {
     unsigned int vao;
@@ -13,10 +13,10 @@ class Mesh {
     float* _meshBuffer;
     
     size_t vertices;
-    _voxels* voxels;
+    VoxelModel* voxels;
     size_t vertexSize;
 public:
-    Mesh(_voxels* voxs, float* buffer, size_t vertices, int* attrs);
+    Mesh(VoxelModel* voxs, float* buffer, size_t vertices, int* attrs);
     Mesh(float* buffer, size_t vertices, int* attrs);
     ~Mesh();
     void create_mesh_buff();
@@ -27,9 +27,9 @@ public:
     void draw(unsigned int primitive);
     void clear();
 
-    void setVoxel(uint num, voxel_m vox);
-    voxel_m getVoxel(int num);
+    void setVoxel(uint num, Voxel* vox);
+    Voxel* getVoxel(int num);
 
-    _voxels* getVoxels();
-    void setVoxels(_voxels* voxs);
+    VoxelModel* getVoxels();
+    void setVoxels(VoxelModel* voxs);
 };

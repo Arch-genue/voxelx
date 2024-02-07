@@ -42,68 +42,80 @@ void Renderer::addCamera(Camera* cam) {
 	camera = cam;
 }
 
-Mesh* Renderer::render(_voxels* voxels) {
+Mesh* Renderer::render(VoxelModel* voxels) {
 	size_t index {0};
 	float x, y, z;
-	glm::vec4 clr;
+
 	glm::vec3 light;
+
+	glm::vec3 position;
+	glm::vec4 clr;
+	glm::vec3* lightArray;
+	std::string renderside;
 	bool side[6]; //! top, bottom, left, right, front, back
+
+	renderside = voxels->getRenderSide();
+	lightArray = voxels->getLightArray();
 	
 	for(uint8_t i = 0; i < 6; i++) side[i] = false;
 
-	for (size_t i = 0; i < voxels->voxels.size(); i++) {
-		if (!voxels->voxels[i].visible) continue;
+	for (size_t i = 0; i < voxels->getVoxelsCount(); i++) {
+		Voxel* voxel = voxels->getVoxel(i);
+		if (voxel == nullptr) continue;
+		if (!voxel->isVisible()) continue;
 
-		x = voxels->voxels[i].position.x;
-		y = voxels->voxels[i].position.y;
-		z = voxels->voxels[i].position.z;
-		clr = voxels->voxels[i].clr;
+		position = voxel->getPosition();
+		clr = voxel->getColor();
 
-		if (voxels->renderSide == "") {
+		x = position.x;
+		y = position.y;
+		z = position.z;
+
+		if (renderside == "") {
 			for(uint8_t i = 0; i < 6; i++) side[i] = true;
-		} else if(voxels->renderSide == "top") {
+		} else if(renderside == "top") {
 			side[0] = true;
-		} else if(voxels->renderSide == "bottom") {
+		} else if(renderside == "bottom") {
 			side[1] = true;
-		} else if(voxels->renderSide == "left") {
+		} else if(renderside == "left") {
 			side[2] = true;
-		} else if(voxels->renderSide == "right") {
+		} else if(renderside == "right") {
 			side[3] = true;
-		} else if(voxels->renderSide == "front") {
+		} else if(renderside == "front") {
 			side[4] = true;
-		} else if(voxels->renderSide == "back") {
+		} else if(renderside == "back") {
 			side[5] = true;
 		}
 
-		//std::cout << voxels->renderSide << std::endl;
+		//std::cout << renderside << std::endl;
 		
 		//? Y
 		if (!IS_BLOCKED(x,y+1,z) && side[0] == true) {
-			light = voxels->light[0];
+			light = lightArray[0];
 			top(index, x, y, z, clr, light);
 		} 
 		if (!IS_BLOCKED(x,y-1,z) && side[1] == true) {
-			light = voxels->light[1];
+			light = lightArray[1];
 			bottom(index, x, y, z, clr, light);
 		}
 
 		//? X
 		if (!IS_BLOCKED(x+1,y,z) && side[2] == true) {
-			light = voxels->light[2];
+			light = lightArray[2];
 			left(index, x, y, z, clr, light);
 		}
 		if (!IS_BLOCKED(x-1,y,z) && side[3] == true) {
-			light = voxels->light[3];
+			light = lightArray[3];
 			right(index, x, y, z, clr, light);
 		}
 
 		//? Z
 		if (!IS_BLOCKED(x,y,z+1) && side[4] == true) {
-			light = voxels->light[4];
+			light = lightArray[4];
 			front(index, x, y, z, clr, light);
 		}
 		if (!IS_BLOCKED(x,y,z-1) && side[5] == true) {
-			light = voxels->light[5];
+			light = lightArray[5];
 			back(index, x, y, z, clr, light);
 		}
 	}

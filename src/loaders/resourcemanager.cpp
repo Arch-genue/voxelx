@@ -2,19 +2,19 @@
 
 #include <iostream>
 
-std::string ResourceManager::path = "";
+std::string ResourceManager::_path = "";
 
-std::map<std::string, Shader*> ResourceManager::shaders;
-std::map<std::string, _voxels*> ResourceManager::rowmodels;
-std::map<std::string, Texture*> ResourceManager::textures;
-std::map<std::string, Particles*> ResourceManager::particles;
+std::map<std::string, Shader*> ResourceManager::_shaders;
+std::map<std::string, VoxelModel*> ResourceManager::_rowmodels;
+std::map<std::string, Texture*> ResourceManager::_textures;
+std::map<std::string, Particles*> ResourceManager::_particles;
 
-void ResourceManager::init(std::string str) {
-    path = str;
+void ResourceManager::init(std::string path) {
+    _path = path;
 }
 
 void ResourceManager::loadShader(std::string str) {
-    Shader* shader = load_shader(path + "shaders/" + str + ".glslv", path + "/shaders/" + str + ".glslf");
+    Shader* shader = load_shader(_path + "shaders/" + str + ".glslv", _path + "/shaders/" + str + ".glslf");
 	if (shader == nullptr) {
         std::cerr << "Failed to load shader: " << str << "\n";
         return;
@@ -23,53 +23,59 @@ void ResourceManager::loadShader(std::string str) {
     std::cout << "Shader loaded: " << str << std::endl;
 }
 void ResourceManager::loadTexture(std::string str) {
-	Texture* texture = load_texture(path + "textures/" + str + ".png");
+	Texture* texture = load_texture(_path + "textures/" + str + ".png");
 	if (texture == nullptr) {
         std::cerr << "Failed to load texture: " << str << "\n";
         return;
     }
-    addTexture(texture, str.c_str());
+    addTexture(texture, str);
     std::cout << "Texture loaded: " << str << std::endl;
 }
 void ResourceManager::loadModel(std::string str, std::string type) {
-    _voxels* voxs;
+    VoxelModel* voxels;
     if (type == "voxtxt") {
-        voxs = load_model(path + "models/" + str + ".voxtxt", type.c_str());
-        if (voxs == nullptr) {
+        voxels = load_model(_path + "models/" + str + ".voxtxt", type.c_str());
+        if (voxels == nullptr) {
             std::cerr << "Failed to load model: " << str << "\n";
-            delete voxs;
+            delete voxels;
             return;
         }
-    } else if(type == "null") voxs = genVoxel();
-	addModel(voxs, str);
+    } else if(type == "null") voxels = genVoxel();
+	addModel(voxels, str);
     std::cout << "Model loaded: " << str << std::endl;
 }
 void ResourceManager::loadVoxelParticles(std::string str) {
-	Particles* particles = VoxelParticles::load_voxel_particles(path + "particles/" + str + ".voxpart");
+	Particles* particles = VoxelParticles::load_voxel_particles(_path + "particles/" + str + ".voxpart");
 	if (particles == nullptr) {
         std::cerr << "Failed to load voxel particles: " << str << "\n";
         return;
     }
-    // addParticles(texture, str.c_str());
+    addParticles(particles, str);
     std::cout << "Particles loaded: " << str << std::endl;
 }
 
 void ResourceManager::addShader(Shader* shader, std::string name) {
-	shaders[name] = shader;
+	_shaders[name] = shader;
 }
 void ResourceManager::addTexture(Texture* texture, std::string name) {
-	textures[name] = texture;
+	_textures[name] = texture;
 }
-void ResourceManager::addModel(_voxels* row, std::string name) {
-	rowmodels[name] = row;
+void ResourceManager::addModel(VoxelModel* row, std::string name) {
+	_rowmodels[name] = row;
+}
+void ResourceManager::addParticles(Particles* particles, std::string name) {
+	_particles[name] = particles;
 }
 
 Shader* ResourceManager::getShader(std::string name) {
-	return shaders[name];
+	return _shaders[name];
 }
 Texture* ResourceManager::getTexture(std::string name) {
-	return textures[name];
+	return _textures[name];
 }
-_voxels* ResourceManager::getModel(std::string model) {
-	return rowmodels[model];
+VoxelModel* ResourceManager::getModel(std::string name) {
+	return _rowmodels[name];
+}
+Particles* ResourceManager::getParticles(std::string name) {
+    return _particles[name];
 }

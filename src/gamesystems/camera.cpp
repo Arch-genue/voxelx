@@ -3,61 +3,118 @@
 
 #include <glm/ext.hpp>
 
-Camera::Camera(vec3 pos, float fov) : fov(fov), rotation(1.0f) {
-    updateVectors();
-    position = pos;
-    aspect = 0.0f;
-    perspective = true;
-    flipped = false;
-    zoom = 1.0f;
+Camera::Camera(glm::vec3 pos, float fov) : _fov(fov), _rotation(1.0f) {
+    _updateVectors();
+    _position = pos;
+    _aspect = 0.0f;
+    _perspective = true;
+    _flipped = false;
+    _zoom = 1.0f;
 }
+Camera::~Camera() {}
 
-void Camera::updateVectors() {
-    front = vec3(rotation * vec4(0, 0, -1, 1));
-    right = vec3(rotation * vec4(1, 0, 0, 1));
-    up = vec3(rotation * vec4(0, 1, 0, 1));
+void Camera::_updateVectors() {
+    _front = glm::vec3(_rotation * glm::vec4(0, 0, -1, 1));
+    _right = glm::vec3(_rotation * glm::vec4(1, 0, 0, 1));
+    _up = glm::vec3(_rotation * glm::vec4(0, 1, 0, 1));
 
-	dir = vec3(rotation * vec4(0, 0, -1, 1));
-	dir.y = 0;
-	float len = length(dir);
+	_dir = glm::vec3(_rotation * glm::vec4(0, 0, -1, 1));
+	_dir.y = 0;
+	float len = length(_dir);
 	if (len > 0.0f) {
-		dir.x /= len;
-		dir.z /= len;
+		_dir.x /= len;
+		_dir.z /= len;
 	}
 }
 
-void Camera::rotate(vec2 rot, float z) {
-    rotation = glm::rotate(rotation, z, vec3(0,0,1));
-    rotation = glm::rotate(rotation, rot.x, vec3(0,1,0));
-    rotation = glm::rotate(rotation, rot.y, vec3(1,0,0));
+void Camera::rotate(glm::vec2 rot, float z) {
+    _rotation = glm::rotate(_rotation, z, glm::vec3(0,0,1));
+    _rotation = glm::rotate(_rotation, rot.x, glm::vec3(0,1,0));
+    _rotation = glm::rotate(_rotation, rot.y, glm::vec3(1,0,0));
 
-    updateVectors();
+    _updateVectors();
 }
-void Camera::setPosition(vec3 pos) {
-    position = pos;
+void Camera::setPosition(glm::vec3 pos) {
+    _position = pos;
 }
-vec3 Camera::getPosition() {
-    return position*10.0f;
+glm::vec3 Camera::getPosition() {
+    return _position * 10.0f;
 }
 
-mat4 Camera::getProjection() {
+
+void Camera::setRotation(glm::mat4 rotation) {
+    _rotation = rotation;
+}
+glm::mat4 Camera::getRotation() {
+    return _rotation;
+}
+
+
+void Camera::setFOV(float fov) {
+    _fov = fov;
+}
+float Camera::getFOV() {
+    return _fov;
+}
+
+
+void Camera::setZoom(float zoom) {
+    _zoom = zoom;
+}
+
+float Camera::getZoom() {
+    return _zoom;
+}
+
+
+void Camera::setPerspective(bool perspective) {
+    _perspective = perspective;
+}
+
+bool Camera::getPerspective() {
+    return _perspective;
+}
+
+
+void Camera::setFlipped(bool flipped) {
+    _flipped = flipped;
+}
+
+bool Camera::getFlipped() {
+    return _flipped;
+}
+
+
+glm::vec3 Camera::getFrontVector()
+{
+    return _front;
+}
+glm::vec3 Camera::getUpVector() {
+    return _up;
+}
+glm::vec3 Camera::getRightVector() {
+    return _right;
+}
+
+
+glm::mat4 Camera::getProjection() {
     // float aspect = (float)Window::width / (float)Window::height;
     
     // return glm::perspective(fov, aspect, 0.1f, 100.0f);
-    float aspect = this->aspect;
+    float aspect = this->_aspect;
 	if (aspect == 0.0f) aspect = (float)Window::width / (float)Window::height;
 
-	if (perspective) return glm::perspective(fov*zoom, aspect, 0.05f, 1500.0f);
+	if (_perspective) return glm::perspective(_fov*_zoom, aspect, 0.05f, 1500.0f);
 	else {
-		if (flipped)
-			return glm::ortho(0.0f, fov*aspect, fov, 0.0f);
+		if (_flipped)
+			return glm::ortho(0.0f, _fov*aspect, _fov, 0.0f);
 		else
-			return glm::ortho(0.0f, fov*aspect, 0.0f, fov);
+			return glm::ortho(0.0f, _fov*aspect, 0.0f, _fov);
     }
 }
 
-mat4 Camera::getView() {
+glm::mat4 Camera::getView() {
     // return glm::lookAt(position, position+front, up);
-    if (perspective) return glm::lookAt(position, position+front, up);
-	else return glm::translate(glm::mat4(1.0f), position);
+    if (_perspective) return glm::lookAt(_position, _position+_front, _up);
+	else return glm::translate(glm::mat4(1.0f), _position);
 }

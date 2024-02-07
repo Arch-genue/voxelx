@@ -32,7 +32,7 @@ using namespace glm;
 // #include "gamesystems/gameobject.h"
 #include "gamesystems/entity.h"
 
-#define _VERSION "0.1.6"
+#define _VERSION "0.2.0"
 
 #define _RENDERERSIZE 1024*1024
 
@@ -71,21 +71,19 @@ int main() {
 
     ResourceManager::loadVoxelParticles("testgravity");
 
-    GameManager* gm = new GameManager(100);
+    GameManager* gm = new GameManager();
 
-    _voxels* floorvox = new _voxels;
-    for(uint16_t i = 0; i < 6; i++) floorvox->light[i] = glm::vec3(1);
-    floorvox->m_size = vec3(1000, 1, 1000);
-    floorvox->renderSide = "top";
-    for (size_t y = 0; y < floorvox->m_size.y; y++) {
-        for (size_t z = 0; z < floorvox->m_size.z; z++) {
-            for (size_t x = 0; x < floorvox->m_size.x; x++) {
-                voxel_m vox;
-                vox.position = vec3(x, y, z);
-                vox.clr = vec4(0.3f, 0.3f, 0.3f, 1.0f);
-                vox.size = 1.0f;
-                vox.visible = true;
-                floorvox->voxels.push_back(vox);
+    VoxelModel* floorvox = new VoxelModel;
+    for(uint16_t i = 0; i < 6; i++) floorvox->setLight(i, glm::vec3(1));
+    floorvox->setSize(vec3(1000, 1, 1000));
+    floorvox->setRenderSide("top");
+    for (size_t y = 0; y < floorvox->getSize().y; y++) {
+        for (size_t z = 0; z < floorvox->getSize().z; z++) {
+            for (size_t x = 0; x < floorvox->getSize().x; x++) {
+                Voxel* voxel = new Voxel;
+                voxel->setPosition(vec3(x, y, z));
+                voxel->setColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
+                floorvox->addVoxel(voxel);
             }
         }
     }
@@ -105,7 +103,7 @@ int main() {
     appleobj->setPosition(vec3(0, 50, 40));
     appleobj->setRigidBody(true);
     appleobj->setCollision(SIMPLE_COLLISION);
-    appleobj->setHidden(true);
+    // appleobj->setHidden(true);
 
     GameObject* appleobj1 = new GameObject("apple");
     appleobj1->setPosition(vec3(0, 10, 0));
@@ -122,18 +120,18 @@ int main() {
     appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
 
     //! Particles
-    VoxelParticles* effect1 = new VoxelParticles(EFFECT_FLAME, 20, false);
-    effect1->setPosition(vec3(4.0f, 30.0f, 1.5f));
+    VoxelParticles* effect1 = new VoxelParticles("testgravity", 5000, vec3(4.0f, 100.0f, 1.5f));
+    // VoxelParticles* effect1 = new VoxelParticles(EFFECT_FLAME, 20, false);
 
-    VoxelParticles* effect2 = new VoxelParticles(EFFECT_CURSED_FLAME, 30, true);
-    effect2->setPosition(vec3(15.0f, 30.0f, 1.5f));
+    // VoxelParticles* effect2 = new VoxelParticles(EFFECT_CURSED_FLAME, 30, true);
+    // effect2->setPosition(vec3(15.0f, 30.0f, 1.5f));
 
-    VoxelParticles* effect3 = new VoxelParticles(EFFECT_DEAD_FLAME, 30, true);
-    effect3->setPosition(vec3(-10.0f, 30.0f, 1.5f));
+    // VoxelParticles* effect3 = new VoxelParticles(EFFECT_DEAD_FLAME, 30, true);
+    // effect3->setPosition(vec3(-10.0f, 30.0f, 1.5f));
 
     gm->addVoxelParticles(effect1);
-    gm->addVoxelParticles(effect2);
-    gm->addVoxelParticles(effect3);
+    // gm->addVoxelParticles(effect2);
+    // gm->addVoxelParticles(effect3);
 
     float deltaTime = 0.0f;
     auto lastTimePoint = std::chrono::system_clock::now();
@@ -158,10 +156,11 @@ int main() {
             if (cam.y < -radians(89.0f)) cam.y = -radians(89.0f);
             if (cam.y > radians(89.0f)) cam.y = radians(89.0f);
 
-            camera->rotation = mat4(1.0f);
+            camera->setRotation(mat4(1.0f));
             camera->rotate(cam, 0);
         }
-
+        glm::vec3 camera_front = camera->getFrontVector(); 
+        glm::vec3 camera_right = camera->getRightVector(); 
         if (Input::jpressed(SDLK_ESCAPE)) quit = true;
         if (Input::jpressed(SDLK_p)) {
             Window::setPause(!Window::getPause());
@@ -169,27 +168,33 @@ int main() {
         }
         if (!Window::getPause()) {
             if (Input::jpressed(SDLK_TAB)) Input::toggleCursor();
-
-            if (Input::pressed(SDLK_w)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed );
-            if (Input::pressed(SDLK_s)) appleobj->setPosition( appleobj->getPosition() - vec3(camera->front.x, 0, camera->front.z) * deltaTime * speed );
-            if (Input::pressed(SDLK_a)) appleobj->setPosition( appleobj->getPosition() - vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
-            if (Input::pressed(SDLK_d)) appleobj->setPosition( appleobj->getPosition() + vec3(camera->right.x, 0, camera->right.z) * deltaTime * speed );
+            
+            if (Input::pressed(SDLK_w)) appleobj->setPosition( appleobj->getPosition() + vec3(camera_front.x, 0, camera_front.z) * deltaTime * speed );
+            if (Input::pressed(SDLK_s)) appleobj->setPosition( appleobj->getPosition() - vec3(camera_front.x, 0, camera_front.z) * deltaTime * speed );
+            if (Input::pressed(SDLK_a)) appleobj->setPosition( appleobj->getPosition() - vec3(camera_right.x, 0, camera_right.z) * deltaTime * speed );
+            if (Input::pressed(SDLK_d)) appleobj->setPosition( appleobj->getPosition() + vec3(camera_right.x, 0, camera_right.z) * deltaTime * speed );
             
             if (appleobj->getPhysics()->ground) {
                 if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysics()->applyForce(vec3(0, jumpforce*5, 0));
             }
 
-            if (Input::pressed(SDLK_c)) camera->zoom = 0.5f; else camera->zoom = 1.0f;
+            if (Input::pressed(SDLK_c)) {
+                camera->setZoom(0.2f);
+            } else {
+                camera->setZoom(1.0f);
+            }
+
             if (Input::jclicked(SDL_BUTTON_RIGHT)) {
                 appleobj->setPosition(vec3(0, 100, 0));
             }
             if (Input::jclicked(SDL_BUTTON_LEFT)) {
                 appleobj1->getPhysics()->applyForce(vec3(0, jumpforce*5, 0));
-                appleobj1->getPhysics()->explode(5);
+                // appleobj1->getPhysics()->explode(5);
+                gm->clearParticles();
             }
                 //appleobj->translate(1.0f, vec3(0, 1, 0));
                 vec3 end; vec3 norm; vec3 iend;
-                if (appleobj1->raycast(camera->getPosition(), camera->front, 20.0f, end, norm, iend) ) {
+                if (appleobj1->raycast(camera->getPosition(), camera_front, 20.0f, end, norm, iend) ) {
                     //appleobj1->setBorder(true);
                     //appleobj1->setVisible(false);
                     std::cout << "see" << std::endl;

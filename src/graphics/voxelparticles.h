@@ -12,19 +12,20 @@
 
 class Mesh;
 class Shader;
-class voxel_m;
+class Voxel;
 
 // class VoxelParticle()
 struct Particles {
-    glm::vec3 color;
-    char* position;
+    glm::mat3x3 color;
+
+    std::string position;
 
     bool recursive;
     bool gravity;
 
     bool start_force;
     char* force_direction;
-    float force;
+    glm::vec3 force;
 
     char* lifetime;
 };
@@ -42,54 +43,59 @@ enum _effects {
 
 class VoxelParticles {
     //? Objects
-    Mesh* mesh;
-    _voxels* voxels;
+    Mesh* _mesh;
+    VoxelModel* _voxelsarray;
+    Particles* _particles;
     
     //? Properties
-    glm::vec3 m_gravity;
-    glm::vec3 m_position;
+    glm::vec3 _gravity;
+    glm::vec3 _position;
     float m_size;
     _effects type;
 
     //? Random Generators
     std::uniform_real_distribution<float> pos_generator;
     std::uniform_real_distribution<float> vel_generator;
-    std::uniform_real_distribution<float> clr_generator;
+    std::uniform_real_distribution<float> redclr_generator;
+    std::uniform_real_distribution<float> greenclr_generator;
+    std::uniform_real_distribution<float> blueclr_generator;
     std::uniform_real_distribution<float> lifetime_generator;
 
     //--sys
     float _val;
-    bool _voxelsReady; 
+    bool _voxelsReady;
+    std::string _name;
+    uint16_t _particlecount;
 
     //--Type
     bool _recursive;
     
 public:
-    VoxelParticles(Particles* particles);
-    VoxelParticles(_effects ptype, int bufferSize, bool recursive = false);
+    VoxelParticles(std::string name, uint16_t particlecount, glm::vec3 position);
+    // VoxelParticles(_effects ptype, int bufferSize, bool recursive = false);
     ~VoxelParticles();
     static Particles* load_voxel_particles(std::string filename);
 
     void setReady(bool ready);
 
-    void addParticle(voxel_m& particle);
+    void addParticle(Voxel& particle);
 
     void setType(_effects ptype);
     void setPosition(glm::vec3 pos);
     glm::vec3 getPosition();
     void setSize(float size);
 
-    void draw(float deltaTime);
+    void update(float deltaTime);
 
-    void calculateAnimation(_effects type, voxel_m* vox);
+    void calculateAnimation(Voxel* vox);
 
     //? Default Particles
-    void effect_flame(voxel_m* vox);
-    void effect_cursed_flame(voxel_m* vox);
-    void effect_dead_flame(voxel_m* vox);
+    // void effect_flame(voxel_m* vox);
+    // void effect_cursed_flame(voxel_m* vox);
+    // void effect_dead_flame(voxel_m* vox);
     
-    void effect_vomit(voxel_m* vox);
-    void effect_water(voxel_m* vox);
+    // void effect_vomit(voxel_m* vox);
+    // void effect_water(voxel_m* vox);
 
-    void effect_explosion(voxel_m* vox);
+    // void effect_explosion(voxel_m* vox);
 };

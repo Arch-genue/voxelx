@@ -15,86 +15,88 @@ struct BOUNDINGBOX {
     glm::vec3 max;
 };
 
-enum _collision {NO_COLLISION, SIMPLE_COLLISION};
+enum Collision {NO_COLLISION, SIMPLE_COLLISION};
 
 class GameObject {
-    //? OBJECTS
-    Mesh* mesh;
-    Camera* camera;
-    _voxels* voxels;
+    public:
+        GameObject(const char* model);
+        ~GameObject();
+        void setGameManager(GameManager* gamemanager);
 
-    GameManager* gm;
-    
-    //? POSITIONS
-    glm::mat4 modelmatrix;
-    glm::vec3 position;
-    glm::vec3 lastposition;
-    glm::vec3 rotAxis;
-    float rotAngle;
-    glm::vec3 scaling;
-    vec3 campos;
+        void setLight(glm::vec3 *light);
+        glm::vec3* getLight();
 
-    //! Voxel Physics
-    PhysicsObject* _physobject;
-    bool rigidbody;
-    bool onGround;
+        PhysicsObject* getPhysics();
 
-    //? PROPERTIES
-    bool visible;
-    bool hidden;
-    float mass;
+        void translate(float val, glm::vec3 vec);
+        void rotate(float val, glm::vec3 rot);
+        void scale(float val, glm::vec3 scalevec);
 
-    //? Collision
-    _collision collision;
-    glm::vec3 _boundbox_size;
-    BOUNDINGBOX bbox;
-public:
-    GameObject(const char* model);
-    ~GameObject();
-    void setGameManager(GameManager* gamemanager);
+        //* Pos
+        void setPosition(glm::vec3 pos);
+        glm::vec3 getPosition();
+        void setRotation(float angle, glm::vec3 rot);
+        void setScale(glm::vec3 scalevec);
+        glm::mat4 getMatrix();
 
-    void setLight(glm::vec3 *light);
-    glm::vec3* getLight();
+        void setVisible(bool vis);
+        void setHidden(bool hid);
 
-    PhysicsObject* getPhysics();
+        void draw();
+        void updatePhysics(float deltaTime);
 
-    void translate(float val, glm::vec3 vec);
-    void rotate(float val, glm::vec3 rot);
-    void scale(float val, glm::vec3 scalevec);
+        void attachCamera(Camera* cam, glm::vec3 stdpos);
 
-    //* Pos
-    void setPosition(glm::vec3 pos);
-    glm::vec3 getPosition();
-    void setRotation(float angle, glm::vec3 rot);
-    void setScale(glm::vec3 scalevec);
-    glm::mat4 getMatrix();
+        void setCollision(Collision coll);
+        bool getCollision();
 
-    void setVisible(bool vis);
-    void setHidden(bool hid);
+        void setRigidBody(bool rigid);
+        bool getRigidBody();
 
-    void draw();
-    void updatePhysics(float deltaTime);
+        //* Voxel operations
+        void setVoxelState(uint8_t i, bool state);
+        bool getVoxel(glm::vec3 pos);
 
-    void attachCamera(Camera* cam, vec3 stdpos);
+        bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
 
-    void setCollision(_collision coll);
-    bool getCollision();
+        void setMesh(Mesh* newmesh);
+        Mesh* getMesh();
 
-    void setRigidBody(bool rigid);
-    bool getRigidBody();
+        GameManager* getGameManager();
 
-    //* Voxel operations
-    void setVoxelState(uint8_t i, bool state);
-    bool getVoxel(glm::vec3 pos);
+        glm::ivec3 checkCollision(BOUNDINGBOX b);
+        bool checkGround();
+        BOUNDINGBOX getBBOX();
+    private:
+        //? OBJECTS
+        Mesh* _mesh;
+        Camera* _camera;
+        VoxelModel* _voxelmodel;
+        
+        //? GameManager global object
+        GameManager* _gm;
+        
+        //? POSITIONS
+        glm::mat4 _modelmatrix;
+        glm::vec3 _position;
+        glm::vec3 _lastposition;
+        glm::vec3 _rotAxis;
+        float _rotAngle;
+        glm::vec3 _scaling;
+        glm::vec3 _campos;
 
-    bool raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
+        //! Voxel Physics
+        PhysicsObject* _physobject;
+        bool _rigidbody;
+        bool _onGround;
 
-    void setMesh(Mesh* newmesh);
-    Mesh* getMesh();
+        //? PROPERTIES
+        bool _visible;
+        bool _hidden;
+        float _mass;
 
-    GameManager* getGameManager();
-
-    glm::ivec3 checkCollision(BOUNDINGBOX b);
-    bool checkGround();
-    BOUNDINGBOX getBBOX();
+        //? Collision
+        Collision _collision;
+        glm::vec3 _boundbox_size;
+        BOUNDINGBOX _bbox;
 };
