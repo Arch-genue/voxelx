@@ -43,7 +43,7 @@ float MOUSE_SPEED = 1.3f;
 
 
 int main() {
-    std::cout << "Voxel 3D: " << _VERSION << std::endl;
+    printf ("Voxel 3D: %s\n", _VERSION);
     Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();
     ResourceManager::init("../res/");
@@ -213,6 +213,6 @@ int main() {
         Input::pullEvents();
 	}
     Window::exit();
-
     return 0;
+    
 }
