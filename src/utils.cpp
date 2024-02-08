@@ -48,7 +48,8 @@ bool isNumeric(const std::string& str) {
 
 float* random_keyword_parse(std::string color) {
     // Регулярное выражение для поиска чисел в скобках после слова "random"
-    std::regex pattern("^random\\((\\d+(\\.\\d+)?),(\\d+(\\.\\d+)?)\\)$");
+    // std::regex pattern("^random\\((\\d+(\\.\\d+)?),(\\d+(\\.\\d+)?)\\)$");
+    std::regex pattern("^random\\((-?\\d+(\\.\\d+)?),(-?\\d+(\\.\\d+)?)\\)$");
     float* val  = new float[2];
     std::smatch match;
     if (std::regex_match(color, match, pattern)) {

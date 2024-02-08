@@ -18,9 +18,10 @@ VoxelParticles::VoxelParticles(std::string name, uint16_t particlecount, glm::ve
     _voxelsarray = new VoxelModel;
 
     glm::mat3x3 matrix = _particles->color;
-    glm::vec3 red = glm::vec3(matrix[0][0], matrix[0][1], matrix[0][2]);
-    glm::vec3 green = glm::vec3(matrix[1][0], matrix[1][1], matrix[1][2]);
-    glm::vec3 blue = glm::vec3(matrix[2][0], matrix[2][1], matrix[2][2]);
+    __red = glm::vec3(matrix[0][0], matrix[0][1], matrix[0][2]);
+    __green = glm::vec3(matrix[1][0], matrix[1][1], matrix[1][2]);
+    __blue = glm::vec3(matrix[2][0], matrix[2][1], matrix[2][2]);
+
 
     // std::cout << "Vec1: (" << red.x << ", " << red.y << ", " << red.z << ")" << std::endl;
     // std::cout << "Vec2: (" << green.x << ", " << green.y << ", " << green.z << ")" << std::endl;
@@ -28,20 +29,21 @@ VoxelParticles::VoxelParticles(std::string name, uint16_t particlecount, glm::ve
 
     pos_generator = std::uniform_real_distribution<float>(-1000.0f, 1000.0f);
     vel_generator = std::uniform_real_distribution<float>(_particles->force.x, _particles->force.z);
-    redclr_generator = std::uniform_real_distribution<float>(red.x, red.z);
-    greenclr_generator = std::uniform_real_distribution<float>(green.x, green.z);
-    blueclr_generator = std::uniform_real_distribution<float>(blue.x, blue.z);
-    lifetime_generator = std::uniform_real_distribution<float>(15.0f, 20.0f);
+    redclr_generator = std::uniform_real_distribution<float>(__red.x, __red.z);
+    greenclr_generator = std::uniform_real_distribution<float>(__green.x, __green.z);
+    blueclr_generator = std::uniform_real_distribution<float>(__blue.x, __blue.z);
+    lifetime_generator = std::uniform_real_distribution<float>(3.0f, 6.0f);
 
     for (int i = 0; i < particlecount; ++i) {
         Voxel* particle = new Voxel;
         // particle.position = glm::vec3(0, 0, 0);
-        // particle.lifetime = 3.0f;
+        particle->setLifeTime(lifetime_generator(rng));
         // particle.visible = true;
         particle->setPosition(position);
         _voxelsarray->addVoxel(particle); 
         calculateAnimation(_voxelsarray->getVoxel(i));
     }
+
 }
 
 VoxelParticles::~VoxelParticles() {
@@ -65,9 +67,10 @@ void VoxelParticles::update(float deltaTime) {
     for (uint16_t i = 0; i < _particlecount; i++) {
         Voxel* voxel = _voxelsarray->getVoxel(i);
         glm::vec3 position = voxel->getPosition();
-        std::cout << position.y << " " << (position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime).y << " " << deltaTime << std::endl;
-        // if (_voxelsarray->voxels[i].lifetime >= 0.0f) {
-            if (position.y > 5) {
+        // std::cout << position.y << " " << (position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime).y << " " << deltaTime << std::endl;
+        if (voxel->getLifeTime() >= 0.0f) {
+            voxel->setLifeTime(voxel->getLifeTime() - deltaTime);
+            if (position.y > 2) {
                 voxel->setPosition(position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime);
                 // _voxelsarray->setVoxelPosition(i, glm::vec3(10));
                 // _voxelsarray->setVoxelPosition(i, position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime);
@@ -77,10 +80,11 @@ void VoxelParticles::update(float deltaTime) {
             // _voxelsarray->setVoxelPosition(i, position);
             // std::cout << "I: " << i << " " << _voxelsarray->voxels[i].position.y << std::endl;
         
+            
+        } else {
             _voxelsarray->getVoxel(i)->setLifeTime(_voxelsarray->getVoxel(i)->getLifeTime() - deltaTime);
-        // }// } else {
-            // calculateAnimation(_voxelsarray->getVoxel(i));
-        // }
+            calculateAnimation(_voxelsarray->getVoxel(i));    
+        }
     }
 
     _mesh = Renderer::render(_voxelsarray);
@@ -90,9 +94,18 @@ void VoxelParticles::update(float deltaTime) {
 
 void VoxelParticles::calculateAnimation(Voxel* voxel) {
     glm::vec3 position = voxel->getPosition();
-    voxel->setPosition(position + glm::vec3(pos_generator(rng), 0, pos_generator(rng)));
+    voxel->setPosition(_position + glm::vec3(pos_generator(rng), 0, pos_generator(rng)));
     voxel->setVelocity(glm::vec3(0, vel_generator(rng) + _gravity.y, 0));
-    voxel->setColor(glm::vec4(redclr_generator(rng), greenclr_generator(rng), blueclr_generator(rng), 1.0f));
+
+    float _tmpclrred = (__red.x == -1) ? __red.y : redclr_generator(rng);
+    float _tmpclrgreen = (__red.x == -1) ? __red.y : redclr_generator(rng);
+    float _tmpclrblue = (__red.x == -1) ? __red.y : redclr_generator(rng);
+    // std::cout << "RED: " << __red.x << " " << __red.y << " " << __red.z << "\n";
+    // std::cout << "GREEN: " << __green.x << " " << __green.y << " " << __green.z << "\n";
+    // std::cout << "BLUE: " << __blue.x << " " << __blue.y << " " << __blue.z << "\n";
+    // std::cout << "TMP: " << _tmpclrred << " " << _tmpclrgreen << " " << _tmpclrblue << "\n";
+
+    voxel->setColor(glm::vec4(_tmpclrred, _tmpclrgreen, _tmpclrblue, 1.0f));
     voxel->setLifeTime(lifetime_generator(rng));
     voxel->setVisible(true);
     // vox->visible = true;
@@ -197,7 +210,7 @@ Particles* VoxelParticles::load_voxel_particles(std::string filename) {
                 if (varvalue == nullptr) continue;
                 glm::vec3 val;
                 if (varvalue[1] == -1500000) {
-                    val = glm::vec3(0, varvalue[0], 0);
+                    val = glm::vec3(-1, varvalue[0], -1);
                 } else {
                     val = glm::vec3(varvalue[0], 0, varvalue[1]);
                 }

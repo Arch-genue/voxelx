@@ -69,6 +69,11 @@ class VoxelParticles {
 
     //--Type
     bool _recursive;
+
+    //! Temporary effect vars
+    glm::vec3 __red;
+    glm::vec3 __green;
+    glm::vec3 __blue;
     
 public:
     VoxelParticles(std::string name, uint16_t particlecount, glm::vec3 position);

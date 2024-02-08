@@ -77,11 +77,28 @@ set(HEADER
 	src/utils.h
 )
 
+# Укажите путь к заголовочным файлам embree
+# include_directories("~/dev/embree/include")
+
+# Укажите путь к библиотекам embree
+# link_directories("/path/to/embree/lib")
+
+# Добавьте библиотеки embree к вашему проекту
+# add_executable(YourExecutable main.cpp)
+
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(OpenGL_GL_PREFERENCE GLVND)
+
+find_package(embree 3.0 REQUIRED)
+# if(NOT embree)
+# 	message(SEND_ERROR "Failed to find Embree")
+# 	return()
+# else()
+# 	include_directories(${EMBREE_INCLUDE_DIR})
+# endif()
 
 find_package(GLEW REQUIRED)
 if(NOT GLEW_FOUND)
@@ -133,5 +150,6 @@ ${GLEW_LIBRARIES}
 ${OPENGL_gl_LIBRARY}
 ${GLU_LIBRARY}
 ${PNG_LIBRARY}
+embree
 )
 target_compile_options(voxel3d PRIVATE -g)

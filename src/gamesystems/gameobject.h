@@ -70,6 +70,7 @@ class GameObject {
     private:
         //? OBJECTS
         Mesh* _mesh;
+        Mesh* _boundingbox;
         Camera* _camera;
         VoxelModel* _voxelmodel;
         

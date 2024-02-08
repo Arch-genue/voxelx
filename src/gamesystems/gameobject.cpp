@@ -55,7 +55,10 @@ void GameObject::draw() {
     _modelmatrix = glm::scale(_modelmatrix, _scaling);
     _modelmatrix = glm::translate(_modelmatrix, _position);
     ResourceManager::getShader("voxel")->uniformMatrix("model", _modelmatrix);
-    if (!_hidden && _visible) _mesh->draw(GL_TRIANGLES);
+    if (!_hidden && _visible) {
+		_mesh->draw(GL_TRIANGLES);
+		_boundingbox->draw(GL_LINES);
+	}
 
     _modelmatrix = glm::mat4(1.0f);
 }
@@ -74,25 +77,58 @@ void GameObject::setCollision(Collision coll) {
 			_boundbox_size = glm::vec3(sizes.x, sizes.y, sizes.z);
 			_bbox.min = getPosition()-0.5f;
 			_bbox.max = _boundbox_size-0.5f;
-			// float vertices[] = {
-			// 	//x     y
-			// 	getPosition().x-0.5f, -0.5f, -0.5f,
-			// 	getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+			float vertices[] = {
+				//x     y
+				getPosition().x-0.5f, -0.5f, -0.5f,
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+
+
+				//* Нижняя полоса 1
+				getPosition().x-0.5f, -0.5f, -0.5f,
+				_boundbox_size.x-0.5f, -0.5f, -0.5f,
+
+				//* Нижняя полоса 2
+				_boundbox_size.x-0.5f, -0.5f, -0.5f,
+				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.x-0.5f,
+
+				//* Нижняя полоса 3
+				getPosition().x-0.5f, -0.5f, -0.5f,
+				getPosition().x-0.5f, -0.5f, _boundbox_size.x-0.5f,
+
+				//* Нижняя полоса 4
+				getPosition().x-0.5f, -0.5f, _boundbox_size.x-0.5f,
+				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.x-0.5f,
+
+				//* Верхняя полоса 1
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+
+				//* Верхняя полоса 2
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
+
+				//* Верхняя полоса 3
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
+
+				//* Верхняя полоса 4
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
 
 				
-			// 	_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-			// 	_boundbox_size.x-0.5f, -0.5f, -0.5f,
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
+				_boundbox_size.x-0.5f, -0.5f, -0.5f,
 
-			// 	getPosition().x-0.5f, -0.5f, _boundbox_size.z-0.5f,
-			// 	getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
+				getPosition().x-0.5f, -0.5f, _boundbox_size.z-0.5f,
+				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
 
 				
-			// 	_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
-			// 	_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
-			// };
-			// int attrs[2] = { 3,  0 };
-			//_boundingbox = new Mesh(vertices, 8, attrs);
-			//_physobject = new PhysicsObject(getPosition(), , mass);
+				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
+				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
+			};
+			int attrs[2] = { 3,  0 };
+			_boundingbox = new Mesh(vertices, 24, attrs);
+			// _physobject = new PhysicsObject(getPosition(), , mass);
 			_physobject->setType(getRigidBody() ? DYNAMIC_PHYSICS : STATIC_PHYSICS);
 			_physobject->setMass(_mass);
 		break;
