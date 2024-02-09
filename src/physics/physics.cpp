@@ -95,8 +95,8 @@ bool PhysicsObject::isGrounded()
 }
 
 bool PhysicsObject::checkGround(glm::vec3 &position, glm::vec3 &normal) {
-    if (_position.y <= 0) {
-        position = glm::vec3(_position.x, 0, _position.z);
+    if (_position.y <= 1) {
+        position = glm::vec3(_position.x, 1, _position.z);
         normal = glm::vec3(0, 1, 0);
         _ground = true;
         return true;

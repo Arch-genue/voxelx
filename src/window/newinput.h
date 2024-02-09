@@ -10,6 +10,7 @@ class Input {
 
     public:
         static bool* _keys;
+        // static std::map<uint, bool> Input::_keys;
         static uint* _frames;
         static uint _current;
         static float deltaX;
@@ -20,8 +21,13 @@ class Input {
         static bool _cursor_started;
 
         static int init();
+        static void cleanup();
         static void processEvents(bool &quit);
         static void pullEvents();
+        static void setKey(int key, bool value);
+        static void setFrame(int key, uint value);
+        static bool getKey(int keycode);
+        static uint getFrame(int keycode);
         static bool pressed(int keycode);
         static bool jpressed(int keycode);
         static bool clicked(int button);

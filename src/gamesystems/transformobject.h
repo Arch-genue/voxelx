@@ -14,6 +14,8 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#define DEFAULT_SCALE 0.1f
+
 /**
  * @brief Абстрактный класс описывающий пространственный объект и его свойства
  * 
@@ -84,6 +86,9 @@ public:
      * @param rotation Ссылка на переменную вектора вращения
      */
     void getRotation(float &angle, glm::vec3 &rotation);
+
+    void setScaling(glm::vec3 scaling);
+    glm::vec3 getScaling();
 
     /**
      * @brief Задать видимость объекта

@@ -6,18 +6,19 @@ TransformObject::TransformObject() {
     _position = glm::vec3(0);
     _rotationAngle = 0.0f;
     _rotationAxis = glm::vec3(1);
-    _scaling = glm::vec3(0.1f);
+    _scaling = glm::vec3(DEFAULT_SCALE);
 
     _visible = true;
 }
 TransformObject::~TransformObject() {}
 
+// TODO Добавить возможность вращения объекта вокруг точки
 void TransformObject::update() {
     if (_visible == false) return;
-    // setMatrix();
+    
     _modelmatrix = glm::scale(_modelmatrix, _scaling);
-    _modelmatrix = glm::translate(_modelmatrix, _position);
-	// std::cout << "position: " << getPosition().x << ", " << getPosition().y << ", " << getPosition().z << std::endl;
+    _modelmatrix = glm::translate(_modelmatrix, _position * (DEFAULT_SCALE / _scaling));
+    _modelmatrix = glm::rotate(_modelmatrix, _rotationAngle, _rotationAxis);
     draw();
     _modelmatrix = glm::mat4(1.0f);
 }
@@ -32,8 +33,7 @@ void TransformObject::rotate(float angle, glm::vec3 vector) {
     _rotationAxis = vector; 
 }
 
-void TransformObject::setPosition(glm::vec3 position)
-{
+void TransformObject::setPosition(glm::vec3 position) {
     _position = position;
 }
 glm::vec3 TransformObject::getPosition() {  
@@ -42,14 +42,18 @@ glm::vec3 TransformObject::getPosition() {
 
 void TransformObject::setRotation(float angle, glm::vec3 rotation) {
     _rotationAngle = angle;
-    _rotationAxis = rotation; 
-    glm::mat4 rotationmatrix = glm::rotate(_modelmatrix, _rotationAngle, _rotationAxis);
-
-    _modelmatrix = rotationmatrix * _modelmatrix;
+    _rotationAxis = rotation;
 }
 void TransformObject::getRotation(float &angle, glm::vec3 &rotation) {
     angle = _rotationAngle;
     rotation = _rotationAxis;
+}
+
+void TransformObject::setScaling(glm::vec3 scaling) {
+    _scaling = scaling;
+}
+glm::vec3 TransformObject::getScaling() {
+    return _scaling;
 }
 
 void TransformObject::setVisible(bool visible) {

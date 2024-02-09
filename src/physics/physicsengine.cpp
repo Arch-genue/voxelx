@@ -1,5 +1,7 @@
 #include "physicsengine.h"
 
+class GameObject;
+
 void PhysicsEngine::addObject(PhysicsObject* object) {
     objects.push_back(object);
 }
@@ -16,11 +18,12 @@ void PhysicsEngine::update(float deltaTime) {
 bool PhysicsEngine::checkCollision(PhysicsObject* object, glm::vec3& surfacePosition, glm::vec3& surfaceNormal) {
     // Проверяем столкновение между объектом и поверхностью
     // В этом примере мы считаем, что поверхность находится на высоте 0
+    if (object->getPhysics() == STATIC_PHYSICS or object->getPhysics() == NO_PHYSICS) return false;
+
     return object->checkGround(surfacePosition, surfaceNormal);
     
     // return false;
 }
-
 void PhysicsEngine::handleCollision(PhysicsObject* object, glm::vec3 surfacePosition, glm::vec3 surfaceNormal) {
      // Применяем реакцию на столкновение
     glm::vec3 velocity = object->getVelocity();
@@ -39,5 +42,7 @@ void PhysicsEngine::handleCollision(PhysicsObject* object, glm::vec3 surfacePosi
     // Обновляем скорость и ускорение объекта
     object->setVelocity(velocity);
     object->setAcceleration(acceleration);
-    object->setPosition(surfacePosition + surfaceNormal * 0.0f);
+    
+    GameObject* gmobj = object->getGameObject(); 
+    gmobj->setPosition(surfacePosition + surfaceNormal * 0.0f);    
 }

@@ -2,8 +2,11 @@
 #include <string.h>
 
 #include <iostream>
+// #include <map>
 
+// std::map<uint, bool> Input::_keys;
 bool* Input::_keys;
+
 uint* Input::_frames;
 uint Input::_current = 0;
 float Input::deltaX = 0.0f;
@@ -16,6 +19,7 @@ bool Input::_cursor_started = false;
 SDL_Event Input::sdlEvent;
 
 #define _MOUSE_BUTTONS 1024
+#define _SPECIAL_BUTTONS 1040
 
 void Input::cursor_position_callback(SDL_MouseMotionEvent e) {
     int xpos, ypos;
@@ -46,14 +50,18 @@ void Input::mouse_button_callback(Uint8& button, int action) {
         Input::_frames[_MOUSE_BUTTONS + button] = Input::_current;
     }
 }
-
 void Input::key_callback(SDL_Keycode key, int action) {
     if (action == 1) {
-        Input::_keys[key] = true;
-        Input::_frames[key] = Input::_current;
+        setKey(key, true);
+        setFrame(key, Input::_current);
+        // std::cout << "Key " << key << " pressed" << std::endl;
+        // Input::_keys[key] = true;
+        // Input::_frames[key] = Input::_current;
     } else if (action == 0) {
-        Input::_keys[key] = false;
-        Input::_frames[key] = Input::_current;
+        setKey(key, false);
+        setFrame(key, Input::_current);
+        // Input::_keys[key] = false;
+        // Input::_frames[key] = Input::_current;
     }
 }
 
@@ -64,29 +72,72 @@ void Input::window_size_callback(int width, int height) {
 }
 
 int Input::init() {
-    _keys = new bool [1032];
-    _frames = new uint [1032];
+    _keys = new bool [1512];
+    _frames = new uint [1512];
 
-    memset(_keys, false, 1032*sizeof(bool));
-    memset(_frames, 0, 1032*sizeof(uint));
+    memset(_keys, false, 1512 * sizeof(bool));
+    memset(_frames, 0, 1512 * sizeof(uint));
     return 0;
 }
 
+void Input::cleanup() {
+    delete [] _keys;
+    delete [] _frames;
+}
+
+void Input::setKey(int key, bool value) {
+    if (key >= 1073741824) {
+        uint index = (_SPECIAL_BUTTONS + key - 1073741824);
+        _keys[index] = value;
+    } else {
+        _keys[key] = value;
+    }
+}
+
+void Input::setFrame(int key, uint value) {
+    if (key >= 1073741824) {
+        uint index = (_SPECIAL_BUTTONS + key - 1073741824);
+        _frames[index] = value;
+    } else {
+        _frames[key] = value;
+    }
+}
+
+bool Input::getKey(int keycode) {
+    if (keycode >= 1073741824) {
+        uint index = (_SPECIAL_BUTTONS + keycode - 1073741824);
+        return _keys[index];
+    } else {
+        return _keys[keycode];
+    }
+}
+
+uint Input::getFrame(int keycode) {
+    if (keycode >= 1073741824) {
+        uint index = (_SPECIAL_BUTTONS + keycode - 1073741824);
+        return _frames[index];
+    } else {
+        return _frames[keycode];
+    }
+}
+
 bool Input::pressed(int keycode) {
-    if ( keycode < 0 || keycode >= _MOUSE_BUTTONS) return false;
-    return _keys[keycode];
+    if ( keycode < 0 || (keycode >= _MOUSE_BUTTONS && keycode < _SPECIAL_BUTTONS)) return false;
+    return getKey(keycode);
+    // return false;
 }
 bool Input::jpressed(int keycode) {
-    if ( keycode < 0 || keycode >= _MOUSE_BUTTONS) return false;
-    return _keys[keycode] && _frames[keycode] == _current;
+    if ( keycode < 0 || (keycode >= _MOUSE_BUTTONS && keycode < _SPECIAL_BUTTONS)) return false;
+    // std::cout << "sdfsd " << std::endl;
+    return getKey(keycode) && getFrame(keycode) == _current;
 }
 
 bool Input::clicked(int button) {
-    int index = _MOUSE_BUTTONS+button;
+    int index = _MOUSE_BUTTONS + button;
     return _keys[index];
 }
 bool Input::jclicked(int button) {
-    int index = _MOUSE_BUTTONS+button;
+    int index = _MOUSE_BUTTONS + button;
     return _keys[index] && _frames[index] == _current;
 }
 

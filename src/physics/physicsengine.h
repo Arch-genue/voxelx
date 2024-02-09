@@ -1,6 +1,7 @@
 #pragma once
 
 #include "physics.h"
+#include "../gamesystems/gameobject.h"
 
 class PhysicsEngine {
 public:
