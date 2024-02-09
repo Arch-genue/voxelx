@@ -1,3 +1,14 @@
+/**
+ * @file mesh.h
+ * @author Vlad Kartsaev
+ * @brief Mesh class implementation
+ * @version 0.5
+ * @date 2023-04-06
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include <stdlib.h>
@@ -5,6 +16,10 @@
 
 class VoxelModel;
 
+/**
+ * @brief Класс для создания меша в с использованием OpenGL
+ * 
+ */
 class Mesh {
     unsigned int vao;
     unsigned int vbo;

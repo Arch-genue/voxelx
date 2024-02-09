@@ -4,7 +4,7 @@
 \begin{DoxyCode}{0}
 \DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
 \DoxyCodeLine{2 }
-\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}newwindow.h"{}}}
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{newwindow_8h}{newwindow.h}}"{}}}
 \DoxyCodeLine{4 \textcolor{preprocessor}{\#include <SDL2/SDL.h>}}
 \DoxyCodeLine{5 }
 \DoxyCodeLine{6 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} uint;}
@@ -14,29 +14,35 @@
 \DoxyCodeLine{10 }
 \DoxyCodeLine{11     \textcolor{keyword}{public}:}
 \DoxyCodeLine{12         \textcolor{keyword}{static} \textcolor{keywordtype}{bool}* \_keys;}
-\DoxyCodeLine{13         \textcolor{keyword}{static} uint* \_frames;}
-\DoxyCodeLine{14         \textcolor{keyword}{static} uint \_current;}
-\DoxyCodeLine{15         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaX;}
-\DoxyCodeLine{16         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaY;}
-\DoxyCodeLine{17         \textcolor{keyword}{static} \textcolor{keywordtype}{float} x;}
-\DoxyCodeLine{18         \textcolor{keyword}{static} \textcolor{keywordtype}{float} y;}
-\DoxyCodeLine{19         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_locked;}
-\DoxyCodeLine{20         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_started;}
-\DoxyCodeLine{21 }
-\DoxyCodeLine{22         \textcolor{keyword}{static} \textcolor{keywordtype}{int} init();}
-\DoxyCodeLine{23         \textcolor{keyword}{static} \textcolor{keywordtype}{void} processEvents(\textcolor{keywordtype}{bool} \&quit);}
-\DoxyCodeLine{24         \textcolor{keyword}{static} \textcolor{keywordtype}{void} pullEvents();}
-\DoxyCodeLine{25         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} pressed(\textcolor{keywordtype}{int} keycode);}
-\DoxyCodeLine{26         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jpressed(\textcolor{keywordtype}{int} keycode);}
-\DoxyCodeLine{27         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} clicked(\textcolor{keywordtype}{int} button);}
-\DoxyCodeLine{28         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jclicked(\textcolor{keywordtype}{int} button);}
-\DoxyCodeLine{29 }
-\DoxyCodeLine{30         \textcolor{keyword}{static} \textcolor{keywordtype}{void} cursor\_position\_callback(SDL\_MouseMotionEvent e);}
-\DoxyCodeLine{31         \textcolor{keyword}{static} \textcolor{keywordtype}{void} mouse\_button\_callback(Uint8\& button, \textcolor{keywordtype}{int} action);}
-\DoxyCodeLine{32         \textcolor{keyword}{static} \textcolor{keywordtype}{void} key\_callback(SDL\_Keycode key, \textcolor{keywordtype}{int} action);}
-\DoxyCodeLine{33         \textcolor{keyword}{static} \textcolor{keywordtype}{void} window\_size\_callback(\textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height);}
-\DoxyCodeLine{34 }
-\DoxyCodeLine{35         \textcolor{keyword}{static} \textcolor{keywordtype}{void} toggleCursor();}
-\DoxyCodeLine{36 \};}
+\DoxyCodeLine{13         \textcolor{comment}{// static std::map<uint, bool> Input::\_keys;}}
+\DoxyCodeLine{14         \textcolor{keyword}{static} uint* \_frames;}
+\DoxyCodeLine{15         \textcolor{keyword}{static} uint \_current;}
+\DoxyCodeLine{16         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaX;}
+\DoxyCodeLine{17         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaY;}
+\DoxyCodeLine{18         \textcolor{keyword}{static} \textcolor{keywordtype}{float} x;}
+\DoxyCodeLine{19         \textcolor{keyword}{static} \textcolor{keywordtype}{float} y;}
+\DoxyCodeLine{20         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_locked;}
+\DoxyCodeLine{21         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_started;}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23         \textcolor{keyword}{static} \textcolor{keywordtype}{int} init();}
+\DoxyCodeLine{24         \textcolor{keyword}{static} \textcolor{keywordtype}{void} cleanup();}
+\DoxyCodeLine{25         \textcolor{keyword}{static} \textcolor{keywordtype}{void} processEvents(\textcolor{keywordtype}{bool} \&quit);}
+\DoxyCodeLine{26         \textcolor{keyword}{static} \textcolor{keywordtype}{void} pullEvents();}
+\DoxyCodeLine{27         \textcolor{keyword}{static} \textcolor{keywordtype}{void} setKey(\textcolor{keywordtype}{int} key, \textcolor{keywordtype}{bool} value);}
+\DoxyCodeLine{28         \textcolor{keyword}{static} \textcolor{keywordtype}{void} setFrame(\textcolor{keywordtype}{int} key, uint value);}
+\DoxyCodeLine{29         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} getKey(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{30         \textcolor{keyword}{static} uint getFrame(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{31         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} pressed(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{32         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jpressed(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{33         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} clicked(\textcolor{keywordtype}{int} button);}
+\DoxyCodeLine{34         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jclicked(\textcolor{keywordtype}{int} button);}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36         \textcolor{keyword}{static} \textcolor{keywordtype}{void} cursor\_position\_callback(SDL\_MouseMotionEvent e);}
+\DoxyCodeLine{37         \textcolor{keyword}{static} \textcolor{keywordtype}{void} mouse\_button\_callback(Uint8\& button, \textcolor{keywordtype}{int} action);}
+\DoxyCodeLine{38         \textcolor{keyword}{static} \textcolor{keywordtype}{void} key\_callback(SDL\_Keycode key, \textcolor{keywordtype}{int} action);}
+\DoxyCodeLine{39         \textcolor{keyword}{static} \textcolor{keywordtype}{void} window\_size\_callback(\textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height);}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41         \textcolor{keyword}{static} \textcolor{keywordtype}{void} toggleCursor();}
+\DoxyCodeLine{42 \};}
 
 \end{DoxyCode}

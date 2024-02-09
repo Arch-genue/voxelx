@@ -1,42 +1,43 @@
 \hypertarget{newwindow_8h_source}{}\doxysection{newwindow.\+h}
 \label{newwindow_8h_source}\index{/home/user/dev/voxel3d/src/window/newwindow.h@{/home/user/dev/voxel3d/src/window/newwindow.h}}
-
+\mbox{\hyperlink{newwindow_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
-\DoxyCodeLine{2 }
-\DoxyCodeLine{3 \textcolor{preprocessor}{\#define NO\_SDL\_GLEXT}}
-\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <SDL2/SDL.h>}}
-\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <SDL2/SDL\_opengl.h>}}
-\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <SDL2/SDL\_ttf.h>}}
-\DoxyCodeLine{7 }
-\DoxyCodeLine{8 \textcolor{keyword}{class }SDL\_Window;}
-\DoxyCodeLine{9 }
-\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{class_window}{Window}} \{}
-\DoxyCodeLine{11 \textcolor{keyword}{public}:}
-\DoxyCodeLine{12     \textcolor{keyword}{static} \textcolor{keywordtype}{int} width;}
-\DoxyCodeLine{13     \textcolor{keyword}{static} \textcolor{keywordtype}{int} height;}
-\DoxyCodeLine{14 }
-\DoxyCodeLine{15     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_pause;}
-\DoxyCodeLine{16 }
-\DoxyCodeLine{17     \textcolor{keyword}{static} SDL\_Window * window;}
-\DoxyCodeLine{18     \textcolor{keyword}{static} SDL\_Renderer* guirenderer;}
-\DoxyCodeLine{19     \textcolor{keyword}{static} SDL\_GLContext glContext;}
-\DoxyCodeLine{20     }
-\DoxyCodeLine{21     \textcolor{keyword}{static} \textcolor{keywordtype}{int} init(\textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height, \textcolor{keyword}{const} \textcolor{keywordtype}{char} * title);}
-\DoxyCodeLine{22     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_glInit();}
-\DoxyCodeLine{23     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_glClear();}
-\DoxyCodeLine{24     \textcolor{keyword}{static} \textcolor{keywordtype}{void} exit();}
-\DoxyCodeLine{25 }
-\DoxyCodeLine{26     \textcolor{keyword}{static} \textcolor{keywordtype}{void} setCursorMode(SDL\_bool mode);}
-\DoxyCodeLine{27     \textcolor{keyword}{static} SDL\_bool getCursorMode();}
-\DoxyCodeLine{28 }
-\DoxyCodeLine{29     \textcolor{keyword}{static} \textcolor{keywordtype}{void} setPause(\textcolor{keywordtype}{bool} pa);}
-\DoxyCodeLine{30     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} getPause();}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define NO\_SDL\_GLEXT}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <SDL2/SDL.h>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <SDL2/SDL\_opengl.h>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <SDL2/SDL\_ttf.h>}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{class }SDL\_Window;}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{25 \textcolor{keyword}{class }\mbox{\hyperlink{class_window}{Window}} \{}
+\DoxyCodeLine{26 \textcolor{keyword}{public}:}
+\DoxyCodeLine{27     \textcolor{keyword}{static} \textcolor{keywordtype}{int} width;}
+\DoxyCodeLine{28     \textcolor{keyword}{static} \textcolor{keywordtype}{int} height;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_pause;}
 \DoxyCodeLine{31 }
-\DoxyCodeLine{32     \textcolor{keyword}{static} \textcolor{keywordtype}{void} toggleFullscreen();}
-\DoxyCodeLine{33     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isShouldClose(SDL\_Event event);}
-\DoxyCodeLine{34     \textcolor{keyword}{static} \textcolor{keywordtype}{void} setShouldClose(\textcolor{keywordtype}{bool} flag);}
-\DoxyCodeLine{35     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} swapBuffers(); }
-\DoxyCodeLine{36 \};}
+\DoxyCodeLine{32     \textcolor{keyword}{static} SDL\_Window * window;}
+\DoxyCodeLine{33     \textcolor{keyword}{static} SDL\_Renderer* guirenderer;}
+\DoxyCodeLine{34     \textcolor{keyword}{static} SDL\_GLContext glContext;}
+\DoxyCodeLine{35     }
+\DoxyCodeLine{36     \textcolor{keyword}{static} \textcolor{keywordtype}{int} init(\textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height, \textcolor{keyword}{const} \textcolor{keywordtype}{char} * title);}
+\DoxyCodeLine{37     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_glInit();}
+\DoxyCodeLine{38     \textcolor{keyword}{static} \textcolor{keywordtype}{void} \_glClear();}
+\DoxyCodeLine{39     \textcolor{keyword}{static} \textcolor{keywordtype}{void} exit();}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keyword}{static} \textcolor{keywordtype}{void} setCursorMode(SDL\_bool mode);}
+\DoxyCodeLine{42     \textcolor{keyword}{static} SDL\_bool getCursorMode();}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{keyword}{static} \textcolor{keywordtype}{void} setPause(\textcolor{keywordtype}{bool} pa);}
+\DoxyCodeLine{45     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} getPause();}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47     \textcolor{keyword}{static} \textcolor{keywordtype}{void} toggleFullscreen();}
+\DoxyCodeLine{48     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} isShouldClose(SDL\_Event event);}
+\DoxyCodeLine{49     \textcolor{keyword}{static} \textcolor{keywordtype}{void} setShouldClose(\textcolor{keywordtype}{bool} flag);}
+\DoxyCodeLine{50     \textcolor{keyword}{static} \textcolor{keywordtype}{bool} swapBuffers(); }
+\DoxyCodeLine{51 \};}
 
 \end{DoxyCode}

@@ -1,73 +1,74 @@
 \hypertarget{physics_8h_source}{}\doxysection{physics.\+h}
 \label{physics_8h_source}\index{/home/user/dev/voxel3d/src/physics/physics.h@{/home/user/dev/voxel3d/src/physics/physics.h}}
-
+\mbox{\hyperlink{physics_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
-\DoxyCodeLine{2 }
-\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <vector>}}
-\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
-\DoxyCodeLine{5 \textcolor{comment}{// \#include "{}../gamesystems/gameobject.h"{}}}
-\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{boxcollider_8h}{boxcollider.h}}"{}}}
-\DoxyCodeLine{7 }
-\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <iostream>}}
-\DoxyCodeLine{9 }
-\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{class_game_object}{GameObject}};}
-\DoxyCodeLine{11 }
-\DoxyCodeLine{12 \textcolor{keyword}{enum} PHYSICS \{}
-\DoxyCodeLine{13     NO\_PHYSICS, }
-\DoxyCodeLine{14     STATIC\_PHYSICS,}
-\DoxyCodeLine{15     DYNAMIC\_PHYSICS}
-\DoxyCodeLine{16 \};}
-\DoxyCodeLine{17 }
-\DoxyCodeLine{18 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_object}{PhysicsObject}} \{}
-\DoxyCodeLine{19 \textcolor{keyword}{public}:}
-\DoxyCodeLine{20     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}(\mbox{\hyperlink{class_game_object}{GameObject}}* gmobj, \mbox{\hyperlink{class_box_collider}{BoxCollider}}* collider, \textcolor{keywordtype}{float} mass = 1.0f);}
-\DoxyCodeLine{21     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}(glm::vec3 position = glm::vec3(0), PHYSICS physics = NO\_PHYSICS, \textcolor{keywordtype}{float} mass = 1.0f);}
-\DoxyCodeLine{22     \mbox{\hyperlink{class_physics_object}{\string~PhysicsObject}}();}
-\DoxyCodeLine{23 }
-\DoxyCodeLine{24     \textcolor{keywordtype}{void} setCollider(\mbox{\hyperlink{class_box_collider}{BoxCollider}}* collider);}
-\DoxyCodeLine{25     \mbox{\hyperlink{class_box_collider}{BoxCollider}}* getCollider();}
-\DoxyCodeLine{26 }
-\DoxyCodeLine{27     \mbox{\hyperlink{class_game_object}{GameObject}}* getGameObject();}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{16 \textcolor{comment}{// \#include "{}../gamesystems/gameobject.h"{}}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{boxcollider_8h}{boxcollider.h}}"{}}}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{comment}{// \#include <iostream>}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_game_object}{GameObject}};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{keyword}{enum} PHYSICS \{}
+\DoxyCodeLine{24     NO\_PHYSICS, }
+\DoxyCodeLine{25     STATIC\_PHYSICS,}
+\DoxyCodeLine{26     DYNAMIC\_PHYSICS}
+\DoxyCodeLine{27 \};}
 \DoxyCodeLine{28 }
-\DoxyCodeLine{29     \textcolor{keywordtype}{void} setPosition(glm::vec3 position);}
-\DoxyCodeLine{30     glm::vec3 getPosition();}
-\DoxyCodeLine{31 }
-\DoxyCodeLine{32     \textcolor{keywordtype}{void} setVelocity(glm::vec3 velocity);}
-\DoxyCodeLine{33     glm::vec3 getVelocity();}
+\DoxyCodeLine{29 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_object}{PhysicsObject}} \{}
+\DoxyCodeLine{30 \textcolor{keyword}{public}:}
+\DoxyCodeLine{31     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}(\mbox{\hyperlink{class_game_object}{GameObject}}* gmobj, \mbox{\hyperlink{class_box_collider}{BoxCollider}}* collider, \textcolor{keywordtype}{float} mass = 1.0f);}
+\DoxyCodeLine{32     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}(glm::vec3 position = glm::vec3(0), PHYSICS physics = NO\_PHYSICS, \textcolor{keywordtype}{float} mass = 1.0f);}
+\DoxyCodeLine{33     \mbox{\hyperlink{class_physics_object}{\string~PhysicsObject}}();}
 \DoxyCodeLine{34 }
-\DoxyCodeLine{35     \textcolor{keywordtype}{void} setAcceleration(glm::vec3 acceleration);}
-\DoxyCodeLine{36     glm::vec3 getAcceleration();}
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} setCollider(\mbox{\hyperlink{class_box_collider}{BoxCollider}}* collider);}
+\DoxyCodeLine{36     \mbox{\hyperlink{class_box_collider}{BoxCollider}}* getCollider();}
 \DoxyCodeLine{37 }
-\DoxyCodeLine{38     \textcolor{keywordtype}{void} setPhysics(PHYSICS type);}
-\DoxyCodeLine{39     PHYSICS getPhysics();}
-\DoxyCodeLine{40 }
-\DoxyCodeLine{41     \textcolor{keywordtype}{void} setMass(\textcolor{keywordtype}{float} mass);}
-\DoxyCodeLine{42     \textcolor{keywordtype}{float} getMass();}
-\DoxyCodeLine{43 }
-\DoxyCodeLine{44     \textcolor{keywordtype}{void} applyForce(glm::vec3 force);}
-\DoxyCodeLine{45     \textcolor{keywordtype}{void} stopForce();}
-\DoxyCodeLine{46 }
-\DoxyCodeLine{47     \textcolor{keywordtype}{void} explode(uint16\_t explodeForce);}
+\DoxyCodeLine{38     \mbox{\hyperlink{class_game_object}{GameObject}}* getGameObject();}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40     \textcolor{keywordtype}{void} setPosition(glm::vec3 position);}
+\DoxyCodeLine{41     glm::vec3 getPosition();}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} setVelocity(glm::vec3 velocity);}
+\DoxyCodeLine{44     glm::vec3 getVelocity();}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46     \textcolor{keywordtype}{void} setAcceleration(glm::vec3 acceleration);}
+\DoxyCodeLine{47     glm::vec3 getAcceleration();}
 \DoxyCodeLine{48 }
-\DoxyCodeLine{49     \textcolor{keywordtype}{bool} isGrounded();}
-\DoxyCodeLine{50 }
-\DoxyCodeLine{51     \textcolor{keywordtype}{bool} checkGround(glm::vec3\& position, glm::vec3\& normal);}
-\DoxyCodeLine{52     }
-\DoxyCodeLine{53     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{49     \textcolor{keywordtype}{void} setPhysics(PHYSICS type);}
+\DoxyCodeLine{50     PHYSICS getPhysics();}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keywordtype}{void} setMass(\textcolor{keywordtype}{float} mass);}
+\DoxyCodeLine{53     \textcolor{keywordtype}{float} getMass();}
 \DoxyCodeLine{54 }
-\DoxyCodeLine{55     \textcolor{keywordtype}{float}* getVertices();}
-\DoxyCodeLine{56 \textcolor{keyword}{private}:}
-\DoxyCodeLine{57     \mbox{\hyperlink{class_game_object}{GameObject}}* \_gameobject;}
-\DoxyCodeLine{58     PHYSICS \_physics;}
-\DoxyCodeLine{59     \mbox{\hyperlink{class_box_collider}{BoxCollider}}* \_collider;}
-\DoxyCodeLine{60 }
-\DoxyCodeLine{61     glm::vec3 \_position;}
-\DoxyCodeLine{62     glm::vec3 \_velocity;}
-\DoxyCodeLine{63     glm::vec3 \_acceleration;}
-\DoxyCodeLine{64 }
-\DoxyCodeLine{65     \textcolor{keywordtype}{float} \_mass;}
-\DoxyCodeLine{66     \textcolor{keywordtype}{bool} \_ground;}
-\DoxyCodeLine{67 \};}
+\DoxyCodeLine{55     \textcolor{keywordtype}{void} applyForce(glm::vec3 force);}
+\DoxyCodeLine{56     \textcolor{keywordtype}{void} stopForce();}
+\DoxyCodeLine{57 }
+\DoxyCodeLine{58     \textcolor{keywordtype}{void} explode(uint16\_t explodeForce);}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60     \textcolor{keywordtype}{bool} isGrounded();}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62     \textcolor{keywordtype}{bool} checkGround(glm::vec3\& position, glm::vec3\& normal);}
+\DoxyCodeLine{63     }
+\DoxyCodeLine{64     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66     \textcolor{keywordtype}{float}* getVertices();}
+\DoxyCodeLine{67 \textcolor{keyword}{private}:}
+\DoxyCodeLine{68     \mbox{\hyperlink{class_game_object}{GameObject}}* \_gameobject;}
+\DoxyCodeLine{69     PHYSICS \_physics;}
+\DoxyCodeLine{70     \mbox{\hyperlink{class_box_collider}{BoxCollider}}* \_collider;}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     glm::vec3 \_position;}
+\DoxyCodeLine{73     glm::vec3 \_velocity;}
+\DoxyCodeLine{74     glm::vec3 \_acceleration;}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76     \textcolor{keywordtype}{float} \_mass;}
+\DoxyCodeLine{77     \textcolor{keywordtype}{bool} \_ground;}
+\DoxyCodeLine{78 \};}
 
 \end{DoxyCode}

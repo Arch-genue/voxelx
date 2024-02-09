@@ -1,5 +1,14 @@
 \hypertarget{class_input}{}\doxysection{Input Class Reference}
 \label{class_input}\index{Input@{Input}}
+
+
+Класс системы ввода  
+
+
+
+
+{\ttfamily \#include $<$input.\+h$>$}
+
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,11 +36,26 @@ static void {\bfseries toggle\+Cursor} ()
 \mbox{\Hypertarget{class_input_ab112d4684a28ce380c92b06a1d4dfbe4}\label{class_input_ab112d4684a28ce380c92b06a1d4dfbe4}} 
 static int {\bfseries init} ()
 \item 
+\mbox{\Hypertarget{class_input_a3abd64dd1a4dc0bf55f6837c77ffd4a4}\label{class_input_a3abd64dd1a4dc0bf55f6837c77ffd4a4}} 
+static void {\bfseries cleanup} ()
+\item 
 \mbox{\Hypertarget{class_input_a35a7aa3a075e03f4804bed0d789dffce}\label{class_input_a35a7aa3a075e03f4804bed0d789dffce}} 
 static void {\bfseries process\+Events} (bool \&quit)
 \item 
 \mbox{\Hypertarget{class_input_a17f2d156b7b0c8fad51204372bcea017}\label{class_input_a17f2d156b7b0c8fad51204372bcea017}} 
 static void {\bfseries pull\+Events} ()
+\item 
+\mbox{\Hypertarget{class_input_ae8ba06bd674dd8f68866d36133d60abe}\label{class_input_ae8ba06bd674dd8f68866d36133d60abe}} 
+static void {\bfseries set\+Key} (int key, bool value)
+\item 
+\mbox{\Hypertarget{class_input_a288ce9368383ad785f6aee23e9f65d79}\label{class_input_a288ce9368383ad785f6aee23e9f65d79}} 
+static void {\bfseries set\+Frame} (int key, uint value)
+\item 
+\mbox{\Hypertarget{class_input_a80002060090d70ab0fdd9280732a7672}\label{class_input_a80002060090d70ab0fdd9280732a7672}} 
+static bool {\bfseries get\+Key} (int keycode)
+\item 
+\mbox{\Hypertarget{class_input_a0bf0dd2064c4d8c44ace5ff80072ff00}\label{class_input_a0bf0dd2064c4d8c44ace5ff80072ff00}} 
+static uint {\bfseries get\+Frame} (int keycode)
 \item 
 \mbox{\Hypertarget{class_input_aef012e09d92ff05cc414172d5bd77479}\label{class_input_aef012e09d92ff05cc414172d5bd77479}} 
 static bool {\bfseries pressed} (int keycode)
@@ -92,9 +116,12 @@ static bool {\bfseries \+\_\+cursor\+\_\+started} = false
 \end{DoxyCompactItemize}
 
 
+\doxysubsection{Detailed Description}
+Класс системы ввода 
+
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-/home/user/dev/voxel3d/src/window/input.\+h\item 
+/home/user/dev/voxel3d/src/window/\mbox{\hyperlink{input_8h}{input.\+h}}\item 
 /home/user/dev/voxel3d/src/window/newinput.\+h\item 
 /home/user/dev/voxel3d/src/window/input.\+cpp\item 
 /home/user/dev/voxel3d/src/window/newinput.\+cpp\end{DoxyCompactItemize}

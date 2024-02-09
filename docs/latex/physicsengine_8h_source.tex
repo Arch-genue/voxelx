@@ -1,23 +1,25 @@
 \hypertarget{physicsengine_8h_source}{}\doxysection{physicsengine.\+h}
 \label{physicsengine_8h_source}\index{/home/user/dev/voxel3d/src/physics/physicsengine.h@{/home/user/dev/voxel3d/src/physics/physicsengine.h}}
-
+\mbox{\hyperlink{physicsengine_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
-\DoxyCodeLine{2 }
-\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}physics.h"{}}}
-\DoxyCodeLine{4 }
-\DoxyCodeLine{5 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_engine}{PhysicsEngine}} \{}
-\DoxyCodeLine{6 \textcolor{keyword}{public}:}
-\DoxyCodeLine{7     std::vector<PhysicsObject*> objects;}
-\DoxyCodeLine{8 }
-\DoxyCodeLine{9     \textcolor{keywordtype}{void} addObject(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object});}
-\DoxyCodeLine{10     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* getObject(\textcolor{keywordtype}{int} i);}
-\DoxyCodeLine{11 }
-\DoxyCodeLine{12     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
 \DoxyCodeLine{13 }
-\DoxyCodeLine{14     \textcolor{keywordtype}{bool} checkCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3\& surfacePosition, glm::vec3\& surfaceNormal);}
-\DoxyCodeLine{15 }
-\DoxyCodeLine{16     \textcolor{keywordtype}{void} handleCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3 surfacePosition, glm::vec3 surfaceNormal);}
-\DoxyCodeLine{17 \};}
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{physics_8h}{physics.h}}"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}../gamesystems/gameobject.h"{}}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_engine}{PhysicsEngine}} \{}
+\DoxyCodeLine{22 \textcolor{keyword}{public}:}
+\DoxyCodeLine{23     std::vector<PhysicsObject*> objects;}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25     \textcolor{keywordtype}{void} addObject(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object});}
+\DoxyCodeLine{26     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* getObject(\textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{bool} checkCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3\& surfacePosition, glm::vec3\& surfaceNormal);}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     \textcolor{keywordtype}{void} handleCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3 surfacePosition, glm::vec3 surfaceNormal);}
+\DoxyCodeLine{33 \};}
 
 \end{DoxyCode}

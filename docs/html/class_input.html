@@ -91,6 +91,11 @@ $(document).ready(function(){initNavTree('class_input.html',''); initResizable()
   <div class="headertitle"><div class="title">Input Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Класс системы ввода  
+ <a href="class_input.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="input_8h_source.html">input.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -118,12 +123,27 @@ static void&#160;</td><td class="memItemRight" valign="bottom"><b>toggleCursor</
 <tr class="memitem:ab112d4684a28ce380c92b06a1d4dfbe4"><td class="memItemLeft" align="right" valign="top"><a id="ab112d4684a28ce380c92b06a1d4dfbe4" name="ab112d4684a28ce380c92b06a1d4dfbe4"></a>
 static int&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
 <tr class="separator:ab112d4684a28ce380c92b06a1d4dfbe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3abd64dd1a4dc0bf55f6837c77ffd4a4"><td class="memItemLeft" align="right" valign="top"><a id="a3abd64dd1a4dc0bf55f6837c77ffd4a4" name="a3abd64dd1a4dc0bf55f6837c77ffd4a4"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanup</b> ()</td></tr>
+<tr class="separator:a3abd64dd1a4dc0bf55f6837c77ffd4a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35a7aa3a075e03f4804bed0d789dffce"><td class="memItemLeft" align="right" valign="top"><a id="a35a7aa3a075e03f4804bed0d789dffce" name="a35a7aa3a075e03f4804bed0d789dffce"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>processEvents</b> (bool &amp;quit)</td></tr>
 <tr class="separator:a35a7aa3a075e03f4804bed0d789dffce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17f2d156b7b0c8fad51204372bcea017"><td class="memItemLeft" align="right" valign="top"><a id="a17f2d156b7b0c8fad51204372bcea017" name="a17f2d156b7b0c8fad51204372bcea017"></a>
 static void&#160;</td><td class="memItemRight" valign="bottom"><b>pullEvents</b> ()</td></tr>
 <tr class="separator:a17f2d156b7b0c8fad51204372bcea017"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8ba06bd674dd8f68866d36133d60abe"><td class="memItemLeft" align="right" valign="top"><a id="ae8ba06bd674dd8f68866d36133d60abe" name="ae8ba06bd674dd8f68866d36133d60abe"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setKey</b> (int key, bool value)</td></tr>
+<tr class="separator:ae8ba06bd674dd8f68866d36133d60abe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a288ce9368383ad785f6aee23e9f65d79"><td class="memItemLeft" align="right" valign="top"><a id="a288ce9368383ad785f6aee23e9f65d79" name="a288ce9368383ad785f6aee23e9f65d79"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setFrame</b> (int key, uint value)</td></tr>
+<tr class="separator:a288ce9368383ad785f6aee23e9f65d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80002060090d70ab0fdd9280732a7672"><td class="memItemLeft" align="right" valign="top"><a id="a80002060090d70ab0fdd9280732a7672" name="a80002060090d70ab0fdd9280732a7672"></a>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>getKey</b> (int keycode)</td></tr>
+<tr class="separator:a80002060090d70ab0fdd9280732a7672"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bf0dd2064c4d8c44ace5ff80072ff00"><td class="memItemLeft" align="right" valign="top"><a id="a0bf0dd2064c4d8c44ace5ff80072ff00" name="a0bf0dd2064c4d8c44ace5ff80072ff00"></a>
+static uint&#160;</td><td class="memItemRight" valign="bottom"><b>getFrame</b> (int keycode)</td></tr>
+<tr class="separator:a0bf0dd2064c4d8c44ace5ff80072ff00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef012e09d92ff05cc414172d5bd77479"><td class="memItemLeft" align="right" valign="top"><a id="aef012e09d92ff05cc414172d5bd77479" name="aef012e09d92ff05cc414172d5bd77479"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>pressed</b> (int keycode)</td></tr>
 <tr class="separator:aef012e09d92ff05cc414172d5bd77479"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,7 +202,9 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_cursor_locked
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>_cursor_started</b> = false</td></tr>
 <tr class="separator:a90d974f7b6369d78f757669c773a1989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Класс системы ввода </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/user/dev/voxel3d/src/window/<a class="el" href="input_8h_source.html">input.h</a></li>
 <li>/home/user/dev/voxel3d/src/window/<a class="el" href="newinput_8h_source.html">newinput.h</a></li>
 <li>/home/user/dev/voxel3d/src/window/input.cpp</li>

@@ -1,3 +1,14 @@
+/**
+ * @file newwindow.h
+ * @author Vlad Kartsaev
+ * @brief Window creation
+ * @version 1.0
+ * @date 2023-04-20
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #define NO_SDL_GLEXT
@@ -7,6 +18,10 @@
 
 class SDL_Window;
 
+/**
+ * @brief Класс для создания окна
+ * 
+ */
 class Window {
 public:
     static int width;

@@ -3,7 +3,7 @@
  * @author Vlad Kartsaev
  * @brief Voxel3D Engine demo application
  * @version 2.0
- * @date 2024-02-08
+ * @date 2023-04-06
  *
  * @copyright Copyright (c) 2024
  *

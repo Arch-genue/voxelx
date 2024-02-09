@@ -12,6 +12,10 @@ class Shader;
 class Mesh;
 class VoxelParticles;
 
+/**
+ * @brief Менеджер ресурсов
+ * 
+ */
 class ResourceManager {
     static std::string _path;
 

@@ -1,3 +1,14 @@
+/**
+ * @file physics.h
+ * @author Vlad Kartsaev
+ * @brief 
+ * @version 0.8
+ * @date 2023-04-27
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include <vector>
@@ -5,7 +16,7 @@
 // #include "../gamesystems/gameobject.h"
 #include "boxcollider.h"
 
-#include <iostream>
+// #include <iostream>
 
 class GameObject;
 

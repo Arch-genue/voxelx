@@ -1,8 +1,23 @@
+/**
+ * @file physicsengine.h
+ * @author Vlad Kartsaev
+ * @brief PhysicsEngine class
+ * @version 0.1
+ * @date 2023-04-27
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include "physics.h"
 #include "../gamesystems/gameobject.h"
 
+/**
+ * @brief Физический движок
+ * ! УСТАРЕЛО !
+ */
 class PhysicsEngine {
 public:
     std::vector<PhysicsObject*> objects;

@@ -1,3 +1,14 @@
+/**
+ * @file gamemanager.h
+ * @author Vlad Kartsaev
+ * @brief GameManager class implementation
+ * @version 0.1
+ * @date 2023-04-25
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include <stdlib.h>

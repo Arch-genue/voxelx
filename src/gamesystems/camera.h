@@ -1,7 +1,22 @@
+/**
+ * @file camera.h
+ * @author Vlad Kartsaev
+ * @brief Camera implementation
+ * @version 0.5
+ * @date 2023-04-06
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include <glm/glm.hpp>
 
+/**
+ * @brief Класс игровой камеры
+ * 
+ */
 class Camera {
     public:
         Camera(glm::vec3 position, float fov);
