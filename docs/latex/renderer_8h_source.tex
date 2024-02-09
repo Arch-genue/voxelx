@@ -1,0 +1,42 @@
+\hypertarget{renderer_8h_source}{}\doxysection{renderer.\+h}
+\label{renderer_8h_source}\index{/home/user/dev/voxel3d/src/graphics/renderer.h@{/home/user/dev/voxel3d/src/graphics/renderer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}stdlib.h"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}../gamesystems/camera.h"{}}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_mesh}{Mesh}};}
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{class_camera}{Camera}};}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_model}{VoxelModel}};}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel}{Voxel}};}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{keyword}{class }\mbox{\hyperlink{class_renderer}{Renderer}} \{}
+\DoxyCodeLine{15     \textcolor{keyword}{static} \textcolor{keywordtype}{float}* buffer;}
+\DoxyCodeLine{16     \textcolor{keyword}{static} \textcolor{keywordtype}{size\_t} capacity;}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18     \textcolor{keyword}{static} \mbox{\hyperlink{class_camera}{Camera}}* camera;}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20     \textcolor{keyword}{static} \textcolor{keywordtype}{void} top(\textcolor{keywordtype}{size\_t} \&index, \textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z, glm::vec4 clr, glm::vec3 light);}
+\DoxyCodeLine{21     \textcolor{keyword}{static} \textcolor{keywordtype}{void} bottom(\textcolor{keywordtype}{size\_t} \&index, \textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z, glm::vec4 clr, glm::vec3 light);}
+\DoxyCodeLine{22     \textcolor{keyword}{static} \textcolor{keywordtype}{void} left(\textcolor{keywordtype}{size\_t} \&index, \textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z, glm::vec4 clr, glm::vec3 light);}
+\DoxyCodeLine{23     \textcolor{keyword}{static} \textcolor{keywordtype}{void} right(\textcolor{keywordtype}{size\_t} \&index, \textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z, glm::vec4 clr, glm::vec3 light);}
+\DoxyCodeLine{24     \textcolor{keyword}{static} \textcolor{keywordtype}{void} front(\textcolor{keywordtype}{size\_t} \&index, \textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z, glm::vec4 clr, glm::vec3 light);}
+\DoxyCodeLine{25     \textcolor{keyword}{static} \textcolor{keywordtype}{void} back(\textcolor{keywordtype}{size\_t} \&index, \textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z, glm::vec4 clr, glm::vec3 light);}
+\DoxyCodeLine{26 \textcolor{keyword}{public}:}
+\DoxyCodeLine{27     \textcolor{keyword}{static} \textcolor{keywordtype}{void} init(\textcolor{keywordtype}{size\_t} capacity);}
+\DoxyCodeLine{28     \textcolor{keyword}{static} \textcolor{keywordtype}{void} free();}
+\DoxyCodeLine{29     }
+\DoxyCodeLine{30     \textcolor{keyword}{static} \textcolor{keywordtype}{void} addCamera(\mbox{\hyperlink{class_camera}{Camera}}* cam);}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     \textcolor{keyword}{static} \mbox{\hyperlink{class_mesh}{Mesh}}* \mbox{\hyperlink{class_renderer_a411c02d628b18d7e553510d21e9e9550}{render}}(\mbox{\hyperlink{class_voxel_model}{VoxelModel}}* voxels=\textcolor{keyword}{nullptr});}
+\DoxyCodeLine{33     \textcolor{keyword}{static} \mbox{\hyperlink{class_mesh}{Mesh}}* voxelRender(\mbox{\hyperlink{class_voxel}{Voxel}}* voxel);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \textcolor{keyword}{static} \mbox{\hyperlink{class_camera}{Camera}}* getCamera();}
+\DoxyCodeLine{36 \};}
+
+\end{DoxyCode}

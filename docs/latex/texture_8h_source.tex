@@ -1,0 +1,24 @@
+\hypertarget{texture_8h_source}{}\doxysection{texture.\+h}
+\label{texture_8h_source}\index{/home/user/dev/voxel3d/src/graphics/texture.h@{/home/user/dev/voxel3d/src/graphics/texture.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{class }\mbox{\hyperlink{class_texture}{Texture}} \{}
+\DoxyCodeLine{6 \textcolor{keyword}{public}:}
+\DoxyCodeLine{7     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} id;}
+\DoxyCodeLine{8     \textcolor{keywordtype}{int} width;}
+\DoxyCodeLine{9     \textcolor{keywordtype}{int} height;}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11     \mbox{\hyperlink{class_texture}{Texture}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id}, \textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height);}
+\DoxyCodeLine{12     \mbox{\hyperlink{class_texture}{Texture}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char}* data, \textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height);}
+\DoxyCodeLine{13     \mbox{\hyperlink{class_texture}{\string~Texture}}();}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15     \textcolor{keywordtype}{void} bind();}
+\DoxyCodeLine{16 \};}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{extern} \mbox{\hyperlink{class_texture}{Texture}} * load\_texture(std::string filename);}
+
+\end{DoxyCode}

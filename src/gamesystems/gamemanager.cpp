@@ -4,9 +4,7 @@
 
 
 GameManager::GameManager(){
-    // gameobjects = new GameObject*[size];
     _physicsengine = new PhysicsEngine();
-    // voxelparticles = new VoxelParticles*[50];
 }
 GameManager::~GameManager() {
     _gameobjects.clear();
@@ -17,8 +15,8 @@ void GameManager::addGameObject(GameObject* gameobject) {
     gameobject->setGameManager(this);
     
     _gameobjects.push_back(gameobject);
-    if (gameobject->getPhysics() != nullptr) { 
-        _physicsengine->addObject(gameobject->getPhysics());
+    if (gameobject->getPhysicsObject() != nullptr) { 
+        _physicsengine->addObject(gameobject->getPhysicsObject());
     }
 }
 void GameManager::addVoxelParticles(VoxelParticles* voxparticles) {
@@ -27,7 +25,7 @@ void GameManager::addVoxelParticles(VoxelParticles* voxparticles) {
 
 void GameManager::Update() {
     for(uint16_t i = 0; i < _gameobjects.size(); i++) {
-        _gameobjects[i]->draw();
+        _gameobjects[i]->update();
     }
 }
 
@@ -36,11 +34,11 @@ void GameManager::UpdatePhysics(float deltaTime) {
     _physicsengine->update(deltaTime);
 
     for(uint16_t i = 0; i < _gameobjects.size(); i++) {
-        if (_gameobjects[i]->getPhysics() == nullptr) continue;
+        if (_gameobjects[i]->getPhysicsObject() == nullptr) continue;
 
-        PhysicsObject* phs = _gameobjects[i]->getPhysics();
+        PhysicsObject* phs = _gameobjects[i]->getPhysicsObject();
 
-        if (_gameobjects[i]->getPhysics()->type == DYNAMIC_PHYSICS) { 
+        if (_gameobjects[i]->getPhysicsObject()->getPhysics() == DYNAMIC_PHYSICS) { 
             phs->applyForce(gravity);
         }
 
@@ -48,7 +46,7 @@ void GameManager::UpdatePhysics(float deltaTime) {
         if (_physicsengine->checkCollision(phs, surfacePosition, surfaceNormal)) {
             _physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
         }
-        _gameobjects[i]->setPosition(phs->position);
+        _gameobjects[i]->setPosition(phs->getPosition());
     }
 }
 
@@ -59,7 +57,7 @@ void GameManager::UpdateParticles(float deltaTime) {
 }
 
 void GameManager::clearParticles() {
-    for (int i = 0; i < _voxelparticles.size(); i++) {
+    for (uint64_t i = 0; i < _voxelparticles.size(); i++) {
         delete &_voxelparticles[i];
     }
     _voxelparticles.clear();

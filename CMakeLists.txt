@@ -38,10 +38,14 @@ set(SOURCE
 
 	src/physics/physics.cpp
 	src/physics/physicsengine.cpp
+	src/physics/boxcollider.cpp
 	
 	src/gamesystems/camera.cpp
+	src/gamesystems/transformobject.cpp
 	src/gamesystems/gameobject.cpp
 	src/gamesystems/gamemanager.cpp
+
+	src/system/taskscheduler.cpp
 
 	src/utils.cpp
 )
@@ -69,36 +73,23 @@ set(HEADER
 
 	src/physics/physics.h
 	src/physics/physicsengine.h
+	src/physics/boxcollider.h
 
 	src/gamesystems/camera.h
+	src/gamesystems/transformobject.h
 	src/gamesystems/gameobject.h
 	src/gamesystems/gamemanager.h
 
+	src/system/taskscheduler.h
+
 	src/utils.h
 )
-
-# Укажите путь к заголовочным файлам embree
-# include_directories("~/dev/embree/include")
-
-# Укажите путь к библиотекам embree
-# link_directories("/path/to/embree/lib")
-
-# Добавьте библиотеки embree к вашему проекту
-# add_executable(YourExecutable main.cpp)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(OpenGL_GL_PREFERENCE GLVND)
-
-find_package(embree 3.0 REQUIRED)
-# if(NOT embree)
-# 	message(SEND_ERROR "Failed to find Embree")
-# 	return()
-# else()
-# 	include_directories(${EMBREE_INCLUDE_DIR})
-# endif()
 
 find_package(GLEW REQUIRED)
 if(NOT GLEW_FOUND)
@@ -144,12 +135,11 @@ endif()
 
 add_executable(voxel3d ${SOURCE})
 target_link_libraries(voxel3d 
-${SDL2_LIBRARIES}
-${SDL2_TTF_LIBRARIES}
-${GLEW_LIBRARIES}
-${OPENGL_gl_LIBRARY}
-${GLU_LIBRARY}
-${PNG_LIBRARY}
-embree
+	${SDL2_LIBRARIES}
+	${SDL2_TTF_LIBRARIES}
+	${GLEW_LIBRARIES}
+	${OPENGL_gl_LIBRARY}
+	${GLU_LIBRARY}
+	${PNG_LIBRARY}
 )
 target_compile_options(voxel3d PRIVATE -g)

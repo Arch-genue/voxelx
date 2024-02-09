@@ -1,0 +1,32 @@
+\hypertarget{sprite_8h_source}{}\doxysection{sprite.\+h}
+\label{sprite_8h_source}\index{/home/user/dev/voxel3d/src/graphics/sprite.h@{/home/user/dev/voxel3d/src/graphics/sprite.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}uvregion.h"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{class }\mbox{\hyperlink{class_texture}{Texture}};}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_sprite}{Sprite}} \{}
+\DoxyCodeLine{9 \textcolor{keyword}{public}:}
+\DoxyCodeLine{10     glm::vec2 position;}
+\DoxyCodeLine{11     glm::vec2 size;}
+\DoxyCodeLine{12     glm::vec2 origin;}
+\DoxyCodeLine{13     glm::vec4 color;}
+\DoxyCodeLine{14     \textcolor{keywordtype}{float} angle;}
+\DoxyCodeLine{15     \textcolor{keywordtype}{bool} flippedX = \textcolor{keyword}{false};}
+\DoxyCodeLine{16     \textcolor{keywordtype}{bool} flippedY = \textcolor{keyword}{false};}
+\DoxyCodeLine{17     \mbox{\hyperlink{class_texture}{Texture}}* texture;}
+\DoxyCodeLine{18     \mbox{\hyperlink{class_u_v_region}{UVRegion}} region;}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20     \mbox{\hyperlink{class_sprite}{Sprite}}(glm::vec2 position, glm::vec2 size, \mbox{\hyperlink{class_texture}{Texture}}* texture);}
+\DoxyCodeLine{21     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_sprite}{\string~Sprite}}();}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \textcolor{keywordtype}{void} setTexture(\mbox{\hyperlink{class_texture}{Texture}}* texture) \{}
+\DoxyCodeLine{24         this-\/>texture = texture;}
+\DoxyCodeLine{25     \}}
+\DoxyCodeLine{26 \};}
+
+\end{DoxyCode}

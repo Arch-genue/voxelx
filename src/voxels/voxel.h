@@ -1,100 +1,96 @@
+/**
+ * @file voxel.h
+ * @author Vlad Kartsaev
+ * @brief Implementation of the  Voxel class.
+ * @version 2.0
+ * @date 2024-02-08
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include "../utils.h"
 #include <vector>
 
-/**
- * @brief Класс описывающий воксель и все его параметры
- * 
- */
 class Voxel {
-    public:
-        Voxel();
-        Voxel(glm::vec3 position);
-        Voxel(glm::vec3 position, glm::vec4 color);
-        Voxel(glm::vec3 position, glm::vec3 velocity, glm::vec4 color);
-        
-        ~Voxel();
+public:
+    Voxel();
+    Voxel(glm::vec3 position);
+    Voxel(glm::vec3 position, glm::vec4 color);
+    Voxel(glm::vec3 position, glm::vec3 velocity, glm::vec4 color);
 
-        void setPosition(glm::vec3 position);
-        glm::vec3 getPosition();
+    ~Voxel();
 
-        void setVelocity(glm::vec3 velocity);
-        glm::vec3 getVelocity();
+    void setPosition(glm::vec3 position);
 
-        void setColor(glm::vec4 color);
-        glm::vec4 getColor();
+    /**
+     * @brief Get the Position object
+     * 
+     * @return glm::vec3 
+     */
+    glm::vec3 getPosition();
 
-        void setVisible(bool visible);
-        bool isVisible();
+    void setVelocity(glm::vec3 velocity);
+    glm::vec3 getVelocity();
 
-        void setLifeTime(float lifetime);
-        float getLifeTime();
+    void setColor(glm::vec4 color);
+    glm::vec4 getColor();
 
-    private:
-        glm::vec3 _position;
-        glm::vec3 _velocity;
-        glm::vec4 _color;
+    void setVisible(bool visible);
+    bool isVisible();
 
-        float _lifetime;
+    void setLifeTime(float lifetime);
+    float getLifeTime();
 
-        bool _visible;
+private:
+    glm::vec3 _position;
+    glm::vec3 _velocity;
+    glm::vec4 _color;
+
+    float _lifetime;
+
+    bool _visible;
 };
 
 /**
  * @brief Класс описывающий модель состоящую из вокселей как контейнер
- * 
+ *
  */
 class VoxelModel {
-    public:
-        VoxelModel();
-        ~VoxelModel();
+public:
+    VoxelModel();
+    ~VoxelModel();
 
-        void setLight(uint8_t side, glm::vec3 light);
-        glm::vec3 getLight(uint8_t side);
-        glm::vec3* getLightArray();
+    void setLight(uint8_t side, glm::vec3 light);
+    glm::vec3 getLight(uint8_t side);
+    glm::vec3 *getLightArray();
 
-        void addVoxel(Voxel* voxel);
+    void addVoxel(Voxel *voxel);
 
-        int getVoxelsCount();
+    int getVoxelsCount();
 
-        void setVoxel(int num, Voxel* voxel);
-        Voxel* getVoxel(int num);
+    void setVoxel(int num, Voxel *voxel);
+    Voxel *getVoxel(int num);
 
-        void setSize(glm::vec3 size);
-        glm::vec3 getSize();
+    void setSize(glm::vec3 size);
+    glm::vec3 getSize();
 
-        void setRenderSide(std::string renderside);
-        std::string getRenderSide();
+    void setRenderSide(std::string renderside);
+    std::string getRenderSide();
 
-        //? Voxel Functions
-        void setVoxelPosition(int num, glm::vec3 position);
-        glm::vec3 getVoxelPosition(int num);
-    private:
-        std::vector<Voxel*> _voxels;
-        glm::vec3 _size;
-        std::string _renderside;
+    //? Voxel Functions
+    void setVoxelPosition(int num, glm::vec3 position);
+    glm::vec3 getVoxelPosition(int num);
 
-        glm::vec3 _light[6];
+private:
+    std::vector<Voxel *> _voxels;
+    glm::vec3 _size;
+    std::string _renderside;
+
+    glm::vec3 _light[6];
 };
 
-// struct voxel_m {
-//     glm::vec3 position;
-//     glm::vec3 velocity;
-//     glm::vec4 clr;
-//     float size;
-
-//     float lifetime;
-//     bool visible;
-// };
-
-// struct _voxels {
-//     std::vector<voxel_m> voxels;
-//     glm::vec3 m_size;
-//     std::string renderSide;
-
-//     glm::vec3 light[6];
-// };
-
-extern VoxelModel* load_model(std::string filename, const char* type);
-extern VoxelModel* genVoxel();
+extern VoxelModel *load_model(std::string filename, const char *type);
+extern VoxelModel *genVoxel();

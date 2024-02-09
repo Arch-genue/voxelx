@@ -1,0 +1,237 @@
+\hypertarget{class_transform_object}{}\doxysection{Transform\+Object Class Reference}
+\label{class_transform_object}\index{TransformObject@{TransformObject}}
+
+
+Абстрактный класс описывающий пространственный объект и его свойства  
+
+
+
+
+{\ttfamily \#include $<$transformobject.\+h$>$}
+
+Inheritance diagram for Transform\+Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_transform_object}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_transform_object_aa480cbe3cc0bc60f3fd72a82463dcb15}\label{class_transform_object_aa480cbe3cc0bc60f3fd72a82463dcb15}} 
+void {\bfseries update} ()
+\item 
+virtual void \mbox{\hyperlink{class_transform_object_afc58e6b4bdc0a24337c648dcb4667161}{draw}} ()
+\item 
+void \mbox{\hyperlink{class_transform_object_a1f4a60aee9943121b8f634b4968c911d}{translate}} (float val, glm\+::vec3 vector)
+\begin{DoxyCompactList}\small\item\em Перемещение объекта \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_transform_object_a194abcd3ec8cbd7bdb51b7e72ceae12a}{rotate}} (float val, glm\+::vec3 vector)
+\begin{DoxyCompactList}\small\item\em Вращение объекта \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_transform_object_a4f1b6058e30dc71c47990b7f7001a038}{scale}} (float val, glm\+::vec3 vector)
+\begin{DoxyCompactList}\small\item\em Масштабирование объекта \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_transform_object_acaf504fb5360b5632c114ea1de50a5b6}{set\+Position}} (glm\+::vec3 position)
+\begin{DoxyCompactList}\small\item\em Задать позицию объекта \end{DoxyCompactList}\item 
+glm\+::vec3 \mbox{\hyperlink{class_transform_object_a057163a565e1e6d06253788198926b7e}{get\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Получить вектор позиции объекта \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_transform_object_a795edf14697772672ffdc9eeb8abb63a}{set\+Rotation}} (float angle, glm\+::vec3 rotation)
+\begin{DoxyCompactList}\small\item\em Задать вращение объекта \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_transform_object_a67a254255925c7ce7e826fb3e80f66d4}{get\+Rotation}} (float \&angle, glm\+::vec3 \&rotation)
+\begin{DoxyCompactList}\small\item\em Получить значение вращения объекта \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_transform_object_a0c79092c5d5fa4428c3666d644574983}{set\+Visible}} (bool visible)
+\begin{DoxyCompactList}\small\item\em Задать видимость объекта \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_transform_object_a4e465390ca311a60ee334013af68a1f1}\label{class_transform_object_a4e465390ca311a60ee334013af68a1f1}} 
+bool {\bfseries is\+Visible} ()
+\item 
+glm\+::mat4 \mbox{\hyperlink{class_transform_object_aa1c1009edda239f27a71bf96f24447ff}{get\+Matrix}} ()
+\begin{DoxyCompactList}\small\item\em Получить матрицу модели объекта \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_transform_object_a59656be558c3bdc3d31ecc5debadfa2d}\label{class_transform_object_a59656be558c3bdc3d31ecc5debadfa2d}} 
+glm\+::mat4 {\bfseries \+\_\+modelmatrix}
+\item 
+\mbox{\Hypertarget{class_transform_object_a1240db9c184a9cee362af74507798f93}\label{class_transform_object_a1240db9c184a9cee362af74507798f93}} 
+glm\+::vec3 {\bfseries \+\_\+position}
+\item 
+\mbox{\Hypertarget{class_transform_object_ace2f5a64df8ea29c0d257daa55db788c}\label{class_transform_object_ace2f5a64df8ea29c0d257daa55db788c}} 
+glm\+::vec3 {\bfseries \+\_\+lastposition}
+\item 
+\mbox{\Hypertarget{class_transform_object_a05b36f570bac36968317d1affb77f897}\label{class_transform_object_a05b36f570bac36968317d1affb77f897}} 
+glm\+::vec3 {\bfseries \+\_\+rotation\+Axis}
+\item 
+\mbox{\Hypertarget{class_transform_object_ae30357d6cb350962554fa46f8a15ab75}\label{class_transform_object_ae30357d6cb350962554fa46f8a15ab75}} 
+float {\bfseries \+\_\+rotation\+Angle}
+\item 
+\mbox{\Hypertarget{class_transform_object_a465ed624e66eef5da739734b523b3991}\label{class_transform_object_a465ed624e66eef5da739734b523b3991}} 
+glm\+::vec3 {\bfseries \+\_\+scaling}
+\item 
+\mbox{\Hypertarget{class_transform_object_acbf9553cce8de694a89d2b1c33f1053c}\label{class_transform_object_acbf9553cce8de694a89d2b1c33f1053c}} 
+bool {\bfseries \+\_\+visible}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Абстрактный класс описывающий пространственный объект и его свойства 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_transform_object_afc58e6b4bdc0a24337c648dcb4667161}\label{class_transform_object_afc58e6b4bdc0a24337c648dcb4667161}} 
+\index{TransformObject@{TransformObject}!draw@{draw}}
+\index{draw@{draw}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Transform\+Object\+::draw (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \mbox{\hyperlink{class_game_object_a398169fc952e65caa836eb43d56e0e9f}{Game\+Object}}.
+
+\mbox{\Hypertarget{class_transform_object_aa1c1009edda239f27a71bf96f24447ff}\label{class_transform_object_aa1c1009edda239f27a71bf96f24447ff}} 
+\index{TransformObject@{TransformObject}!getMatrix@{getMatrix}}
+\index{getMatrix@{getMatrix}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{getMatrix()}{getMatrix()}}
+{\footnotesize\ttfamily glm\+::mat4 Transform\+Object\+::get\+Matrix (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Получить матрицу модели объекта 
+
+\begin{DoxyReturn}{Returns}
+glm\+::mat4 Матрица модели объекта 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_transform_object_a057163a565e1e6d06253788198926b7e}\label{class_transform_object_a057163a565e1e6d06253788198926b7e}} 
+\index{TransformObject@{TransformObject}!getPosition@{getPosition}}
+\index{getPosition@{getPosition}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{getPosition()}{getPosition()}}
+{\footnotesize\ttfamily glm\+::vec3 Transform\+Object\+::get\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Получить вектор позиции объекта 
+
+\begin{DoxyReturn}{Returns}
+glm\+::vec3 Позиция объекта 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_transform_object_a67a254255925c7ce7e826fb3e80f66d4}\label{class_transform_object_a67a254255925c7ce7e826fb3e80f66d4}} 
+\index{TransformObject@{TransformObject}!getRotation@{getRotation}}
+\index{getRotation@{getRotation}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{getRotation()}{getRotation()}}
+{\footnotesize\ttfamily void Transform\+Object\+::get\+Rotation (\begin{DoxyParamCaption}\item[{float \&}]{angle,  }\item[{glm\+::vec3 \&}]{rotation }\end{DoxyParamCaption})}
+
+
+
+Получить значение вращения объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em angle} & Ссылка на переменную угла вращения \\
+\hline
+{\em rotation} & Ссылка на переменную вектора вращения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_transform_object_a194abcd3ec8cbd7bdb51b7e72ceae12a}\label{class_transform_object_a194abcd3ec8cbd7bdb51b7e72ceae12a}} 
+\index{TransformObject@{TransformObject}!rotate@{rotate}}
+\index{rotate@{rotate}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{rotate()}{rotate()}}
+{\footnotesize\ttfamily void Transform\+Object\+::rotate (\begin{DoxyParamCaption}\item[{float}]{val,  }\item[{glm\+::vec3}]{vector }\end{DoxyParamCaption})}
+
+
+
+Вращение объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & Значение вращения \\
+\hline
+{\em vector} & Вектор вращения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_transform_object_a4f1b6058e30dc71c47990b7f7001a038}\label{class_transform_object_a4f1b6058e30dc71c47990b7f7001a038}} 
+\index{TransformObject@{TransformObject}!scale@{scale}}
+\index{scale@{scale}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{scale()}{scale()}}
+{\footnotesize\ttfamily void Transform\+Object\+::scale (\begin{DoxyParamCaption}\item[{float}]{val,  }\item[{glm\+::vec3}]{vector }\end{DoxyParamCaption})}
+
+
+
+Масштабирование объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & Значение масштабирования \\
+\hline
+{\em vector} & вектор масштабирования \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_transform_object_acaf504fb5360b5632c114ea1de50a5b6}\label{class_transform_object_acaf504fb5360b5632c114ea1de50a5b6}} 
+\index{TransformObject@{TransformObject}!setPosition@{setPosition}}
+\index{setPosition@{setPosition}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{setPosition()}{setPosition()}}
+{\footnotesize\ttfamily void Transform\+Object\+::set\+Position (\begin{DoxyParamCaption}\item[{glm\+::vec3}]{position }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Задать позицию объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & Вектор позиции объекта \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{class_game_object_a12fc8d506e2ef1099f2192295782bd00}{Game\+Object}}.
+
+\mbox{\Hypertarget{class_transform_object_a795edf14697772672ffdc9eeb8abb63a}\label{class_transform_object_a795edf14697772672ffdc9eeb8abb63a}} 
+\index{TransformObject@{TransformObject}!setRotation@{setRotation}}
+\index{setRotation@{setRotation}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{setRotation()}{setRotation()}}
+{\footnotesize\ttfamily void Transform\+Object\+::set\+Rotation (\begin{DoxyParamCaption}\item[{float}]{angle,  }\item[{glm\+::vec3}]{rotation }\end{DoxyParamCaption})}
+
+
+
+Задать вращение объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em angle} & Угол вращения \\
+\hline
+{\em rotation} & Вектор вращения \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_transform_object_a0c79092c5d5fa4428c3666d644574983}\label{class_transform_object_a0c79092c5d5fa4428c3666d644574983}} 
+\index{TransformObject@{TransformObject}!setVisible@{setVisible}}
+\index{setVisible@{setVisible}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{setVisible()}{setVisible()}}
+{\footnotesize\ttfamily void Transform\+Object\+::set\+Visible (\begin{DoxyParamCaption}\item[{bool}]{visible }\end{DoxyParamCaption})}
+
+
+
+Задать видимость объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em visible} & Видимость объекта \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_transform_object_a1f4a60aee9943121b8f634b4968c911d}\label{class_transform_object_a1f4a60aee9943121b8f634b4968c911d}} 
+\index{TransformObject@{TransformObject}!translate@{translate}}
+\index{translate@{translate}!TransformObject@{TransformObject}}
+\doxysubsubsection{\texorpdfstring{translate()}{translate()}}
+{\footnotesize\ttfamily void Transform\+Object\+::translate (\begin{DoxyParamCaption}\item[{float}]{val,  }\item[{glm\+::vec3}]{vector }\end{DoxyParamCaption})}
+
+
+
+Перемещение объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & Значение перемещения \\
+\hline
+{\em vector} & Вектор направления \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/user/dev/voxel3d/src/gamesystems/\mbox{\hyperlink{transformobject_8h}{transformobject.\+h}}\item 
+/home/user/dev/voxel3d/src/gamesystems/transformobject.\+cpp\end{DoxyCompactItemize}

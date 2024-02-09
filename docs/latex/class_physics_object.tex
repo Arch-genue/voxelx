@@ -1,0 +1,77 @@
+\hypertarget{class_physics_object}{}\doxysection{Physics\+Object Class Reference}
+\label{class_physics_object}\index{PhysicsObject@{PhysicsObject}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_physics_object_acafb42a85d84ed186af623b3eedbe605}\label{class_physics_object_acafb42a85d84ed186af623b3eedbe605}} 
+{\bfseries Physics\+Object} (\mbox{\hyperlink{class_game_object}{Game\+Object}} $\ast$gmobj, \mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$collider, float mass=1.\+0f)
+\item 
+\mbox{\Hypertarget{class_physics_object_a231aea3c3e685cd6ca8acfb79afc9c09}\label{class_physics_object_a231aea3c3e685cd6ca8acfb79afc9c09}} 
+{\bfseries Physics\+Object} (glm\+::vec3 position=glm\+::vec3(0), PHYSICS physics=NO\+\_\+\+PHYSICS, float mass=1.\+0f)
+\item 
+\mbox{\Hypertarget{class_physics_object_afd683e16270315faf9de56e99adad3f5}\label{class_physics_object_afd683e16270315faf9de56e99adad3f5}} 
+void {\bfseries set\+Collider} (\mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$collider)
+\item 
+\mbox{\Hypertarget{class_physics_object_a0fd4b9bed331a0a1893b673138f5d6ec}\label{class_physics_object_a0fd4b9bed331a0a1893b673138f5d6ec}} 
+\mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$ {\bfseries get\+Collider} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_ab0bc2f5160c3f2fb0bf381c79737ca5f}\label{class_physics_object_ab0bc2f5160c3f2fb0bf381c79737ca5f}} 
+\mbox{\hyperlink{class_game_object}{Game\+Object}} $\ast$ {\bfseries get\+Game\+Object} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a983203f526566ef6eb34fb6b72cf32e6}\label{class_physics_object_a983203f526566ef6eb34fb6b72cf32e6}} 
+void {\bfseries set\+Position} (glm\+::vec3 position)
+\item 
+\mbox{\Hypertarget{class_physics_object_a4a954c891d81b68362b8c831b96e9b36}\label{class_physics_object_a4a954c891d81b68362b8c831b96e9b36}} 
+glm\+::vec3 {\bfseries get\+Position} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a59eca598b1bbc513934a903d2755d5c8}\label{class_physics_object_a59eca598b1bbc513934a903d2755d5c8}} 
+void {\bfseries set\+Velocity} (glm\+::vec3 velocity)
+\item 
+\mbox{\Hypertarget{class_physics_object_a8371c20d0d5c0574434b35a573216944}\label{class_physics_object_a8371c20d0d5c0574434b35a573216944}} 
+glm\+::vec3 {\bfseries get\+Velocity} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a9ca9af9641b7b65c08cb53348f36d77c}\label{class_physics_object_a9ca9af9641b7b65c08cb53348f36d77c}} 
+void {\bfseries set\+Acceleration} (glm\+::vec3 acceleration)
+\item 
+\mbox{\Hypertarget{class_physics_object_a084fd4a748b1b41c2317f53e1b9438f4}\label{class_physics_object_a084fd4a748b1b41c2317f53e1b9438f4}} 
+glm\+::vec3 {\bfseries get\+Acceleration} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a7c8c43360f575c529c59cce205a23458}\label{class_physics_object_a7c8c43360f575c529c59cce205a23458}} 
+void {\bfseries set\+Physics} (PHYSICS type)
+\item 
+\mbox{\Hypertarget{class_physics_object_a9e371920ddbded50120326f441d3354c}\label{class_physics_object_a9e371920ddbded50120326f441d3354c}} 
+PHYSICS {\bfseries get\+Physics} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a0154db1e3ac548cb66351b0544839136}\label{class_physics_object_a0154db1e3ac548cb66351b0544839136}} 
+void {\bfseries set\+Mass} (float mass)
+\item 
+\mbox{\Hypertarget{class_physics_object_a596a7f5fa34d287ca8f96c9a560646f9}\label{class_physics_object_a596a7f5fa34d287ca8f96c9a560646f9}} 
+float {\bfseries get\+Mass} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a36098cd05d2f846499ea3f0522134ee7}\label{class_physics_object_a36098cd05d2f846499ea3f0522134ee7}} 
+void {\bfseries apply\+Force} (glm\+::vec3 force)
+\item 
+\mbox{\Hypertarget{class_physics_object_a60c68eb8b9da99e27098b1ea9f6777aa}\label{class_physics_object_a60c68eb8b9da99e27098b1ea9f6777aa}} 
+void {\bfseries stop\+Force} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_a255090f5b14f3b6b91c973dede693bc7}\label{class_physics_object_a255090f5b14f3b6b91c973dede693bc7}} 
+void {\bfseries explode} (uint16\+\_\+t explode\+Force)
+\item 
+\mbox{\Hypertarget{class_physics_object_aa522db71ccab6484dff9d39e6f83a5ea}\label{class_physics_object_aa522db71ccab6484dff9d39e6f83a5ea}} 
+bool {\bfseries is\+Grounded} ()
+\item 
+\mbox{\Hypertarget{class_physics_object_ac81a63206f06307517840d12cf9f70f2}\label{class_physics_object_ac81a63206f06307517840d12cf9f70f2}} 
+bool {\bfseries check\+Ground} (glm\+::vec3 \&position, glm\+::vec3 \&normal)
+\item 
+\mbox{\Hypertarget{class_physics_object_ae3b279c2a6e48dfc97213cfab8c72d94}\label{class_physics_object_ae3b279c2a6e48dfc97213cfab8c72d94}} 
+void {\bfseries update} (float delta\+Time)
+\item 
+\mbox{\Hypertarget{class_physics_object_a0d4c1b4716bf6d4043f307399973f4e3}\label{class_physics_object_a0d4c1b4716bf6d4043f307399973f4e3}} 
+float $\ast$ {\bfseries get\+Vertices} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/user/dev/voxel3d/src/physics/physics.\+h\item 
+/home/user/dev/voxel3d/src/physics/physics.\+cpp\end{DoxyCompactItemize}

@@ -9,6 +9,10 @@
 class PhysicsEngine;
 class VoxelParticles;
 
+/**
+ * @brief Класс для обработки игровых объектов, сущностей, систем частиц и т.д.
+ * 
+ */
 class GameManager {
     public:
         GameManager();

@@ -1,0 +1,58 @@
+\hypertarget{camera_8h_source}{}\doxysection{camera.\+h}
+\label{camera_8h_source}\index{/home/user/dev/voxel3d/src/gamesystems/camera.h@{/home/user/dev/voxel3d/src/gamesystems/camera.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{class }\mbox{\hyperlink{class_camera}{Camera}} \{}
+\DoxyCodeLine{6     \textcolor{keyword}{public}:}
+\DoxyCodeLine{7         \mbox{\hyperlink{class_camera}{Camera}}(glm::vec3 position, \textcolor{keywordtype}{float} fov);}
+\DoxyCodeLine{8         \mbox{\hyperlink{class_camera}{\string~Camera}}();}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10         \textcolor{keywordtype}{void} rotate(glm::vec2 rotation, \textcolor{keywordtype}{float} z);}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{12         \textcolor{keywordtype}{void} setPosition(glm::vec3 position);}
+\DoxyCodeLine{13         glm::vec3 getPosition();}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15         \textcolor{keywordtype}{void} setRotation(glm::mat4 rotation);}
+\DoxyCodeLine{16         glm::mat4 getRotation();}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18         \textcolor{keywordtype}{void} setFOV(\textcolor{keywordtype}{float} fov);}
+\DoxyCodeLine{19         \textcolor{keywordtype}{float} getFOV();}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21         \textcolor{keywordtype}{void} setZoom(\textcolor{keywordtype}{float} zoom);}
+\DoxyCodeLine{22         \textcolor{keywordtype}{float} getZoom();}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24         \textcolor{keywordtype}{void} setPerspective(\textcolor{keywordtype}{bool} perspective);}
+\DoxyCodeLine{25         \textcolor{keywordtype}{bool} getPerspective();}
+\DoxyCodeLine{26 }
+\DoxyCodeLine{27         \textcolor{keywordtype}{void} setFlipped(\textcolor{keywordtype}{bool} flipped);}
+\DoxyCodeLine{28         \textcolor{keywordtype}{bool} getFlipped();}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30         glm::vec3 getFrontVector();}
+\DoxyCodeLine{31         glm::vec3 getUpVector();}
+\DoxyCodeLine{32         glm::vec3 getRightVector();}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34         glm::mat4 getProjection();}
+\DoxyCodeLine{35         glm::mat4 getView();}
+\DoxyCodeLine{36     \textcolor{keyword}{private}:}
+\DoxyCodeLine{37         \textcolor{keywordtype}{void} \_updateVectors();}
+\DoxyCodeLine{38         }
+\DoxyCodeLine{39         glm::vec3 \_front;}
+\DoxyCodeLine{40         glm::vec3 \_up;}
+\DoxyCodeLine{41         glm::vec3 \_right;}
+\DoxyCodeLine{42         glm::vec3 \_dir;}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44         glm::vec3 \_position;}
+\DoxyCodeLine{45         glm::mat4 \_rotation;}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47         \textcolor{keywordtype}{float} \_fov;}
+\DoxyCodeLine{48         \textcolor{keywordtype}{float} \_zoom;}
+\DoxyCodeLine{49         \textcolor{keywordtype}{bool} \_perspective = \textcolor{keyword}{true};}
+\DoxyCodeLine{50         \textcolor{keywordtype}{bool} \_flipped = \textcolor{keyword}{false};}
+\DoxyCodeLine{51         \textcolor{keywordtype}{float} \_aspect = 0.0f;}
+\DoxyCodeLine{52 \};}
+
+\end{DoxyCode}

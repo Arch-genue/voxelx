@@ -1,0 +1,41 @@
+\hypertarget{mesh_8h_source}{}\doxysection{mesh.\+h}
+\label{mesh_8h_source}\index{/home/user/dev/voxel3d/src/graphics/mesh.h@{/home/user/dev/voxel3d/src/graphics/mesh.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}../voxels/voxel.h"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_model}{VoxelModel}};}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_mesh}{Mesh}} \{}
+\DoxyCodeLine{9     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} vao;}
+\DoxyCodeLine{10     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} vbo;}
+\DoxyCodeLine{11     }
+\DoxyCodeLine{12     \textcolor{keywordtype}{int}* \_meshAttributes;}
+\DoxyCodeLine{13     \textcolor{keywordtype}{float}* \_meshBuffer;}
+\DoxyCodeLine{14     }
+\DoxyCodeLine{15     \textcolor{keywordtype}{size\_t} vertices;}
+\DoxyCodeLine{16     \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* voxels;}
+\DoxyCodeLine{17     \textcolor{keywordtype}{size\_t} vertexSize;}
+\DoxyCodeLine{18 \textcolor{keyword}{public}:}
+\DoxyCodeLine{19     \mbox{\hyperlink{class_mesh}{Mesh}}(\mbox{\hyperlink{class_voxel_model}{VoxelModel}}* voxs, \textcolor{keywordtype}{float}* buffer, \textcolor{keywordtype}{size\_t} vertices, \textcolor{keywordtype}{int}* attrs);}
+\DoxyCodeLine{20     \mbox{\hyperlink{class_mesh}{Mesh}}(\textcolor{keywordtype}{float}* buffer, \textcolor{keywordtype}{size\_t} vertices, \textcolor{keywordtype}{int}* attrs);}
+\DoxyCodeLine{21     \mbox{\hyperlink{class_mesh}{\string~Mesh}}();}
+\DoxyCodeLine{22     \textcolor{keywordtype}{void} create\_mesh\_buff();}
+\DoxyCodeLine{23     \textcolor{keywordtype}{void} create\_empty\_mesh\_buff();}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25     \textcolor{keywordtype}{void} update();}
+\DoxyCodeLine{26     \textcolor{keywordtype}{void} reload(\textcolor{keywordtype}{float}* buffer, \textcolor{keywordtype}{size\_t} vertices);}
+\DoxyCodeLine{27     \textcolor{keywordtype}{void} draw(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} primitive);}
+\DoxyCodeLine{28     \textcolor{keywordtype}{void} clear();}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{void} setVoxel(uint num, \mbox{\hyperlink{class_voxel}{Voxel}}* vox);}
+\DoxyCodeLine{31     \mbox{\hyperlink{class_voxel}{Voxel}}* getVoxel(\textcolor{keywordtype}{int} num);}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* getVoxels();}
+\DoxyCodeLine{34     \textcolor{keywordtype}{void} setVoxels(\mbox{\hyperlink{class_voxel_model}{VoxelModel}}* voxs);}
+\DoxyCodeLine{35 \};}
+
+\end{DoxyCode}

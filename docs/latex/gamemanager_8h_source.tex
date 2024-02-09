@@ -1,0 +1,37 @@
+\hypertarget{gamemanager_8h_source}{}\doxysection{gamemanager.\+h}
+\label{gamemanager_8h_source}\index{/home/user/dev/voxel3d/src/gamesystems/gamemanager.h@{/home/user/dev/voxel3d/src/gamesystems/gamemanager.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}../physics/physicsengine.h"{}}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}../graphics/voxelparticles.h"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{gameobject_8h}{gameobject.h}}"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_engine}{PhysicsEngine}};}
+\DoxyCodeLine{10 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}};}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{16 \textcolor{keyword}{class }\mbox{\hyperlink{class_game_manager}{GameManager}} \{}
+\DoxyCodeLine{17     \textcolor{keyword}{public}:}
+\DoxyCodeLine{18         \mbox{\hyperlink{class_game_manager}{GameManager}}();}
+\DoxyCodeLine{19         \mbox{\hyperlink{class_game_manager}{\string~GameManager}}();}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21         \textcolor{keywordtype}{void} addGameObject(\mbox{\hyperlink{class_game_object}{GameObject}}* gameobject);}
+\DoxyCodeLine{22         \textcolor{keywordtype}{void} addVoxelParticles(\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}}* voxelparticles);}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24         \textcolor{keywordtype}{void} Update();}
+\DoxyCodeLine{25         \textcolor{keywordtype}{void} UpdatePhysics(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{26         \textcolor{keywordtype}{void} UpdateParticles(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28         \textcolor{keywordtype}{void} clearParticles();}
+\DoxyCodeLine{29     }
+\DoxyCodeLine{30     \textcolor{keyword}{private}:}
+\DoxyCodeLine{31         std::vector<GameObject*> \_gameobjects;}
+\DoxyCodeLine{32         std::vector<VoxelParticles*> \_voxelparticles;}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34         \mbox{\hyperlink{class_physics_engine}{PhysicsEngine}}* \_physicsengine;}
+\DoxyCodeLine{35 \};}
+
+\end{DoxyCode}

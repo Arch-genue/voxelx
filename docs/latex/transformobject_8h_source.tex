@@ -1,0 +1,44 @@
+\hypertarget{transformobject_8h_source}{}\doxysection{transformobject.\+h}
+\label{transformobject_8h_source}\index{/home/user/dev/voxel3d/src/gamesystems/transformobject.h@{/home/user/dev/voxel3d/src/gamesystems/transformobject.h}}
+\mbox{\hyperlink{transformobject_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <glm/ext.hpp>}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_transform_object}{TransformObject}} \{}
+\DoxyCodeLine{22 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{23     glm::mat4 \_modelmatrix;}
+\DoxyCodeLine{24     glm::vec3 \_position;}
+\DoxyCodeLine{25     glm::vec3 \_lastposition;}
+\DoxyCodeLine{26     glm::vec3 \_rotationAxis;}
+\DoxyCodeLine{27     \textcolor{keywordtype}{float} \_rotationAngle;}
+\DoxyCodeLine{28     glm::vec3 \_scaling;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{bool} \_visible;}
+\DoxyCodeLine{31 \textcolor{keyword}{public}:}
+\DoxyCodeLine{32     \mbox{\hyperlink{class_transform_object}{TransformObject}}(\textcolor{comment}{/* args */});}
+\DoxyCodeLine{33     \mbox{\hyperlink{class_transform_object}{\string~TransformObject}}();}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} update();}
+\DoxyCodeLine{36     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} draw();}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{44     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_a1f4a60aee9943121b8f634b4968c911d}{translate}}(\textcolor{keywordtype}{float} val, glm::vec3 vector);}
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_a194abcd3ec8cbd7bdb51b7e72ceae12a}{rotate}}(\textcolor{keywordtype}{float} val, glm::vec3 vector);}
+\DoxyCodeLine{58     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_a4f1b6058e30dc71c47990b7f7001a038}{scale}}(\textcolor{keywordtype}{float} val, glm::vec3 vector);}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{65     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_acaf504fb5360b5632c114ea1de50a5b6}{setPosition}}(glm::vec3 position);}
+\DoxyCodeLine{71     glm::vec3 \mbox{\hyperlink{class_transform_object_a057163a565e1e6d06253788198926b7e}{getPosition}}();}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{79     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_a795edf14697772672ffdc9eeb8abb63a}{setRotation}}(\textcolor{keywordtype}{float} angle, glm::vec3 rotation);}
+\DoxyCodeLine{86     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_a67a254255925c7ce7e826fb3e80f66d4}{getRotation}}(\textcolor{keywordtype}{float} \&angle, glm::vec3 \&rotation);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{93     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_transform_object_a0c79092c5d5fa4428c3666d644574983}{setVisible}}(\textcolor{keywordtype}{bool} visible);}
+\DoxyCodeLine{94     \textcolor{keywordtype}{bool} isVisible();}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{101     glm::mat4 \mbox{\hyperlink{class_transform_object_aa1c1009edda239f27a71bf96f24447ff}{getMatrix}}();}
+\DoxyCodeLine{102 \};}
+
+\end{DoxyCode}

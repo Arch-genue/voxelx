@@ -1,0 +1,83 @@
+\hypertarget{voxel_8h_source}{}\doxysection{voxel.\+h}
+\label{voxel_8h_source}\index{/home/user/dev/voxel3d/src/voxels/voxel.h@{/home/user/dev/voxel3d/src/voxels/voxel.h}}
+\mbox{\hyperlink{voxel_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include "{}../utils.h"{}}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel}{Voxel}} \{}
+\DoxyCodeLine{18 \textcolor{keyword}{public}:}
+\DoxyCodeLine{19     \mbox{\hyperlink{class_voxel}{Voxel}}();}
+\DoxyCodeLine{20     \mbox{\hyperlink{class_voxel}{Voxel}}(glm::vec3 position);}
+\DoxyCodeLine{21     \mbox{\hyperlink{class_voxel}{Voxel}}(glm::vec3 position, glm::vec4 color);}
+\DoxyCodeLine{22     \mbox{\hyperlink{class_voxel}{Voxel}}(glm::vec3 position, glm::vec3 velocity, glm::vec4 color);}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{24     \mbox{\hyperlink{class_voxel}{\string~Voxel}}();}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_voxel_a7bf6e181966c97e7fe7c429d173d9752}{setPosition}}(glm::vec3 position);}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{33     glm::vec3 \mbox{\hyperlink{class_voxel_a27321f59c840a4231d88eba5dd68076d}{getPosition}}();}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_voxel_a98f5f95f0b795d81a19a6f860b8280fe}{setVelocity}}(glm::vec3 velocity);}
+\DoxyCodeLine{36     glm::vec3 \mbox{\hyperlink{class_voxel_ad88ae982666f4de39c26a5aee9a3f87b}{getVelocity}}();}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38     \textcolor{keywordtype}{void} setColor(glm::vec4 color);}
+\DoxyCodeLine{39     glm::vec4 getColor();}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keywordtype}{void} setVisible(\textcolor{keywordtype}{bool} visible);}
+\DoxyCodeLine{42     \textcolor{keywordtype}{bool} isVisible();}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44     \textcolor{keywordtype}{void} setLifeTime(\textcolor{keywordtype}{float} lifetime);}
+\DoxyCodeLine{45     \textcolor{keywordtype}{float} getLifeTime();}
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{private}:}
+\DoxyCodeLine{48     glm::vec3 \_position;}
+\DoxyCodeLine{49     glm::vec3 \_velocity;}
+\DoxyCodeLine{50     glm::vec4 \_color;}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \textcolor{keywordtype}{float} \_lifetime;}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     \textcolor{keywordtype}{bool} \_visible;}
+\DoxyCodeLine{55 \};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{61 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_model}{VoxelModel}} \{}
+\DoxyCodeLine{62 \textcolor{keyword}{public}:}
+\DoxyCodeLine{63     \mbox{\hyperlink{class_voxel_model}{VoxelModel}}();}
+\DoxyCodeLine{64     \mbox{\hyperlink{class_voxel_model}{\string~VoxelModel}}();}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66     \textcolor{keywordtype}{void} setLight(uint8\_t side, glm::vec3 light);}
+\DoxyCodeLine{67     glm::vec3 getLight(uint8\_t side);}
+\DoxyCodeLine{68     glm::vec3 *getLightArray();}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70     \textcolor{keywordtype}{void} addVoxel(\mbox{\hyperlink{class_voxel}{Voxel}} *voxel);}
+\DoxyCodeLine{71 }
+\DoxyCodeLine{72     \textcolor{keywordtype}{int} getVoxelsCount();}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{74     \textcolor{keywordtype}{void} setVoxel(\textcolor{keywordtype}{int} num, \mbox{\hyperlink{class_voxel}{Voxel}} *voxel);}
+\DoxyCodeLine{75     \mbox{\hyperlink{class_voxel}{Voxel}} *getVoxel(\textcolor{keywordtype}{int} num);}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{77     \textcolor{keywordtype}{void} setSize(glm::vec3 size);}
+\DoxyCodeLine{78     glm::vec3 getSize();}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{80     \textcolor{keywordtype}{void} setRenderSide(std::string renderside);}
+\DoxyCodeLine{81     std::string getRenderSide();}
+\DoxyCodeLine{82 }
+\DoxyCodeLine{83     \textcolor{comment}{//? Voxel Functions}}
+\DoxyCodeLine{84     \textcolor{keywordtype}{void} setVoxelPosition(\textcolor{keywordtype}{int} num, glm::vec3 position);}
+\DoxyCodeLine{85     glm::vec3 getVoxelPosition(\textcolor{keywordtype}{int} num);}
+\DoxyCodeLine{86 }
+\DoxyCodeLine{87 \textcolor{keyword}{private}:}
+\DoxyCodeLine{88     std::vector<Voxel *> \_voxels;}
+\DoxyCodeLine{89     glm::vec3 \_size;}
+\DoxyCodeLine{90     std::string \_renderside;}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92     glm::vec3 \_light[6];}
+\DoxyCodeLine{93 \};}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95 \textcolor{keyword}{extern} \mbox{\hyperlink{class_voxel_model}{VoxelModel}} *load\_model(std::string filename, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *type);}
+\DoxyCodeLine{96 \textcolor{keyword}{extern} \mbox{\hyperlink{class_voxel_model}{VoxelModel}} *genVoxel();}
+
+\end{DoxyCode}

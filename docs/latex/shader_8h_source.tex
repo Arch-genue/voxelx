@@ -1,0 +1,23 @@
+\hypertarget{shader_8h_source}{}\doxysection{shader.\+h}
+\label{shader_8h_source}\index{/home/user/dev/voxel3d/src/graphics/shader.h@{/home/user/dev/voxel3d/src/graphics/shader.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{class }\mbox{\hyperlink{class_shader}{Shader}} \{}
+\DoxyCodeLine{7     \textcolor{keyword}{public}:}
+\DoxyCodeLine{8         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} id;}
+\DoxyCodeLine{9         }
+\DoxyCodeLine{10         \mbox{\hyperlink{class_shader}{Shader}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id});}
+\DoxyCodeLine{11         \mbox{\hyperlink{class_shader}{\string~Shader}}();}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13         \textcolor{keywordtype}{void} use();}
+\DoxyCodeLine{14         \textcolor{keywordtype}{void} uniformMatrix(std::string name, glm::mat4 matrix);}
+\DoxyCodeLine{15         \textcolor{keywordtype}{void} uniformFloat(std::string name, \textcolor{keywordtype}{float} val);}
+\DoxyCodeLine{16 \};}
+\DoxyCodeLine{17 \textcolor{keyword}{extern} \mbox{\hyperlink{class_shader}{Shader}} * load\_shader(std::string vertexFile, std::string fragmentFile); }
+
+\end{DoxyCode}

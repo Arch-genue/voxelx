@@ -1,0 +1,43 @@
+\hypertarget{batch3d_8h_source}{}\doxysection{batch3d.\+h}
+\label{batch3d_8h_source}\index{/home/user/dev/voxel3d/src/graphics/batch3d.h@{/home/user/dev/voxel3d/src/graphics/batch3d.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{using namespace }glm;}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_mesh}{Mesh}};}
+\DoxyCodeLine{9 \textcolor{keyword}{class }\mbox{\hyperlink{class_texture}{Texture}};}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{class }\mbox{\hyperlink{class_batch3_d}{Batch3D}} \{}
+\DoxyCodeLine{12     \textcolor{keywordtype}{float}* buffer;}
+\DoxyCodeLine{13     \textcolor{keywordtype}{size\_t} capacity;}
+\DoxyCodeLine{14     \textcolor{keywordtype}{size\_t} offset;}
+\DoxyCodeLine{15     glm::vec4 color;}
+\DoxyCodeLine{16     \mbox{\hyperlink{class_mesh}{Mesh}}* mesh;}
+\DoxyCodeLine{17     \textcolor{keywordtype}{size\_t} index;}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19     \mbox{\hyperlink{class_texture}{Texture}}* blank;}
+\DoxyCodeLine{20     \mbox{\hyperlink{class_texture}{Texture}}* \_texture;}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22     \textcolor{keywordtype}{void} vertex(\textcolor{keywordtype}{float} x, \textcolor{keywordtype}{float} y, \textcolor{keywordtype}{float} z,}
+\DoxyCodeLine{23             \textcolor{keywordtype}{float} u, \textcolor{keywordtype}{float} v,}
+\DoxyCodeLine{24             \textcolor{keywordtype}{float} r, \textcolor{keywordtype}{float} g, \textcolor{keywordtype}{float} b, \textcolor{keywordtype}{float} a);}
+\DoxyCodeLine{25     \textcolor{keywordtype}{void} vertex(vec3 point, vec2 uvpoint,}
+\DoxyCodeLine{26             \textcolor{keywordtype}{float} r, \textcolor{keywordtype}{float} g, \textcolor{keywordtype}{float} b, \textcolor{keywordtype}{float} a);}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{keyword}{public}:}
+\DoxyCodeLine{29     \mbox{\hyperlink{class_batch3_d}{Batch3D}}(\textcolor{keywordtype}{size\_t} capacity);}
+\DoxyCodeLine{30     \mbox{\hyperlink{class_batch3_d}{\string~Batch3D}}();}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32     \textcolor{keywordtype}{void} begin();}
+\DoxyCodeLine{33     \textcolor{keywordtype}{void} texture(\mbox{\hyperlink{class_texture}{Texture}}* texture);}
+\DoxyCodeLine{34     \textcolor{keywordtype}{void} sprite(vec3 pos, vec3 up, vec3 right, \textcolor{keywordtype}{float} w, \textcolor{keywordtype}{float} h, \textcolor{keywordtype}{int} atlasRes, \textcolor{keywordtype}{int} index, vec4 tint);}
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} sprite(vec3 pos, vec3 up, vec3 right, \textcolor{keywordtype}{float} w, \textcolor{keywordtype}{float} h);}
+\DoxyCodeLine{36     \textcolor{keywordtype}{void} render();}
+\DoxyCodeLine{37 \};}
+
+\end{DoxyCode}

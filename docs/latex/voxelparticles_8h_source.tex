@@ -1,0 +1,111 @@
+\hypertarget{voxelparticles_8h_source}{}\doxysection{voxelparticles.\+h}
+\label{voxelparticles_8h_source}\index{/home/user/dev/voxel3d/src/graphics/voxelparticles.h@{/home/user/dev/voxel3d/src/graphics/voxelparticles.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <GL/glew.h>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <glm/ext.hpp>}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <random>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <algorithm>}}
+\DoxyCodeLine{9 }
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include "{}mesh.h"{}}}
+\DoxyCodeLine{11 \textcolor{preprocessor}{\#include "{}../voxels/voxel.h"{}}}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{class }\mbox{\hyperlink{class_mesh}{Mesh}};}
+\DoxyCodeLine{14 \textcolor{keyword}{class }\mbox{\hyperlink{class_shader}{Shader}};}
+\DoxyCodeLine{15 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel}{Voxel}};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{comment}{// class VoxelParticle()}}
+\DoxyCodeLine{18 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_particles}{Particles}} \{}
+\DoxyCodeLine{19     glm::mat3x3 color;}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21     std::string position;}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \textcolor{keywordtype}{bool} recursive;}
+\DoxyCodeLine{24     \textcolor{keywordtype}{bool} gravity;}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26     \textcolor{keywordtype}{bool} start\_force;}
+\DoxyCodeLine{27     \textcolor{keywordtype}{char}* force\_direction;}
+\DoxyCodeLine{28     glm::vec3 force;}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30     \textcolor{keywordtype}{char}* lifetime;}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{enum} \_effects \{}
+\DoxyCodeLine{34     EFFECT\_IMPORT,}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     EFFECT\_FLAME,}
+\DoxyCodeLine{37     EFFECT\_CURSED\_FLAME,}
+\DoxyCodeLine{38     EFFECT\_DEAD\_FLAME,}
+\DoxyCodeLine{39     EFFECT\_VOMIT,}
+\DoxyCodeLine{40     EFFECT\_WATER,}
+\DoxyCodeLine{41     EFFECT\_EXPLOSION,}
+\DoxyCodeLine{42 \};}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}} \{}
+\DoxyCodeLine{45     \textcolor{comment}{//? Objects}}
+\DoxyCodeLine{46     \mbox{\hyperlink{class_mesh}{Mesh}}* \_mesh;}
+\DoxyCodeLine{47     \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* \_voxelsarray;}
+\DoxyCodeLine{48     \mbox{\hyperlink{struct_particles}{Particles}}* \_particles;}
+\DoxyCodeLine{49     }
+\DoxyCodeLine{50     \textcolor{comment}{//? Properties}}
+\DoxyCodeLine{51     glm::vec3 \_gravity;}
+\DoxyCodeLine{52     glm::vec3 \_position;}
+\DoxyCodeLine{53     \textcolor{keywordtype}{float} m\_size;}
+\DoxyCodeLine{54     \_effects type;}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{comment}{//? Random Generators}}
+\DoxyCodeLine{57     std::uniform\_real\_distribution<float> pos\_generator;}
+\DoxyCodeLine{58     std::uniform\_real\_distribution<float> vel\_generator;}
+\DoxyCodeLine{59     std::uniform\_real\_distribution<float> redclr\_generator;}
+\DoxyCodeLine{60     std::uniform\_real\_distribution<float> greenclr\_generator;}
+\DoxyCodeLine{61     std::uniform\_real\_distribution<float> blueclr\_generator;}
+\DoxyCodeLine{62     std::uniform\_real\_distribution<float> lifetime\_generator;}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64     \textcolor{comment}{//-\/-\/sys}}
+\DoxyCodeLine{65     \textcolor{keywordtype}{float} \_val;}
+\DoxyCodeLine{66     \textcolor{keywordtype}{bool} \_voxelsReady;}
+\DoxyCodeLine{67     std::string \_name;}
+\DoxyCodeLine{68     uint16\_t \_particlecount;}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{70     \textcolor{comment}{//-\/-\/Type}}
+\DoxyCodeLine{71     \textcolor{keywordtype}{bool} \_recursive;}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{74     glm::vec3 \_\_red;}
+\DoxyCodeLine{75     glm::vec3 \_\_green;}
+\DoxyCodeLine{76     glm::vec3 \_\_blue;}
+\DoxyCodeLine{77     }
+\DoxyCodeLine{78 \textcolor{keyword}{public}:}
+\DoxyCodeLine{79     \mbox{\hyperlink{class_voxel_particles}{VoxelParticles}}(std::string name, uint16\_t particlecount, glm::vec3 position);}
+\DoxyCodeLine{80     \textcolor{comment}{// VoxelParticles(\_effects ptype, int bufferSize, bool recursive = false);}}
+\DoxyCodeLine{81     \mbox{\hyperlink{class_voxel_particles}{\string~VoxelParticles}}();}
+\DoxyCodeLine{82     \textcolor{keyword}{static} \mbox{\hyperlink{struct_particles}{Particles}}* load\_voxel\_particles(std::string filename);}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84     \textcolor{keywordtype}{void} setReady(\textcolor{keywordtype}{bool} ready);}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{86     \textcolor{keywordtype}{void} addParticle(\mbox{\hyperlink{class_voxel}{Voxel}}\& particle);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88     \textcolor{keywordtype}{void} setType(\_effects ptype);}
+\DoxyCodeLine{89     \textcolor{keywordtype}{void} setPosition(glm::vec3 pos);}
+\DoxyCodeLine{90     glm::vec3 getPosition();}
+\DoxyCodeLine{91     \textcolor{keywordtype}{void} setSize(\textcolor{keywordtype}{float} size);}
+\DoxyCodeLine{92 }
+\DoxyCodeLine{93     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{94 }
+\DoxyCodeLine{95     \textcolor{keywordtype}{void} calculateAnimation(\mbox{\hyperlink{class_voxel}{Voxel}}* vox);}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{97     \textcolor{comment}{//? Default Particles}}
+\DoxyCodeLine{98     \textcolor{comment}{// void effect\_flame(voxel\_m* vox);}}
+\DoxyCodeLine{99     \textcolor{comment}{// void effect\_cursed\_flame(voxel\_m* vox);}}
+\DoxyCodeLine{100     \textcolor{comment}{// void effect\_dead\_flame(voxel\_m* vox);}}
+\DoxyCodeLine{101     }
+\DoxyCodeLine{102     \textcolor{comment}{// void effect\_vomit(voxel\_m* vox);}}
+\DoxyCodeLine{103     \textcolor{comment}{// void effect\_water(voxel\_m* vox);}}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{105     \textcolor{comment}{// void effect\_explosion(voxel\_m* vox);}}
+\DoxyCodeLine{106 \};}
+
+\end{DoxyCode}

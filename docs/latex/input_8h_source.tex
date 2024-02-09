@@ -1,0 +1,33 @@
+\hypertarget{input_8h_source}{}\doxysection{input.\+h}
+\label{input_8h_source}\index{/home/user/dev/voxel3d/src/window/input.h@{/home/user/dev/voxel3d/src/window/input.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}window.h"{}}}
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} uint;}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{class }\mbox{\hyperlink{class_input}{Input}} \{}
+\DoxyCodeLine{8     \textcolor{keyword}{public}:}
+\DoxyCodeLine{9         \textcolor{keyword}{static} \textcolor{keywordtype}{bool}* \_keys;}
+\DoxyCodeLine{10         \textcolor{keyword}{static} uint* \_frames;}
+\DoxyCodeLine{11         \textcolor{keyword}{static} uint \_current;}
+\DoxyCodeLine{12         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaX;}
+\DoxyCodeLine{13         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaY;}
+\DoxyCodeLine{14         \textcolor{keyword}{static} \textcolor{keywordtype}{float} x;}
+\DoxyCodeLine{15         \textcolor{keyword}{static} \textcolor{keywordtype}{float} y;}
+\DoxyCodeLine{16         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_locked;}
+\DoxyCodeLine{17         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_started;}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19         \textcolor{keyword}{static} \textcolor{keywordtype}{int} init();}
+\DoxyCodeLine{20         \textcolor{keyword}{static} \textcolor{keywordtype}{void} pullEvents();}
+\DoxyCodeLine{21         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} pressed(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{22         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jpressed(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{23         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} clicked(\textcolor{keywordtype}{int} button);}
+\DoxyCodeLine{24         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jclicked(\textcolor{keywordtype}{int} button);}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26         \textcolor{keyword}{static} \textcolor{keywordtype}{void} toggleCursor();}
+\DoxyCodeLine{27 \};}
+
+\end{DoxyCode}

@@ -8,25 +8,37 @@
 #include "../loaders/resourcemanager.h"
 #include "../graphics/renderer.h"
 
-#include <iostream>
 
-GameObject::GameObject(const char* model) {
-    _modelmatrix = glm::mat4(1.0f);
-    _position = glm::vec3(0);
-    _rotAngle = 0.0f;
-    _rotAxis = glm::vec3(1);
-    _scaling = glm::vec3(0.1f);
+GameObject::GameObject(const char* model) : TransformObject() {
 	_campos = glm::vec3(0);
 
     setVisible(true);
-	setHidden(false);
-
-	_physobject = new PhysicsObject(this);
-	_onGround = false;
-
-    _mass = 10; // 100 Kg
 
 	_voxelmodel = ResourceManager::getModel(model);
+	
+	BoundingBox boundingbox = {0, 0, 0, 0, 0, 0};
+	BoxCollider* collider = new BoxCollider(boundingbox);
+
+	_physicsobject = new PhysicsObject(this, collider, 10.0f);
+	setPosition(glm::vec3(0));
+
+    // !CREATE MESH!
+	_mesh = Renderer::render(_voxelmodel);
+}
+GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject() {
+	_campos = glm::vec3(0);
+
+	// std::cout << "position: " << position.x << ", " << position.y << ", " << position.z << std::endl;
+
+    setVisible(true);
+
+	_voxelmodel = ResourceManager::getModel(model);
+	
+	BoundingBox boundingbox = {0, 0, 0, 0, 0, 0};
+	BoxCollider* collider = new BoxCollider(boundingbox);
+
+	_physicsobject = new PhysicsObject(this, collider, 10.0f);
+	setPosition(position);
 
     // !CREATE MESH!
 	_mesh = Renderer::render(_voxelmodel);
@@ -36,12 +48,8 @@ GameObject::~GameObject() {}
 void GameObject::setGameManager(GameManager* gamemanager) {
 	_gm = gamemanager;
 }
-
-void GameObject::setLight(glm::vec3 *light) {
-	for (uint16_t i = 0; i < 6; i++) _voxelmodel->setLight(i, light[i]);
-}
-glm::vec3* GameObject::getLight() {
-	return _voxelmodel->getLightArray();
+GameManager* GameObject::getGameManager() {
+	return _gm;
 }
 
 void GameObject::attachCamera(Camera* cam, glm::vec3 stdpos) {
@@ -50,181 +58,99 @@ void GameObject::attachCamera(Camera* cam, glm::vec3 stdpos) {
 	_camera->setPosition(getPosition() + _campos);
 }
 
+PhysicsObject* GameObject::getPhysicsObject() {
+	return _physicsobject;
+}
+
+void GameObject::setPosition(glm::vec3 position) {
+	TransformObject::setPosition(position);
+	_physicsobject->setPosition(position);
+}
+
 void GameObject::draw() {
-    if (_visible == false) return;
-    _modelmatrix = glm::scale(_modelmatrix, _scaling);
-    _modelmatrix = glm::translate(_modelmatrix, _position);
-    ResourceManager::getShader("voxel")->uniformMatrix("model", _modelmatrix);
-    if (!_hidden && _visible) {
+	if (isVisible()) {
+		ResourceManager::getShader("voxel")->uniformMatrix("model", getMatrix());
 		_mesh->draw(GL_TRIANGLES);
-		_boundingbox->draw(GL_LINES);
+		// _boundingboxmesh->draw(GL_LINES);
 	}
+};
 
-    _modelmatrix = glm::mat4(1.0f);
-}
-
-PhysicsObject* GameObject::getPhysics() {
-	return _physobject;
-}
-
-void GameObject::setCollision(Collision coll) {
-	switch(coll) {
-		case NO_COLLISION: 
-			_boundbox_size = glm::vec3(0, 0, 0); 
+void GameObject::setPhysics(PHYSICS physics) {
+	switch(physics) {
+		case NO_PHYSICS:
+			_physicsobject->getCollider()->setSize(glm::vec3(0, 0, 0)); 
+			_physicsobject->setPhysics(physics);
 		break;
-		case SIMPLE_COLLISION:
+		case STATIC_PHYSICS:
+		case DYNAMIC_PHYSICS:
 			glm::vec3 sizes = _voxelmodel->getSize();
-			_boundbox_size = glm::vec3(sizes.x, sizes.y, sizes.z);
-			_bbox.min = getPosition()-0.5f;
-			_bbox.max = _boundbox_size-0.5f;
-			float vertices[] = {
-				//x     y
-				getPosition().x-0.5f, -0.5f, -0.5f,
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-
-
-				//* Нижняя полоса 1
-				getPosition().x-0.5f, -0.5f, -0.5f,
-				_boundbox_size.x-0.5f, -0.5f, -0.5f,
-
-				//* Нижняя полоса 2
-				_boundbox_size.x-0.5f, -0.5f, -0.5f,
-				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.x-0.5f,
-
-				//* Нижняя полоса 3
-				getPosition().x-0.5f, -0.5f, -0.5f,
-				getPosition().x-0.5f, -0.5f, _boundbox_size.x-0.5f,
-
-				//* Нижняя полоса 4
-				getPosition().x-0.5f, -0.5f, _boundbox_size.x-0.5f,
-				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.x-0.5f,
-
-				//* Верхняя полоса 1
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-
-				//* Верхняя полоса 2
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
-
-				//* Верхняя полоса 3
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
-
-				//* Верхняя полоса 4
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.x-0.5f,
-
-				
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, -0.5f,
-				_boundbox_size.x-0.5f, -0.5f, -0.5f,
-
-				getPosition().x-0.5f, -0.5f, _boundbox_size.z-0.5f,
-				getPosition().x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
-
-				
-				_boundbox_size.x-0.5f, _boundbox_size.y-0.5f, _boundbox_size.z-0.5f,
-				_boundbox_size.x-0.5f, -0.5f, _boundbox_size.z-0.5f,
-			};
-			int attrs[2] = { 3,  0 };
-			_boundingbox = new Mesh(vertices, 24, attrs);
+			_physicsobject->getCollider()->setSize(glm::vec3(sizes.x, sizes.y, sizes.z));
+			// float* vertices = _physicsobject->getVertices();
+			// _collider->getBoundingbox()->
+			// _bbox.min = getPosition()-0.5f;
+			// _bbox.max = _boundbox_size-0.5f;
+			
+			// int attrs[2] = { 3,  0 };
+			// _boundingboxmesh = new Mesh(vertices, 24, attrs);
 			// _physobject = new PhysicsObject(getPosition(), , mass);
-			_physobject->setType(getRigidBody() ? DYNAMIC_PHYSICS : STATIC_PHYSICS);
-			_physobject->setMass(_mass);
+			
+			// _physicsobject->setMass(_mass);
+			_physicsobject->setPhysics(physics);
 		break;
+		// default:
+		// 	_physicsobject->getCollider()->setSize(glm::vec3(0, 0, 0));
+		// break;
 	}
-	_collision = coll;
 }
 
-bool GameObject::getCollision() {
-	return (_collision == SIMPLE_COLLISION);
+// TODO SIMPLE COLLISION
+// glm::ivec3 GameObject::checkCollision(BOUNDINGBOX b) {
+// 	glm::ivec3 collisionside(1);
+// 	if (_bbox.max.x < b.min.x || _bbox.min.x > b.max.x) collisionside.x = 0;
+
+// 	if (_bbox.max.y < b.min.y || _bbox.min.y > b.max.y) { 
+// 		collisionside.y = 0; _onGround = false; 
+// 	} else 
+// 		_onGround = true;
+
+// 	if (_bbox.max.z < b.min.z || _bbox.min.z > b.max.z) collisionside.z = 0;
+// 	return collisionside;
+// }
+// bool GameObject::checkGround() {
+// 	return _onGround;
+// }
+
+// BOUNDINGBOX GameObject::getBBOX() {
+// 	return _bbox;
+// }
+
+
+
+
+VoxelModel* GameObject::getVoxelModel() {
+	return _voxelmodel;
+    // if (_visible == false) return false;
+
+	// VoxelModel* voxels = _mesh->getVoxels();
+	// glm::vec3 halfSize = glm::vec3(0.1f) * 0.5f;
+	// for (int i = 0; i < voxels->getVoxelsCount(); i++) {
+	// 	Voxel* voxel = voxels->getVoxel(i);
+	// 	glm::vec3 position = voxel->getPosition();
+	// 	//std::cout << voxs->voxels[i].position.x << " " << voxs->voxels[i].position.y << " " << voxs->voxels[i].position.z << std::endl;
+	// 	// if (voxs->voxels[i].position == pos) {
+	// 	// 	return &voxs->voxels[i];
+	// 	// }
+	// 	glm::vec3 voxelMin = position - halfSize;
+    // 	glm::vec3 voxelMax = position + halfSize;
+	// 	if (point.x >= voxelMin.x && point.x <= voxelMax.x &&
+    //         point.y >= voxelMin.y && point.y <= voxelMax.y &&
+    //         point.z >= voxelMin.z && point.z <= voxelMax.z) return true;
+	// }
+	// return false;
 }
 
-void GameObject::setRigidBody(bool rigid) {
-	_rigidbody = rigid;
-}
-
-bool GameObject::getRigidBody() {
-	return _rigidbody;
-}
-
-//TODO SIMPLE COLLISION
-glm::ivec3 GameObject::checkCollision(BOUNDINGBOX b) {
-	glm::ivec3 collisionside(1);
-	if (_bbox.max.x < b.min.x || _bbox.min.x > b.max.x) collisionside.x = 0;
-
-	if (_bbox.max.y < b.min.y || _bbox.min.y > b.max.y) { 
-		collisionside.y = 0; _onGround = false; 
-	} else 
-		_onGround = true;
-
-	if (_bbox.max.z < b.min.z || _bbox.min.z > b.max.z) collisionside.z = 0;
-	return collisionside;
-}
-bool GameObject::checkGround() {
-	return _onGround;
-}
-
-BOUNDINGBOX GameObject::getBBOX() {
-	return _bbox;
-}
-
-void GameObject::translate(float val, glm::vec3 vec) {
-	_position += vec*val;
-}
-
-void GameObject::rotate(float angle, glm::vec3 rot) {
-    _rotAngle += angle;
-    _rotAxis = rot; 
-}
-
-void GameObject::setPosition(glm::vec3 pos) {
-	_position = pos;
-	_physobject->setPosition(pos);
-}
-void GameObject::setRotation(float angle, glm::vec3 rot) {
-    _rotAngle = angle;
-    _rotAxis = rot; 
-    glm::mat4 rotation = glm::rotate(_modelmatrix, _rotAngle, _rotAxis);
-
-    _modelmatrix = rotation * _modelmatrix;
-}
-void GameObject::setVisible(bool vis) {
-    _visible = vis;
-}
-void GameObject::setHidden(bool hid) {
-    _hidden = hid;
-}
-
-glm::vec3 GameObject::getPosition() {
-    return _position;
-}
-glm::mat4 GameObject::getMatrix() {
-    return _modelmatrix;
-}
-bool GameObject::getVoxel(glm::vec3 point) {
-    if (_visible == false) return false;
-
-	VoxelModel* voxels = _mesh->getVoxels();
-	glm::vec3 halfSize = glm::vec3(0.1f) * 0.5f;
-	for (size_t i = 0; i < voxels->getVoxelsCount(); i++) {
-		Voxel* voxel = voxels->getVoxel(i);
-		glm::vec3 position = voxel->getPosition();
-		//std::cout << voxs->voxels[i].position.x << " " << voxs->voxels[i].position.y << " " << voxs->voxels[i].position.z << std::endl;
-		// if (voxs->voxels[i].position == pos) {
-		// 	return &voxs->voxels[i];
-		// }
-		glm::vec3 voxelMin = position - halfSize;
-    	glm::vec3 voxelMax = position + halfSize;
-		if (point.x >= voxelMin.x && point.x <= voxelMax.x &&
-            point.y >= voxelMin.y && point.y <= voxelMax.y &&
-            point.z >= voxelMin.z && point.z <= voxelMax.z) return true;
-	}
-	return false;
-}
-
-void GameObject::setMesh(Mesh* newmesh) {
-	_mesh = newmesh;
+void GameObject::setMesh(Mesh* mesh) {
+	_mesh = mesh;
 }
 
 Mesh* GameObject::getMesh() {
@@ -232,7 +158,7 @@ Mesh* GameObject::getMesh() {
 }
 
 bool GameObject::raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend) {
-    if (_visible == false) return false;
+    if (!isVisible()) return false;
 
 	float px = pos.x;
 	float py = pos.y;
@@ -271,22 +197,22 @@ bool GameObject::raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3&
 	while (t <= maxDist) {
 		//voxel* voxel = get(ix, iy, iz);
 		//if (voxel == nullptr || voxel->id){
-        if (getVoxel(glm::vec3(ix, iy, iz))) {
-			end.x = px + t * dx;
-			end.y = py + t * dy;
-			end.z = pz + t * dz;
+        // if (getVoxel(glm::vec3(ix, iy, iz))) {
+		// 	end.x = px + t * dx;
+		// 	end.y = py + t * dy;
+		// 	end.z = pz + t * dz;
 
-			iend.x = ix;
-			iend.y = iy;
-			iend.z = iz;
+		// 	iend.x = ix;
+		// 	iend.y = iy;
+		// 	iend.z = iz;
 
-			norm.x = norm.y = norm.z = 0.0f;
-			if (steppedIndex == 0) norm.x = -stepx;
-			if (steppedIndex == 1) norm.y = -stepy;
-			if (steppedIndex == 2) norm.z = -stepz;
+		// 	norm.x = norm.y = norm.z = 0.0f;
+		// 	if (steppedIndex == 0) norm.x = -stepx;
+		// 	if (steppedIndex == 1) norm.y = -stepy;
+		// 	if (steppedIndex == 2) norm.z = -stepz;
 
-            return true;
-		}
+        //     return true;
+		// }
 		if (txMax < tyMax) {
 			if (txMax < tzMax) {
 				ix += stepx;
@@ -322,8 +248,4 @@ bool GameObject::raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3&
 	end.z = pz + t * dz;
 	norm.x = norm.y = norm.z = 0.0f;
 	return false;
-}
-
-GameManager* GameObject::getGameManager() {
-	return _gm;
 }

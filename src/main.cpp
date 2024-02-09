@@ -1,9 +1,13 @@
-/*
-Voxel3D Engine 2023
-
-
-C++, OpenGL
-*/
+/**
+ * @file main.cpp
+ * @author Vlad Kartsaev
+ * @brief Voxel3D Engine demo application
+ * @version 2.0
+ * @date 2024-02-08
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 
 #include <iostream>
 #include <chrono>
@@ -31,16 +35,28 @@ using namespace glm;
 #include "gamesystems/camera.h"
 #include "gamesystems/entity.h"
 
+#include "system/taskscheduler.h"
+
+/**
+ * @brief Версия Voxel3D Engine
+ */
 #define _VERSION "0.2.0"
 
+/**
+ * @brief Размера буфера рендера
+ * 
+ */
 #define _RENDERERSIZE 1024*1024
 
+/**
+ * @brief Заголовок окна
+ * 
+ */
 #define TITLE "Voxel3D DEMO"
 
 int WIDTH = 1024;
 int HEIGHT = 768;
 float MOUSE_SPEED = 1.3f;
-
 
 int main() {
     printf ("Voxel 3D: %s\n", _VERSION);
@@ -90,25 +106,28 @@ int main() {
 
     ResourceManager::addModel(floorvox, "floor");
 
-    //! GameObjects
-    GameObject* floorobj = new GameObject("floor");
-    floorobj->setPosition(vec3(-500, -1, -500));
-    floorobj->setRigidBody(false);
-    floorobj->setCollision(SIMPLE_COLLISION);
-
-    GameObject* nullobj = new GameObject("null");
-    nullobj->setPosition(vec3(15,0,0));
+    // BoundingBox box1 = {0, 10, 0, 10};
+    // BoundingBox box2 = {5, 15, 5, 15};
     
-    GameObject* appleobj = new GameObject("apple");
-    appleobj->setPosition(vec3(0, 50, 40));
-    appleobj->setRigidBody(true);
-    appleobj->setCollision(SIMPLE_COLLISION);
-    // appleobj->setHidden(true);
+    // if (isIntersecting(box1, box2)) {
+    //     std::cout << "Bounding boxes intersect.\n";
+    // } else {
+    //     std::cout << "Bounding boxes do not intersect.\n";
+    // }
 
-    GameObject* appleobj1 = new GameObject("apple");
-    appleobj1->setPosition(vec3(0, 10, 0));
-    appleobj1->setRigidBody(true);
-    appleobj1->setCollision(SIMPLE_COLLISION);
+    //! GameObjects
+    GameObject* floorobj = new GameObject("floor", vec3(-500, -1, -500));
+    floorobj->setPhysics(STATIC_PHYSICS);
+
+    // GameObject* nullobj = new GameObject("null");
+    // nullobj->setPosition(vec3(15,0,0));
+    
+    GameObject* appleobj = new GameObject("apple", vec3(0, 50, 40));
+    appleobj->setPhysics(DYNAMIC_PHYSICS);
+    appleobj->setVisible(true);
+
+    GameObject* appleobj1 = new GameObject("apple", vec3(0, 10, 0));
+    appleobj1->setPhysics(DYNAMIC_PHYSICS);
 
     gm->addGameObject(floorobj);
     gm->addGameObject(appleobj);
@@ -164,8 +183,8 @@ int main() {
             if (Input::pressed(SDLK_a)) appleobj->setPosition( appleobj->getPosition() - vec3(camera_right.x, 0, camera_right.z) * deltaTime * speed );
             if (Input::pressed(SDLK_d)) appleobj->setPosition( appleobj->getPosition() + vec3(camera_right.x, 0, camera_right.z) * deltaTime * speed );
             
-            if (appleobj->getPhysics()->ground) {
-                if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysics()->applyForce(vec3(0, jumpforce*5, 0));
+            if (appleobj->getPhysicsObject()->isGrounded()) {
+                if (Input::jpressed(SDLK_SPACE)) appleobj->getPhysicsObject()->applyForce(vec3(0, jumpforce*5, 0));
             }
 
             if (Input::pressed(SDLK_c)) {
@@ -178,7 +197,7 @@ int main() {
                 appleobj->setPosition(vec3(0, 100, 0));
             }
             if (Input::jclicked(SDL_BUTTON_LEFT)) {
-                appleobj1->getPhysics()->applyForce(vec3(0, jumpforce*5, 0));
+                appleobj1->getPhysicsObject()->applyForce(vec3(0, jumpforce*5, 0));
                 // appleobj1->getPhysics()->explode(5);
                 // gm->clearParticles();
             }
@@ -189,7 +208,7 @@ int main() {
                     //appleobj1->setVisible(false);
                     std::cout << "see" << std::endl;
                 }
-                //std::cout << "ddd" << std::endl;
+                // std::cout << appleobj->getPosition().y << std::endl;
             //}
         }
 

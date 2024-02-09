@@ -1,0 +1,42 @@
+\hypertarget{newinput_8h_source}{}\doxysection{newinput.\+h}
+\label{newinput_8h_source}\index{/home/user/dev/voxel3d/src/window/newinput.h@{/home/user/dev/voxel3d/src/window/newinput.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include "{}newwindow.h"{}}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <SDL2/SDL.h>}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{keyword}{typedef} \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} uint;}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_input}{Input}} \{}
+\DoxyCodeLine{9     \textcolor{keyword}{static} SDL\_Event sdlEvent;}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11     \textcolor{keyword}{public}:}
+\DoxyCodeLine{12         \textcolor{keyword}{static} \textcolor{keywordtype}{bool}* \_keys;}
+\DoxyCodeLine{13         \textcolor{keyword}{static} uint* \_frames;}
+\DoxyCodeLine{14         \textcolor{keyword}{static} uint \_current;}
+\DoxyCodeLine{15         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaX;}
+\DoxyCodeLine{16         \textcolor{keyword}{static} \textcolor{keywordtype}{float} deltaY;}
+\DoxyCodeLine{17         \textcolor{keyword}{static} \textcolor{keywordtype}{float} x;}
+\DoxyCodeLine{18         \textcolor{keyword}{static} \textcolor{keywordtype}{float} y;}
+\DoxyCodeLine{19         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_locked;}
+\DoxyCodeLine{20         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} \_cursor\_started;}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22         \textcolor{keyword}{static} \textcolor{keywordtype}{int} init();}
+\DoxyCodeLine{23         \textcolor{keyword}{static} \textcolor{keywordtype}{void} processEvents(\textcolor{keywordtype}{bool} \&quit);}
+\DoxyCodeLine{24         \textcolor{keyword}{static} \textcolor{keywordtype}{void} pullEvents();}
+\DoxyCodeLine{25         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} pressed(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{26         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jpressed(\textcolor{keywordtype}{int} keycode);}
+\DoxyCodeLine{27         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} clicked(\textcolor{keywordtype}{int} button);}
+\DoxyCodeLine{28         \textcolor{keyword}{static} \textcolor{keywordtype}{bool} jclicked(\textcolor{keywordtype}{int} button);}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{30         \textcolor{keyword}{static} \textcolor{keywordtype}{void} cursor\_position\_callback(SDL\_MouseMotionEvent e);}
+\DoxyCodeLine{31         \textcolor{keyword}{static} \textcolor{keywordtype}{void} mouse\_button\_callback(Uint8\& button, \textcolor{keywordtype}{int} action);}
+\DoxyCodeLine{32         \textcolor{keyword}{static} \textcolor{keywordtype}{void} key\_callback(SDL\_Keycode key, \textcolor{keywordtype}{int} action);}
+\DoxyCodeLine{33         \textcolor{keyword}{static} \textcolor{keywordtype}{void} window\_size\_callback(\textcolor{keywordtype}{int} width, \textcolor{keywordtype}{int} height);}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{35         \textcolor{keyword}{static} \textcolor{keywordtype}{void} toggleCursor();}
+\DoxyCodeLine{36 \};}
+
+\end{DoxyCode}

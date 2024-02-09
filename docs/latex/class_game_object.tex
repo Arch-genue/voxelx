@@ -1,0 +1,212 @@
+\hypertarget{class_game_object}{}\doxysection{Game\+Object Class Reference}
+\label{class_game_object}\index{GameObject@{GameObject}}
+
+
+Класс описывающий игровой объект с физической моделью и графическим отображением  
+
+
+
+
+{\ttfamily \#include $<$gameobject.\+h$>$}
+
+Inheritance diagram for Game\+Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_game_object}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_game_object_aa28ab6697b0a6a6b0a22553c1dcd6b5c}\label{class_game_object_aa28ab6697b0a6a6b0a22553c1dcd6b5c}} 
+{\bfseries Game\+Object} (const char $\ast$model)
+\item 
+\mbox{\Hypertarget{class_game_object_a31ded2aeafaa3289b07b65c94098a86c}\label{class_game_object_a31ded2aeafaa3289b07b65c94098a86c}} 
+{\bfseries Game\+Object} (const char $\ast$model, glm\+::vec3 position)
+\item 
+void \mbox{\hyperlink{class_game_object_a21d24661c2bc70290b2c6ed7cc6eb538}{set\+Game\+Manager}} (\mbox{\hyperlink{class_game_manager}{Game\+Manager}} $\ast$gamemanager)
+\begin{DoxyCompactList}\small\item\em Задать указатель на объект \mbox{\hyperlink{class_game_manager}{Game\+Manager}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_game_manager}{Game\+Manager}} $\ast$ \mbox{\hyperlink{class_game_object_a33244fc0d5391f774fd9f10fee6d4884}{get\+Game\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em Получить указатель на объект \mbox{\hyperlink{class_game_manager}{Game\+Manager}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_physics_object}{Physics\+Object}} $\ast$ \mbox{\hyperlink{class_game_object_a0f561fdb9713681659f305c08633220f}{get\+Physics\+Object}} ()
+\begin{DoxyCompactList}\small\item\em Получить указатель на \mbox{\hyperlink{class_physics_object}{Physics\+Object}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_game_object_a12fc8d506e2ef1099f2192295782bd00}{set\+Position}} (glm\+::vec3 position) override
+\begin{DoxyCompactList}\small\item\em Задать позицию \mbox{\hyperlink{class_transform_object}{Transform\+Object}} и \mbox{\hyperlink{class_physics_object}{Physics\+Object}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_game_object_acb52827652014ef1c18cb3e0afef481f}{set\+Physics}} (PHYSICS physics)
+\begin{DoxyCompactList}\small\item\em Задать тип физической модели объекта \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_game_object_a398169fc952e65caa836eb43d56e0e9f}{draw}} () override
+\begin{DoxyCompactList}\small\item\em Отрисовка модели \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_game_object_a263aaa371cf1d346bd6483fccc9cab23}{update\+Physics}} (float delta\+Time)
+\begin{DoxyCompactList}\small\item\em Просчет физики \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_game_object_a3cbce4f9de4a0348763a8c5850412aa5}{attach\+Camera}} (\mbox{\hyperlink{class_camera}{Camera}} $\ast$camera, glm\+::vec3 stdpos)
+\begin{DoxyCompactList}\small\item\em Назначить объект \mbox{\hyperlink{class_camera}{Camera}} игровому объекту \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_voxel_model}{Voxel\+Model}} $\ast$ \mbox{\hyperlink{class_game_object_aa09a0959a714a3f56ebd6380c02de6a8}{get\+Voxel\+Model}} ()
+\begin{DoxyCompactList}\small\item\em Получить указатель на объект \mbox{\hyperlink{class_voxel_model}{Voxel\+Model}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_game_object_a7e077e13b5e8a40af1c735b722a5470f}\label{class_game_object_a7e077e13b5e8a40af1c735b722a5470f}} 
+bool {\bfseries raycast} (glm\+::vec3 position, glm\+::vec3 dir, float max\+Dist, glm\+::vec3 \&end, glm\+::vec3 \&norm, glm\+::vec3 \&iend)
+\item 
+\mbox{\Hypertarget{class_game_object_ac474b94fb5f61f71fd06eabbe2037d80}\label{class_game_object_ac474b94fb5f61f71fd06eabbe2037d80}} 
+void {\bfseries set\+Mesh} (\mbox{\hyperlink{class_mesh}{Mesh}} $\ast$mesh)
+\item 
+\mbox{\hyperlink{class_mesh}{Mesh}} $\ast$ \mbox{\hyperlink{class_game_object_acf4e61f71df3644d5eb0e9b70824b31a}{get\+Mesh}} ()
+\begin{DoxyCompactList}\small\item\em Получить указатель на объект \mbox{\hyperlink{class_mesh}{Mesh}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Класс описывающий игровой объект с физической моделью и графическим отображением 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_game_object_a3cbce4f9de4a0348763a8c5850412aa5}\label{class_game_object_a3cbce4f9de4a0348763a8c5850412aa5}} 
+\index{GameObject@{GameObject}!attachCamera@{attachCamera}}
+\index{attachCamera@{attachCamera}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{attachCamera()}{attachCamera()}}
+{\footnotesize\ttfamily void Game\+Object\+::attach\+Camera (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_camera}{Camera}} $\ast$}]{camera,  }\item[{glm\+::vec3}]{stdpos }\end{DoxyParamCaption})}
+
+
+
+Назначить объект \mbox{\hyperlink{class_camera}{Camera}} игровому объекту 
+
+
+\begin{DoxyParams}{Parameters}
+{\em camera} & Объект \mbox{\hyperlink{class_camera}{Camera}} \\
+\hline
+{\em stdpos} & Стандартное положение камеры \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_game_object_a398169fc952e65caa836eb43d56e0e9f}\label{class_game_object_a398169fc952e65caa836eb43d56e0e9f}} 
+\index{GameObject@{GameObject}!draw@{draw}}
+\index{draw@{draw}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void Game\+Object\+::draw (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Отрисовка модели 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_transform_object}{Transform\+Object}}.
+
+\mbox{\Hypertarget{class_game_object_a33244fc0d5391f774fd9f10fee6d4884}\label{class_game_object_a33244fc0d5391f774fd9f10fee6d4884}} 
+\index{GameObject@{GameObject}!getGameManager@{getGameManager}}
+\index{getGameManager@{getGameManager}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{getGameManager()}{getGameManager()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_game_manager}{Game\+Manager}} $\ast$ Game\+Object\+::get\+Game\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Получить указатель на объект \mbox{\hyperlink{class_game_manager}{Game\+Manager}}. 
+
+\begin{DoxyReturn}{Returns}
+Shader$\ast$ Указатель на объект \mbox{\hyperlink{class_game_manager}{Game\+Manager}} или nullptr 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_object_acf4e61f71df3644d5eb0e9b70824b31a}\label{class_game_object_acf4e61f71df3644d5eb0e9b70824b31a}} 
+\index{GameObject@{GameObject}!getMesh@{getMesh}}
+\index{getMesh@{getMesh}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{getMesh()}{getMesh()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_mesh}{Mesh}} $\ast$ Game\+Object\+::get\+Mesh (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Получить указатель на объект \mbox{\hyperlink{class_mesh}{Mesh}}. 
+
+\begin{DoxyReturn}{Returns}
+Mesh$\ast$ Указатель на объект \mbox{\hyperlink{class_mesh}{Mesh}} или nullptr 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_object_a0f561fdb9713681659f305c08633220f}\label{class_game_object_a0f561fdb9713681659f305c08633220f}} 
+\index{GameObject@{GameObject}!getPhysicsObject@{getPhysicsObject}}
+\index{getPhysicsObject@{getPhysicsObject}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{getPhysicsObject()}{getPhysicsObject()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_physics_object}{Physics\+Object}} $\ast$ Game\+Object\+::get\+Physics\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Получить указатель на \mbox{\hyperlink{class_physics_object}{Physics\+Object}}. 
+
+\begin{DoxyReturn}{Returns}
+Physics\+Object$\ast$ Указатель на \mbox{\hyperlink{class_physics_object}{Physics\+Object}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_object_aa09a0959a714a3f56ebd6380c02de6a8}\label{class_game_object_aa09a0959a714a3f56ebd6380c02de6a8}} 
+\index{GameObject@{GameObject}!getVoxelModel@{getVoxelModel}}
+\index{getVoxelModel@{getVoxelModel}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{getVoxelModel()}{getVoxelModel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_voxel_model}{Voxel\+Model}} $\ast$ Game\+Object\+::get\+Voxel\+Model (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Получить указатель на объект \mbox{\hyperlink{class_voxel_model}{Voxel\+Model}}. 
+
+\begin{DoxyReturn}{Returns}
+Указатель на объект \mbox{\hyperlink{class_voxel_model}{Voxel\+Model}} или nullptr 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_game_object_a21d24661c2bc70290b2c6ed7cc6eb538}\label{class_game_object_a21d24661c2bc70290b2c6ed7cc6eb538}} 
+\index{GameObject@{GameObject}!setGameManager@{setGameManager}}
+\index{setGameManager@{setGameManager}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{setGameManager()}{setGameManager()}}
+{\footnotesize\ttfamily void Game\+Object\+::set\+Game\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_game_manager}{Game\+Manager}} $\ast$}]{gamemanager }\end{DoxyParamCaption})}
+
+
+
+Задать указатель на объект \mbox{\hyperlink{class_game_manager}{Game\+Manager}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em gamemanager} & Указатель на объект \mbox{\hyperlink{class_game_manager}{Game\+Manager}} \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_game_object_acb52827652014ef1c18cb3e0afef481f}\label{class_game_object_acb52827652014ef1c18cb3e0afef481f}} 
+\index{GameObject@{GameObject}!setPhysics@{setPhysics}}
+\index{setPhysics@{setPhysics}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{setPhysics()}{setPhysics()}}
+{\footnotesize\ttfamily void Game\+Object\+::set\+Physics (\begin{DoxyParamCaption}\item[{PHYSICS}]{physics }\end{DoxyParamCaption})}
+
+
+
+Задать тип физической модели объекта 
+
+
+\begin{DoxyParams}{Parameters}
+{\em physics} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_game_object_a12fc8d506e2ef1099f2192295782bd00}\label{class_game_object_a12fc8d506e2ef1099f2192295782bd00}} 
+\index{GameObject@{GameObject}!setPosition@{setPosition}}
+\index{setPosition@{setPosition}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{setPosition()}{setPosition()}}
+{\footnotesize\ttfamily void Game\+Object\+::set\+Position (\begin{DoxyParamCaption}\item[{glm\+::vec3}]{position }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Задать позицию \mbox{\hyperlink{class_transform_object}{Transform\+Object}} и \mbox{\hyperlink{class_physics_object}{Physics\+Object}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & Вектор новой позиции объекта \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{class_transform_object_acaf504fb5360b5632c114ea1de50a5b6}{Transform\+Object}}.
+
+\mbox{\Hypertarget{class_game_object_a263aaa371cf1d346bd6483fccc9cab23}\label{class_game_object_a263aaa371cf1d346bd6483fccc9cab23}} 
+\index{GameObject@{GameObject}!updatePhysics@{updatePhysics}}
+\index{updatePhysics@{updatePhysics}!GameObject@{GameObject}}
+\doxysubsubsection{\texorpdfstring{updatePhysics()}{updatePhysics()}}
+{\footnotesize\ttfamily void Game\+Object\+::update\+Physics (\begin{DoxyParamCaption}\item[{float}]{delta\+Time }\end{DoxyParamCaption})}
+
+
+
+Просчет физики 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delta\+Time} & delta\+Time \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/user/dev/voxel3d/src/gamesystems/\mbox{\hyperlink{gameobject_8h}{gameobject.\+h}}\item 
+/home/user/dev/voxel3d/src/gamesystems/gameobject.\+cpp\end{DoxyCompactItemize}

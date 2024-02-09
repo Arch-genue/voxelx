@@ -1,0 +1,42 @@
+\hypertarget{gui_8h_source}{}\doxysection{gui.\+h}
+\label{gui_8h_source}\index{/home/user/dev/voxel3d/src/graphics/gui.h@{/home/user/dev/voxel3d/src/graphics/gui.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{preprocessor}{\#include <GL/glew.h>}}
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <SDL2/SDL.h>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <SDL2/SDL\_ttf.h>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}texture.h"{}}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}renderer.h"{}}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{class }\mbox{\hyperlink{class_batch2_d}{Batch2D}};}
+\DoxyCodeLine{12 \textcolor{keyword}{class }\mbox{\hyperlink{class_camera}{Camera}};}
+\DoxyCodeLine{13 \textcolor{keyword}{class }Level;}
+\DoxyCodeLine{14 \textcolor{keyword}{class }Assets;}
+\DoxyCodeLine{15 \textcolor{keyword}{class }\mbox{\hyperlink{class_mesh}{Mesh}};}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{class }\mbox{\hyperlink{class_g_u_i}{GUI}} \{}
+\DoxyCodeLine{18     TTF\_Font* defaultFont;}
+\DoxyCodeLine{19     \mbox{\hyperlink{class_batch2_d}{Batch2D}}* batch;}
+\DoxyCodeLine{20     \mbox{\hyperlink{class_camera}{Camera}}* uicamera;}
+\DoxyCodeLine{21     \mbox{\hyperlink{class_mesh}{Mesh}}* crosshair;}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23     \mbox{\hyperlink{class_texture}{Texture}}* blocks;}
+\DoxyCodeLine{24 \textcolor{keyword}{public}:}
+\DoxyCodeLine{25     \mbox{\hyperlink{class_g_u_i}{GUI}}();}
+\DoxyCodeLine{26     \mbox{\hyperlink{class_g_u_i}{\string~GUI}}();}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \textcolor{keywordtype}{void} draw();}
+\DoxyCodeLine{29     \textcolor{keywordtype}{void} drawDebug(Level* level, Assets* assets, \textcolor{keywordtype}{int} fps, \textcolor{keywordtype}{bool} occlusion);}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31     \textcolor{keywordtype}{void} setFont(TTF\_Font* font);}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33     \mbox{\hyperlink{class_texture}{Texture}}* renderText(SDL\_Color clr, \textcolor{keyword}{const} \textcolor{keywordtype}{char}* \textcolor{keywordtype}{string});}
+\DoxyCodeLine{34     \textcolor{keywordtype}{void} renderButton(\textcolor{keywordtype}{double} x, \textcolor{keywordtype}{double} y);}
+\DoxyCodeLine{35     \textcolor{keywordtype}{void} renderTexture(\textcolor{keywordtype}{double} x, \textcolor{keywordtype}{double} y);}
+\DoxyCodeLine{36 \};}
+
+\end{DoxyCode}

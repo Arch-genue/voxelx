@@ -1,0 +1,28 @@
+\hypertarget{boxcollider_8h_source}{}\doxysection{boxcollider.\+h}
+\label{boxcollider_8h_source}\index{/home/user/dev/voxel3d/src/physics/boxcollider.h@{/home/user/dev/voxel3d/src/physics/boxcollider.h}}
+\mbox{\hyperlink{boxcollider_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_bounding_box}{BoundingBox}} \{}
+\DoxyCodeLine{17     \textcolor{keywordtype}{float} xMin, xMax, yMin, yMax, zMin, zMax;}
+\DoxyCodeLine{18 \};}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{20 \textcolor{keyword}{class }\mbox{\hyperlink{class_box_collider}{BoxCollider}}\{}
+\DoxyCodeLine{21 \textcolor{keyword}{private}:}
+\DoxyCodeLine{22     \mbox{\hyperlink{struct_bounding_box}{BoundingBox}}* \_boundingbox;}
+\DoxyCodeLine{23     glm::vec3 \_size;}
+\DoxyCodeLine{24 \textcolor{keyword}{public}:}
+\DoxyCodeLine{25     \mbox{\hyperlink{class_box_collider}{BoxCollider}}(\mbox{\hyperlink{struct_bounding_box}{BoundingBox}}\& \_boundingbox);}
+\DoxyCodeLine{26     \mbox{\hyperlink{class_box_collider}{\string~BoxCollider}}();}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28     \mbox{\hyperlink{struct_bounding_box}{BoundingBox}}* getBoundingbox() \textcolor{keyword}{const};}
+\DoxyCodeLine{29     }
+\DoxyCodeLine{30     \textcolor{keywordtype}{void} setSize(glm::vec3 size);}
+\DoxyCodeLine{31     glm::vec3 getSize() \textcolor{keyword}{const};}
+\DoxyCodeLine{32 \};}
+
+\end{DoxyCode}

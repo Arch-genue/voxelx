@@ -1,0 +1,94 @@
+\hypertarget{main_8cpp}{}\doxysection{/home/user/dev/voxel3d/src/main.cpp File Reference}
+\label{main_8cpp}\index{/home/user/dev/voxel3d/src/main.cpp@{/home/user/dev/voxel3d/src/main.cpp}}
+
+
+Voxel3D Engine demo application.  
+
+
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$GL/glew.\+h$>$}\newline
+{\ttfamily \#include $<$SDL2/\+SDL.\+h$>$}\newline
+{\ttfamily \#include $<$SDL2/\+SDL\+\_\+opengl.\+h$>$}\newline
+{\ttfamily \#include $<$SDL2/\+SDL\+\_\+ttf.\+h$>$}\newline
+{\ttfamily \#include $<$glm/glm.\+hpp$>$}\newline
+{\ttfamily \#include $<$glm/ext.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}window/newwindow.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}window/newinput.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}graphics/renderer.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}graphics/gui.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}loaders/resourcemanager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gamesystems/gamemanager.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}voxels/voxel.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gamesystems/camera.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}gamesystems/entity.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}system/taskscheduler.\+h\char`\"{}}\newline
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8cpp_abcde84ea0ef5f934384e4620f092c85a}\label{main_8cpp_abcde84ea0ef5f934384e4620f092c85a}} 
+\#define {\bfseries GLEW\+\_\+\+STATIC}
+\item 
+\mbox{\Hypertarget{main_8cpp_a069a1175d7ba5c8452e30b0213ed01c1}\label{main_8cpp_a069a1175d7ba5c8452e30b0213ed01c1}} 
+\#define {\bfseries \+\_\+\+VERSION}~\char`\"{}0.\+2.\+0\char`\"{}
+\begin{DoxyCompactList}\small\item\em Версия Voxel3D Engine. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8cpp_ae4146c322465be6d75cef1bf365f4b19}\label{main_8cpp_ae4146c322465be6d75cef1bf365f4b19}} 
+\#define {\bfseries \+\_\+\+RENDERERSIZE}~1024$\ast$1024
+\begin{DoxyCompactList}\small\item\em Размера буфера рендера \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8cpp_a60a56c499875b57369f7ef3a5a227cb9}\label{main_8cpp_a60a56c499875b57369f7ef3a5a227cb9}} 
+\#define {\bfseries TITLE}~\char`\"{}Voxel3D DEMO\char`\"{}
+\begin{DoxyCompactList}\small\item\em Заголовок окна \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8cpp_a59c3bba4b17cd5e19f149ea175fa6989}\label{main_8cpp_a59c3bba4b17cd5e19f149ea175fa6989}} 
+int {\bfseries WIDTH} = 1024
+\item 
+\mbox{\Hypertarget{main_8cpp_a4e81322eb1085aca9cd7c5527f5e4c6b}\label{main_8cpp_a4e81322eb1085aca9cd7c5527f5e4c6b}} 
+int {\bfseries HEIGHT} = 768
+\item 
+\mbox{\Hypertarget{main_8cpp_a08bf8aef08795319523b879ac6d9805b}\label{main_8cpp_a08bf8aef08795319523b879ac6d9805b}} 
+float {\bfseries MOUSE\+\_\+\+SPEED} = 1.\+3f
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Voxel3D Engine demo application. 
+
+\begin{DoxyAuthor}{Author}
+Vlad Kartsaev 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+2.\+0 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2024-\/02-\/08
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2024 
+\end{DoxyCopyright}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{main.cpp@{main.cpp}!main@{main}}
+\index{main@{main}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Global renderer
+
+Game\+Objects
+
+\mbox{\hyperlink{class_camera}{Camera}}
+
+Attach camera to appleobj, apple hidden
+
+\mbox{\hyperlink{struct_particles}{Particles}}
+
+===MAIN-\/\+LOOP===
