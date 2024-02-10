@@ -14,7 +14,8 @@
 #include <glm/glm.hpp>
 
 struct BoundingBox {
-    float xMin, xMax, yMin, yMax, zMin, zMax;
+    glm::vec3 min; // Минимальные координаты BoundingBox
+    glm::vec3 max;
 };
 
 class BoxCollider{

@@ -8,6 +8,10 @@ TransformObject::TransformObject() {
     _rotationAxis = glm::vec3(1);
     _scaling = glm::vec3(DEFAULT_SCALE);
 
+    _scalematrix = glm::mat4(1.0f);
+    _positionmatrix = glm::mat4(1.0f);
+    _rotatematrix = glm::mat4(1.0f);
+
     _visible = true;
 }
 TransformObject::~TransformObject() {}
@@ -19,6 +23,8 @@ void TransformObject::update() {
     _modelmatrix = glm::scale(_modelmatrix, _scaling);
     _modelmatrix = glm::translate(_modelmatrix, _position * (DEFAULT_SCALE / _scaling));
     _modelmatrix = glm::rotate(_modelmatrix, _rotationAngle, _rotationAxis);
+    
+    
     draw();
     _modelmatrix = glm::mat4(1.0f);
 }
@@ -39,6 +45,14 @@ void TransformObject::setPosition(glm::vec3 position) {
 glm::vec3 TransformObject::getPosition() {  
     return _position;
 }
+
+// void TransformObject::setRotationAroundPoint(float angle, glm::vec3 rotation, glm::vec3 point) {
+//     _rotationAngle = angle;
+//     _rotationAxis = rotation;
+    
+//     _rotatepoint = getPosition();
+//     setPosition(point);
+// }
 
 void TransformObject::setRotation(float angle, glm::vec3 rotation) {
     _rotationAngle = angle;

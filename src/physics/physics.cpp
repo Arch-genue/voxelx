@@ -8,6 +8,7 @@ class Voxel;
 class Mesh;
 class GameManager;
 
+
 PhysicsObject::PhysicsObject(GameObject *gmobj, BoxCollider *collider, float mass)
     : _gameobject(gmobj), _collider(collider), _position(glm::vec3(0)), _physics(PHYSICS::NO_PHYSICS) {
         setVelocity(glm::vec3(0));
@@ -111,110 +112,106 @@ void PhysicsObject::update(float deltaTime) {
     _acceleration = glm::vec3(0);
 }
 
-float *PhysicsObject::getVertices()
-{
+std::vector<line> PhysicsObject::getVertices() {
     BoxCollider *collider = getCollider();
     BoundingBox *boundingbox = getCollider()->getBoundingbox();
-    boundingbox->xMin = getPosition().x - 0.5f;
-    boundingbox->xMax = collider->getSize().x - 0.5f;
 
-    boundingbox->yMax = collider->getSize().y - 0.5f;
+    if (collider == nullptr) {
+        std::cerr << "ERROR: PhysicsObject::getVertices() called with no collider!\n";
+    }
+    if (boundingbox == nullptr) {
+        std::cerr << "ERROR: PhysicsObject::getVertices() called with no boundingbox!\n";
+    }
+
+    boundingbox->min.x = -0.5f;
+    boundingbox->max.x = collider->getSize().x - 0.5f;
+
+    boundingbox->min.y = -0.5f;
+    boundingbox->max.y = collider->getSize().y - 0.5f;
 
     // boundingbox->zMin = getPosition().z - 0.5f;
-    boundingbox->zMax = collider->getSize().z - 0.5f;
-    float *vertices = new float[72] {
-        // x      y       z
-        boundingbox->xMin,
-        -0.5f,
-        -0.5f,
-        boundingbox->xMin,
-        boundingbox->yMax,
-        -0.5f,
+    boundingbox->max.z = collider->getSize().z - 0.5f;
 
-        //* Нижняя полоса 1
-        boundingbox->xMin,
-        -0.5f,
-        -0.5f,
-        boundingbox->xMax,
-        -0.5f,
-        -0.5f,
+    std::vector<line> vertices;
 
-        //* Нижняя полоса 2
-        boundingbox->xMax,
-        -0.5f,
-        -0.5f,
-        boundingbox->xMax,
-        -0.5f,
-        boundingbox->zMax,
-
-        //* Нижняя полоса 3
-        boundingbox->xMin,
-        -0.5f,
-        -0.5f,
-        boundingbox->xMin,
-        -0.5f,
-        boundingbox->zMax,
-
-        //* Нижняя полоса 4
-        boundingbox->xMin,
-        -0.5f,
-        boundingbox->zMax,
-        boundingbox->xMax,
-        -0.5f,
-        boundingbox->zMax,
-
-        //* Верхняя полоса 1
-        boundingbox->xMin,
-        boundingbox->yMax,
-        -0.5f,
-        boundingbox->xMax,
-        boundingbox->yMax,
-        -0.5f,
-
-        //* Верхняя полоса 2
-        boundingbox->xMax,
-        boundingbox->yMax,
-        -0.5f,
-        boundingbox->xMax,
-        boundingbox->yMax,
-        boundingbox->zMax,
-
-        //* Верхняя полоса 3
-        boundingbox->xMin,
-        boundingbox->yMax,
-        -0.5f,
-        boundingbox->xMin,
-        boundingbox->yMax,
-        boundingbox->zMax,
-
-        //* Верхняя полоса 4
-        boundingbox->xMin,
-        boundingbox->yMax,
-        boundingbox->zMax,
-        boundingbox->xMax,
-        boundingbox->yMax,
-        boundingbox->zMax,
-
-        boundingbox->xMax,
-        boundingbox->yMax,
-        -0.5f,
-        boundingbox->xMax,
-        -0.5f,
-        -0.5f,
-
-        boundingbox->xMin,
-        -0.5f,
-        boundingbox->zMax,
-        boundingbox->xMin,
-        boundingbox->yMax,
-        boundingbox->zMax,
-
-        boundingbox->xMax,
-        boundingbox->yMax,
-        boundingbox->zMax,
-        boundingbox->xMax,
-        -0.5f,
-        boundingbox->zMax,
+    line vert0 = {
+        glm::vec3(boundingbox->min.x, boundingbox->min.y, -0.5f),
+        glm::vec3(boundingbox->min.x, boundingbox->max.y, -0.5f)
     };
+
+    line vert1 = {
+        glm::vec3(boundingbox->min.x, boundingbox->min.y, -0.5f),
+        glm::vec3(boundingbox->max.x, boundingbox->min.y, -0.5f)
+    };
+
+    line vert2 = {
+        glm::vec3(boundingbox->max.x, boundingbox->min.y, -0.5f),
+        glm::vec3(boundingbox->max.x, boundingbox->min.y, boundingbox->max.z)
+    };
+
+    line vert3 = {
+        glm::vec3(boundingbox->min.x, boundingbox->min.y, -0.5f),
+        glm::vec3(boundingbox->min.x, boundingbox->min.y, boundingbox->max.z)
+    };
+
+    line vert4 = {
+        glm::vec3(boundingbox->min.x, boundingbox->min.y, boundingbox->max.z),
+        glm::vec3(boundingbox->max.x, boundingbox->min.y, boundingbox->max.z)
+    };
+
+    line vert5 = {
+        glm::vec3(boundingbox->min.x, boundingbox->max.y, -0.5f),
+        glm::vec3(boundingbox->max.x, boundingbox->max.y, -0.5f)
+    };
+
+    line vert6 = {
+        glm::vec3(boundingbox->max.x, boundingbox->max.y, -0.5f),
+        glm::vec3(boundingbox->max.x, boundingbox->max.y, boundingbox->max.z)
+    };
+
+    line vert7 = {
+        glm::vec3(boundingbox->min.x, boundingbox->max.y, -0.5f),
+        glm::vec3(boundingbox->min.x, boundingbox->max.y, boundingbox->max.z)
+    };
+
+    line vert8 = {
+        glm::vec3(boundingbox->min.x, boundingbox->max.y, boundingbox->max.z),
+        glm::vec3(boundingbox->max.x, boundingbox->max.y, boundingbox->max.z)
+    };
+
+    line vert9 = {
+        glm::vec3(boundingbox->max.x, boundingbox->max.y, -0.5f),
+        glm::vec3(boundingbox->max.x, boundingbox->min.y, -0.5f)
+    };
+
+    line vert10 = {
+        glm::vec3(boundingbox->min.x, boundingbox->min.y, boundingbox->max.z),
+        glm::vec3(boundingbox->min.x, boundingbox->max.y, boundingbox->max.z)
+    };
+
+    line vert11 = {
+        glm::vec3(boundingbox->max.x, boundingbox->max.y, boundingbox->max.z),
+        glm::vec3(boundingbox->max.x, boundingbox->min.y, boundingbox->max.z)
+    };
+    
+    vertices.push_back(vert0);
+
+    vertices.push_back(vert1);
+    vertices.push_back(vert2);
+
+    vertices.push_back(vert3);
+    vertices.push_back(vert4);
+
+    vertices.push_back(vert5);
+    vertices.push_back(vert6);
+
+    vertices.push_back(vert7);
+    vertices.push_back(vert8);
+
+    vertices.push_back(vert9);
+    vertices.push_back(vert10);
+
+    vertices.push_back(vert11);
+
     return vertices;
 }

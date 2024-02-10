@@ -19,8 +19,15 @@
  * ! УСТАРЕЛО !
  */
 class PhysicsEngine {
+private:
+    std::vector<PhysicsObject*> _objects;
+    glm::vec3 _gravity;
+
 public:
-    std::vector<PhysicsObject*> objects;
+    PhysicsEngine();
+    ~PhysicsEngine();
+
+    glm::vec3 getGravity();
 
     void addObject(PhysicsObject* object);
     PhysicsObject* getObject(int i);
@@ -30,4 +37,7 @@ public:
     bool checkCollision(PhysicsObject* object, glm::vec3& surfacePosition, glm::vec3& surfaceNormal);
 
     void handleCollision(PhysicsObject* object, glm::vec3 surfacePosition, glm::vec3 surfaceNormal);
+
+    bool raycast(GameObject* gameobject, glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
+    bool raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, PhysicsObject* physicsobject);
 };

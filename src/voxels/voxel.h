@@ -73,10 +73,11 @@ public:
 
     void addVoxel(Voxel *voxel);
 
-    int getVoxelsCount();
+    size_t getVoxelsCount();
 
     void setVoxel(int num, Voxel *voxel);
     Voxel *getVoxel(int num);
+    Voxel* getVoxel(glm::vec3 position);
 
     void setSize(glm::vec3 size);
     glm::vec3 getSize();

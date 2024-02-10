@@ -19,8 +19,12 @@ void GameManager::addGameObject(GameObject* gameobject) {
         _physicsengine->addObject(gameobject->getPhysicsObject());
     }
 }
-void GameManager::addVoxelParticles(VoxelParticles* voxparticles) {
+ void GameManager::addVoxelParticles(VoxelParticles* voxparticles) {
     _voxelparticles.push_back(voxparticles);
+}
+
+PhysicsEngine* GameManager::getPhysicsEngine() {
+    return _physicsengine;
 }
 
 void GameManager::Update() {
@@ -30,7 +34,6 @@ void GameManager::Update() {
 }
 
 void GameManager::UpdatePhysics(float deltaTime) {
-    glm::vec3 gravity(0, -9.81f, 0);
     _physicsengine->update(deltaTime);
 
     for(uint16_t i = 0; i < _gameobjects.size(); i++) {
@@ -39,14 +42,28 @@ void GameManager::UpdatePhysics(float deltaTime) {
         PhysicsObject* phs = _gameobjects[i]->getPhysicsObject();
 
         if (_gameobjects[i]->getPhysicsObject()->getPhysics() == DYNAMIC_PHYSICS) { 
-            phs->applyForce(gravity);
+            phs->applyForce(_physicsengine->getGravity());
         }
 
         glm::vec3 surfacePosition, surfaceNormal;
         if (_physicsengine->checkCollision(phs, surfacePosition, surfaceNormal)) {
             _physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
         }
+
+        glm::vec3 end;
+        glm::vec3 norm;
+        glm::vec3 iend;
+
+        // if (i + 1 < _gameobjects.size()) {
+            // if (_physicsengine->raycast(_gameobjects[i], _gameobjects[i+1]->getPosition(), , 20.0f, end, norm, iend)) {
+        // }
+
         _gameobjects[i]->setPosition(phs->getPosition());
+    }
+    if (_physicsengine->raycast(_gameobjects[1]->getPosition(), glm::vec3(0.0f, -1.0f, 0.0), _gameobjects[0]->getPhysicsObject())) {
+        // std::cout << "hit something" << std::endl;
+    } else {
+        // std::cout << "didnt hit anything" << std::endl;
     }
 }
 

@@ -29,7 +29,15 @@ protected:
     float _rotationAngle;
     glm::vec3 _scaling;
 
+    //* TEMPRORARY
+
     bool _visible;
+
+private:
+    glm::mat4 _scalematrix;
+    glm::mat4 _positionmatrix;
+    glm::mat4 _rotatematrix;
+
 public:
     TransformObject(/* args */);
     ~TransformObject();
@@ -71,6 +79,8 @@ public:
      * @return glm::vec3 Позиция объекта
      */
     glm::vec3 getPosition();
+
+    void setRotationAroundPoint(float angle, glm::vec3 rotation, glm::vec3 point);
 
     /**
      * @brief Задать вращение объекта

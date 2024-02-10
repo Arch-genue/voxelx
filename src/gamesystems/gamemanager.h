@@ -32,6 +32,8 @@ class GameManager {
         void addGameObject(GameObject* gameobject);
         void addVoxelParticles(VoxelParticles* voxelparticles);
 
+        PhysicsEngine* getPhysicsEngine();
+
         void Update();
         void UpdatePhysics(float deltaTime);
         void UpdateParticles(float deltaTime);

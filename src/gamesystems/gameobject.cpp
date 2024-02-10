@@ -16,7 +16,7 @@ GameObject::GameObject(const char* model) : TransformObject() {
 
 	_voxelmodel = ResourceManager::getModel(model);
 	
-	BoundingBox boundingbox = {0, 0, 0, 0, 0, 0};
+	BoundingBox boundingbox = {glm::vec3(0), glm::vec3(0)};
 	BoxCollider* collider = new BoxCollider(boundingbox);
 
 	_physicsobject = new PhysicsObject(this, collider, 10.0f);
@@ -34,8 +34,11 @@ GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject(
 
 	_voxelmodel = ResourceManager::getModel(model);
 	
-	BoundingBox boundingbox = {0, 0, 0, 0, 0, 0};
+	BoundingBox boundingbox = {glm::vec3(position),_voxelmodel->getSize()};
 	BoxCollider* collider = new BoxCollider(boundingbox);
+
+	std::cout << "Min: " << boundingbox.min.x << ", " << boundingbox.min.y << ", " << boundingbox.min.z << "\n"
+			  << "     " << boundingbox.max.x << ", " << boundingbox.max.y << ", " << boundingbox.max.z << std::endl;
 
 	_physicsobject = new PhysicsObject(this, collider, 10.0f);
 	setPosition(position);
@@ -71,7 +74,7 @@ void GameObject::draw() {
 	if (isVisible()) {
 		ResourceManager::getShader("voxel")->uniformMatrix("model", getMatrix());
 		_mesh->draw(GL_TRIANGLES);
-		// _boundingboxmesh->draw(GL_LINES);
+		_boundingboxmesh->draw(GL_LINES);
 	}
 };
 
@@ -85,14 +88,24 @@ void GameObject::setPhysics(PHYSICS physics) {
 		case DYNAMIC_PHYSICS:
 			glm::vec3 sizes = _voxelmodel->getSize();
 			_physicsobject->getCollider()->setSize(glm::vec3(sizes.x, sizes.y, sizes.z));
-			// float* vertices = _physicsobject->getVertices();
-			// _collider->getBoundingbox()->
-			// _bbox.min = getPosition()-0.5f;
-			// _bbox.max = _boundbox_size-0.5f;
+			std::vector<line> lines = _physicsobject->getVertices();
+			float vertices[72];
+
+			uint d = 0;
+			for (size_t i = 0; i < lines.size(); i++) {
+                vertices[d] 	= lines[i].vertex1.x;
+				vertices[d + 1] = lines[i].vertex1.y;
+				vertices[d + 2] = lines[i].vertex1.z;
+
+				vertices[d + 3] = lines[i].vertex2.x;
+				vertices[d + 4] = lines[i].vertex2.y;
+				vertices[d + 5] = lines[i].vertex2.z;
+				
+				d += 6;
+            }
 			
-			// int attrs[2] = { 3,  0 };
-			// _boundingboxmesh = new Mesh(vertices, 24, attrs);
-			// _physobject = new PhysicsObject(getPosition(), , mass);
+			int attrs[2] = { 3,  0 };
+			_boundingboxmesh = new Mesh(vertices, 24, attrs);
 			
 			// _physicsobject->setMass(_mass);
 			_physicsobject->setPhysics(physics);
@@ -155,97 +168,4 @@ void GameObject::setMesh(Mesh* mesh) {
 
 Mesh* GameObject::getMesh() {
 	return _mesh;
-}
-
-bool GameObject::raycast(glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend) {
-    if (!isVisible()) return false;
-
-	float px = pos.x;
-	float py = pos.y;
-	float pz = pos.z;
-
-	float dx = dir.x;
-	float dy = dir.y;
-	float dz = dir.z;
-
-	float t = 0.0f;
-	int ix = floor(px);
-	int iy = floor(py);
-	int iz = floor(pz);
-
-	float stepx = (dx > 0.0f) ? 1.0f : -1.0f;
-	float stepy = (dy > 0.0f) ? 1.0f : -1.0f;
-	float stepz = (dz > 0.0f) ? 1.0f : -1.0f;
-
-	float infinity = std::numeric_limits<float>::infinity();
-
-	float txDelta = (dx == 0.0f) ? infinity : abs(1.0f / dx);
-	float tyDelta = (dy == 0.0f) ? infinity : abs(1.0f / dy);
-	float tzDelta = (dz == 0.0f) ? infinity : abs(1.0f / dz);
-
-	float xdist = (stepx > 0) ? (ix + 1 - px) : (px - ix);
-	float ydist = (stepy > 0) ? (iy + 1 - py) : (py - iy);
-	float zdist = (stepz > 0) ? (iz + 1 - pz) : (pz - iz);
-
-	float txMax = (txDelta < infinity) ? txDelta * xdist : infinity;
-	float tyMax = (tyDelta < infinity) ? tyDelta * ydist : infinity;
-	float tzMax = (tzDelta < infinity) ? tzDelta * zdist : infinity;
-
-	int steppedIndex = -1;
-    
-
-	while (t <= maxDist) {
-		//voxel* voxel = get(ix, iy, iz);
-		//if (voxel == nullptr || voxel->id){
-        // if (getVoxel(glm::vec3(ix, iy, iz))) {
-		// 	end.x = px + t * dx;
-		// 	end.y = py + t * dy;
-		// 	end.z = pz + t * dz;
-
-		// 	iend.x = ix;
-		// 	iend.y = iy;
-		// 	iend.z = iz;
-
-		// 	norm.x = norm.y = norm.z = 0.0f;
-		// 	if (steppedIndex == 0) norm.x = -stepx;
-		// 	if (steppedIndex == 1) norm.y = -stepy;
-		// 	if (steppedIndex == 2) norm.z = -stepz;
-
-        //     return true;
-		// }
-		if (txMax < tyMax) {
-			if (txMax < tzMax) {
-				ix += stepx;
-				t = txMax;
-				txMax += txDelta;
-				steppedIndex = 0;
-			} else {
-				iz += stepz;
-				t = tzMax;
-				tzMax += tzDelta;
-				steppedIndex = 2;
-			}
-		} else {
-			if (tyMax < tzMax) {
-				iy += stepy;
-				t = tyMax;
-				tyMax += tyDelta;
-				steppedIndex = 1;
-			} else {
-				iz += stepz;
-				t = tzMax;
-				tzMax += tzDelta;
-				steppedIndex = 2;
-			}
-		}
-	}
-	iend.x = ix;
-	iend.y = iy;
-	iend.z = iz;
-
-	end.x = px + t * dx;
-	end.y = py + t * dy;
-	end.z = pz + t * dz;
-	norm.x = norm.y = norm.z = 0.0f;
-	return false;
 }

@@ -106,7 +106,7 @@ void VoxelModel::addVoxel(Voxel* voxel) {
 }
 
 
-int VoxelModel::getVoxelsCount() {
+size_t VoxelModel::getVoxelsCount() {
     return _voxels.size();
 }
 
@@ -116,6 +116,15 @@ void VoxelModel::setVoxel(int num, Voxel* voxel) {
 }
 Voxel* VoxelModel::getVoxel(int num) {
     return _voxels[num];
+}
+Voxel* VoxelModel::getVoxel(glm::vec3 position) {
+    for (size_t i = 0; i < _voxels.size(); i++) {
+        if (_voxels[i]->getPosition() == position) {
+            return _voxels[i];
+        }
+    }
+    return nullptr;
+    // return _voxels[num];
 }
 
 

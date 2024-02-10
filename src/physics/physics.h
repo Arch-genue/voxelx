@@ -26,6 +26,15 @@ enum PHYSICS {
     DYNAMIC_PHYSICS
 };
 
+struct vertex {
+    glm::vec3 position;
+};
+
+struct line {
+    glm::vec3 vertex1;
+    glm::vec3 vertex2;
+};
+
 class PhysicsObject {
 public:
     PhysicsObject(GameObject* gmobj, BoxCollider* collider, float mass = 1.0f);
@@ -63,7 +72,7 @@ public:
     
     void update(float deltaTime);
 
-    float* getVertices();
+    std::vector<line> getVertices();
 private:
     GameObject* _gameobject;
     PHYSICS _physics;

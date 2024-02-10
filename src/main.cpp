@@ -89,18 +89,16 @@ int main()
     ResourceManager::loadVoxelParticles("testgravity");
 
     GameManager *gm = new GameManager();
+    PhysicsEngine* physicsengine = gm->getPhysicsEngine();
 
     VoxelModel *floorvox = new VoxelModel;
     for (uint16_t i = 0; i < 6; i++)
         floorvox->setLight(i, glm::vec3(1));
     floorvox->setSize(vec3(1000, 1, 1000));
     floorvox->setRenderSide("top");
-    for (size_t y = 0; y < floorvox->getSize().y; y++)
-    {
-        for (size_t z = 0; z < floorvox->getSize().z; z++)
-        {
-            for (size_t x = 0; x < floorvox->getSize().x; x++)
-            {
+    for (size_t y = 0; y < floorvox->getSize().y; y++) {
+        for (size_t z = 0; z < floorvox->getSize().z; z++) {
+            for (size_t x = 0; x < floorvox->getSize().x; x++) {
                 Voxel *voxel = new Voxel(glm::vec3(x, y, z));
                 // voxel->setPosition(vec3(x, y, z));
                 voxel->setColor(vec4(0.3f, 0.3f, 0.3f, 1.0f));
@@ -125,7 +123,7 @@ int main()
     GameObject *appleobj1 = new GameObject("apple", vec3(0, 10, 0));
     appleobj1->setPhysics(DYNAMIC_PHYSICS);
 
-    GameObject *appleobj2 = new GameObject("apple", vec3(20, 10, 0));
+    GameObject *appleobj2 = new GameObject("apple", vec3(20, 30, 20));
     appleobj2->setPhysics(DYNAMIC_PHYSICS);
 
     gm->addGameObject(floorobj);
@@ -161,8 +159,7 @@ int main()
 
         Input::processEvents(quit);
 
-        if (Input::_cursor_locked)
-        {
+        if (Input::_cursor_locked) {
             cam.x += -Input::deltaX * MOUSE_SPEED / Window::height;
             cam.y += -Input::deltaY * MOUSE_SPEED / Window::height;
             if (cam.y < -radians(89.0f))
@@ -177,6 +174,7 @@ int main()
         glm::vec3 camera_right = camera->getRightVector();
         if (Input::jpressed(SDLK_ESCAPE))
             quit = true;
+
         if (Input::jpressed(SDLK_p)) {
             Window::setPause(!Window::getPause());
             Input::toggleCursor();
@@ -219,16 +217,13 @@ int main()
                 flagscale = !flagscale;
             } 
 
-            if (Input::jclicked(SDL_BUTTON_MIDDLE))
-            {
+            if (Input::jclicked(SDL_BUTTON_MIDDLE)) {
                 appleobj1->getPhysicsObject()->applyForce(vec3(0, jumpforce * 5, -jumpforce * 5));
             }
-            if (Input::jclicked(SDL_BUTTON_RIGHT))
-            {
+            if (Input::jclicked(SDL_BUTTON_RIGHT)) {
                 appleobj->setPosition(vec3(0, 100, 0));
             }
-            if (Input::jclicked(SDL_BUTTON_LEFT))
-            {
+            if (Input::jclicked(SDL_BUTTON_LEFT)) {
                 appleobj1->getPhysicsObject()->applyForce(vec3(0, jumpforce * 5, 0));
                 // appleobj1->getPhysics()->explode(5);
                 // gm->clearParticles();
@@ -237,8 +232,7 @@ int main()
             vec3 end;
             vec3 norm;
             vec3 iend;
-            if (appleobj1->raycast(camera->getPosition(), camera_front, 20.0f, end, norm, iend))
-            {
+            if (physicsengine->raycast(appleobj1, camera->getPosition(), camera_front, 50.0f, end, norm, iend)) {
                 // appleobj1->setBorder(true);
                 // appleobj1->setVisible(false);
                 std::cout << "see" << std::endl;
