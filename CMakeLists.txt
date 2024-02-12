@@ -43,6 +43,7 @@ set(SOURCE
 	src/gamesystems/camera.cpp
 	src/gamesystems/transformobject.cpp
 	src/gamesystems/gameobject.cpp
+	src/gamesystems/linesobject.cpp
 	src/gamesystems/gamemanager.cpp
 
 	src/system/taskscheduler.cpp
@@ -78,6 +79,7 @@ set(HEADER
 	src/gamesystems/camera.h
 	src/gamesystems/transformobject.h
 	src/gamesystems/gameobject.h
+	src/gamesystems/linesobject.h
 	src/gamesystems/gamemanager.h
 
 	src/system/taskscheduler.h

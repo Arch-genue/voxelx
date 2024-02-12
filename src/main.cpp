@@ -58,8 +58,7 @@ int WIDTH = 1024;
 int HEIGHT = 768;
 float MOUSE_SPEED = 1.3f;
 
-int main()
-{
+int main() {
     printf("Voxel 3D: %s\n", _VERSION);
     Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();
@@ -91,6 +90,10 @@ int main()
     GameManager *gm = new GameManager();
     PhysicsEngine* physicsengine = gm->getPhysicsEngine();
 
+    //! Camera
+    Camera *camera = new Camera(vec3(3, 1, 0), radians(70.0f));
+    Renderer::addCamera(camera);
+
     VoxelModel *floorvox = new VoxelModel;
     for (uint16_t i = 0; i < 6; i++)
         floorvox->setLight(i, glm::vec3(1));
@@ -113,10 +116,8 @@ int main()
     GameObject *floorobj = new GameObject("floor", vec3(-500, -1, -500));
     floorobj->setPhysics(STATIC_PHYSICS);
 
-    // GameObject* nullobj = new GameObject("null");
-    // nullobj->setPosition(vec3(15,0,0));
-
     GameObject *appleobj = new GameObject("apple", vec3(0, 50, 40));
+    appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
     appleobj->setPhysics(DYNAMIC_PHYSICS);
     appleobj->setVisible(true);
 
@@ -131,11 +132,15 @@ int main()
     gm->addGameObject(appleobj1);
     gm->addGameObject(appleobj2);
 
-    //! Camera
-    Camera *camera = new Camera(vec3(3, 1, 0), radians(70.0f));
-    Renderer::addCamera(camera);
-    appleobj->attachCamera(camera, vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
+    float vertices[6] = {
+        // x, y, z
+        camera->getPosition().x, camera->getPosition().y, camera->getPosition().z,
+        10.0f, 0.0f, 0.0f,
+    };
 
+    LinesObject *linesobj = new LinesObject(vertices, 2);
+    std::cout << " " << linesobj->getPosition().x << " " << linesobj->getPosition().y << " " << linesobj->getPosition().z << std::endl;
+   
     //! Particles
     VoxelParticles *effect1 = new VoxelParticles("testgravity", 10000, vec3(4.0f, 500.0f, 1.5f));
     gm->addVoxelParticles(effect1);
@@ -164,16 +169,18 @@ int main()
             cam.y += -Input::deltaY * MOUSE_SPEED / Window::height;
             if (cam.y < -radians(89.0f))
                 cam.y = -radians(89.0f);
+
             if (cam.y > radians(89.0f))
                 cam.y = radians(89.0f);
 
             camera->setRotation(mat4(1.0f));
             camera->rotate(cam, 0);
+            appleobj->setRotation(cam.x, glm::vec3(0, 1, 0));
         }
         glm::vec3 camera_front = camera->getFrontVector();
         glm::vec3 camera_right = camera->getRightVector();
-        if (Input::jpressed(SDLK_ESCAPE))
-            quit = true;
+
+        if (Input::jpressed(SDLK_ESCAPE)) quit = true;
 
         if (Input::jpressed(SDLK_p)) {
             Window::setPause(!Window::getPause());
@@ -194,8 +201,9 @@ int main()
                 appleobj->setPosition(appleobj->getPosition() + vec3(camera_right.x, 0, camera_right.z) * deltaTime * speed);
 
             if (appleobj->getPhysicsObject()->isGrounded()) {
-                if (Input::jpressed(SDLK_SPACE))
+                if (Input::jpressed(SDLK_SPACE)) {
                     appleobj->getPhysicsObject()->applyForce(vec3(0, jumpforce * 5, 0));
+                }
             }
 
             if (Input::pressed(SDLK_c)) {
@@ -204,12 +212,12 @@ int main()
                 camera->setZoom(1.0f);
             }
             static float test = 0.0f;
-            appleobj1->setRotation(test, vec3(0, 1, 0));
+            // appleobj1->setRotation(test, vec3(0, 1, 0));
             test += 0.05f;
 
             static float testscale = 0.1f;
             static bool flagscale = false;
-            appleobj2->setScaling(vec3(testscale));
+            // appleobj2->setScaling(vec3(testscale));
             if (!flagscale) testscale += 0.003f;
             else testscale -= 0.003f;
 
@@ -237,9 +245,10 @@ int main()
                 // appleobj1->setVisible(false);
                 std::cout << "see" << std::endl;
             }
-            // std::cout << appleobj->getPosition().y << std::endl;
-            //}
         }
+
+        camera->setPosition((appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f);
+        // std::cout << appleobj->getPosition().x << " " << appleobj->getPosition().y << " " << appleobj->getPosition().z << std::endl;
 
         Window::_glClear();
 
@@ -249,11 +258,21 @@ int main()
         gm->UpdatePhysics(deltaTime);
         gm->Update();
 
+        float vertices[6] = {
+            // x, y, z
+            camera->getPosition().x, camera->getPosition().y, camera->getPosition().z,
+            camera->getFrontVector().x * 10.0f, 10.0f, camera->getFrontVector().z * 10.0f
+            // camera->getPosition().x, camera->getPosition().y + camera->getFrontVector().y, camera->getPosition().z + camera->getFrontVector().z
+        };
+
+        int attrs[2] = { 3,  0 };
+        Mesh* mesh = new Mesh(vertices, 2, attrs);
+        linesobj->updateMesh(mesh);
+        linesobj->draw();
+
         ResourceManager::getShader("particle")->use();
         ResourceManager::getShader("particle")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
         gm->UpdateParticles(deltaTime);
-
-        camera->setPosition((appleobj->getPosition() + vec3(0, 15, 0)) / 10.0f);
 
         gui.draw();
 

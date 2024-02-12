@@ -16,6 +16,7 @@
 #include "../physics/physicsengine.h"
 #include "../graphics/voxelparticles.h"
 #include "gameobject.h"
+#include "linesobject.h"
 
 class PhysicsEngine;
 class VoxelParticles;
@@ -39,10 +40,13 @@ class GameManager {
         void UpdateParticles(float deltaTime);
 
         void clearParticles();
+
+        uint getIncrement();
     
     private:
         std::vector<GameObject*> _gameobjects;
         std::vector<VoxelParticles*> _voxelparticles;
+        uint _gameobject_increment;
 
         PhysicsEngine* _physicsengine;
 };

@@ -6,7 +6,7 @@
 #include "../graphics/shader.h"
 #include "../voxels/voxel.h"
 #include "../loaders/resourcemanager.h"
-#include "../graphics/renderer.h"
+// #include "../graphics/renderer.h"
 
 
 GameObject::GameObject(const char* model) : TransformObject() {
@@ -16,8 +16,7 @@ GameObject::GameObject(const char* model) : TransformObject() {
 
 	_voxelmodel = ResourceManager::getModel(model);
 	
-	BoundingBox boundingbox = {glm::vec3(0), glm::vec3(0)};
-	BoxCollider* collider = new BoxCollider(boundingbox);
+	BoxCollider* collider = new BoxCollider(this, glm::vec3(0), glm::vec3(0));
 
 	_physicsobject = new PhysicsObject(this, collider, 10.0f);
 	setPosition(glm::vec3(0));
@@ -28,17 +27,11 @@ GameObject::GameObject(const char* model) : TransformObject() {
 GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject() {
 	_campos = glm::vec3(0);
 
-	// std::cout << "position: " << position.x << ", " << position.y << ", " << position.z << std::endl;
-
     setVisible(true);
 
 	_voxelmodel = ResourceManager::getModel(model);
 	
-	BoundingBox boundingbox = {glm::vec3(position),_voxelmodel->getSize()};
-	BoxCollider* collider = new BoxCollider(boundingbox);
-
-	std::cout << "Min: " << boundingbox.min.x << ", " << boundingbox.min.y << ", " << boundingbox.min.z << "\n"
-			  << "     " << boundingbox.max.x << ", " << boundingbox.max.y << ", " << boundingbox.max.z << std::endl;
+	BoxCollider* collider = new BoxCollider(this, glm::vec3(position),_voxelmodel->getSize());
 
 	_physicsobject = new PhysicsObject(this, collider, 10.0f);
 	setPosition(position);
@@ -47,6 +40,14 @@ GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject(
 	_mesh = Renderer::render(_voxelmodel);
 }
 GameObject::~GameObject() {}
+
+void GameObject::setID(uint id) {
+	if (_id != NULL){
+		std::cerr << "ID already set!" << std::endl;
+	} else {
+		_id = id;
+	}
+}
 
 void GameObject::setGameManager(GameManager* gamemanager) {
 	_gm = gamemanager;
@@ -67,6 +68,7 @@ PhysicsObject* GameObject::getPhysicsObject() {
 
 void GameObject::setPosition(glm::vec3 position) {
 	TransformObject::setPosition(position);
+	
 	_physicsobject->setPosition(position);
 }
 
@@ -75,19 +77,23 @@ void GameObject::draw() {
 		ResourceManager::getShader("voxel")->uniformMatrix("model", getMatrix());
 		_mesh->draw(GL_TRIANGLES);
 		_boundingboxmesh->draw(GL_LINES);
+
+		// if (_camera != nullptr) 
+		// 	_raymesh->draw(GL_LINES);
 	}
 };
 
 void GameObject::setPhysics(PHYSICS physics) {
 	switch(physics) {
 		case NO_PHYSICS:
-			_physicsobject->getCollider()->setSize(glm::vec3(0, 0, 0)); 
+			_physicsobject->getCollider()->setMax(glm::vec3(0, 0, 0)); 
 			_physicsobject->setPhysics(physics);
 		break;
 		case STATIC_PHYSICS:
 		case DYNAMIC_PHYSICS:
 			glm::vec3 sizes = _voxelmodel->getSize();
-			_physicsobject->getCollider()->setSize(glm::vec3(sizes.x, sizes.y, sizes.z));
+			_physicsobject->getCollider()->setMax(glm::vec3(sizes.x, sizes.y, sizes.z));
+
 			std::vector<line> lines = _physicsobject->getVertices();
 			float vertices[72];
 
@@ -106,7 +112,17 @@ void GameObject::setPhysics(PHYSICS physics) {
 			
 			int attrs[2] = { 3,  0 };
 			_boundingboxmesh = new Mesh(vertices, 24, attrs);
-			
+			// if (_camera != nullptr) {
+			// 	float rayvertices[6] = {
+			// 		// x, y, z
+			// 		0.0f, 0.0f, 0.0f,
+			// 		_camera->getFrontVector().x, _camera->getFrontVector().y, _camera->getFrontVector().z
+			// 	};
+					
+			// 	int rayattrs[2] = { 3,  0 };
+
+			// 	_raymesh = new Mesh(rayvertices, 2, rayattrs);
+			// }
 			// _physicsobject->setMass(_mass);
 			_physicsobject->setPhysics(physics);
 		break;

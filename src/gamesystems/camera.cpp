@@ -85,8 +85,7 @@ bool Camera::getFlipped() {
 }
 
 
-glm::vec3 Camera::getFrontVector()
-{
+glm::vec3 Camera::getFrontVector() {
     return _front;
 }
 glm::vec3 Camera::getUpVector() {

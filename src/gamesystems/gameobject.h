@@ -34,6 +34,9 @@ class GameObject : public TransformObject {
         GameObject(const char* model, glm::vec3 position);
         ~GameObject();
 
+        void setID(uint id);
+            uint getID() const { return _id; };
+
         /**
          * @brief Задать указатель на объект GameManager
          * 
@@ -110,7 +113,10 @@ class GameObject : public TransformObject {
         VoxelModel* _voxelmodel;
         Mesh* _mesh;
         Mesh* _boundingboxmesh;
+        Mesh* _raymesh;
         Camera* _camera;
+
+        uint _id;
         
         //? GameManager global object
         GameManager* _gm;

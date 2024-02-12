@@ -12,22 +12,50 @@
 #pragma once
 
 #include <glm/glm.hpp>
+// #include <vector>
 
-struct BoundingBox {
-    glm::vec3 min; // Минимальные координаты BoundingBox
-    glm::vec3 max;
-};
+class GameObject;
 
-class BoxCollider{
+class BoxCollider {
 private:
-    BoundingBox* _boundingbox;
+    GameObject* _gameobject;
+
     glm::vec3 _size;
+
+    glm::vec3 _min; // Минимальные координаты BoundingBox
+    glm::vec3 _max;
 public:
-    BoxCollider(BoundingBox& _boundingbox);
+    BoxCollider(GameObject* gameobject, glm::vec3 min, glm::vec3 max);
     ~BoxCollider();
 
-    BoundingBox* getBoundingbox() const;
+    GameObject* getGameObject() { return _gameobject; }
     
-    void setSize(glm::vec3 size);
-    glm::vec3 getSize() const;
+    void setMin(glm::vec3 position);
+    glm::vec3 getMin();
+
+    void setMax(glm::vec3 size);
+    glm::vec3 getMax();
+};
+
+// Узел красно-черного дерева BoundingBox
+class Node {
+private:
+    BoxCollider* _box;
+    bool _isRed; // Цвет узла (true - красный, false - черный)
+    Node* _left;
+    Node* _right;
+
+public:
+    Node(BoxCollider* box) : _box(box), _isRed(true), _left(nullptr), _right(nullptr) {}
+    
+    void setIsRed(bool isRed) { _isRed = isRed; };
+    bool isRed() const { return _isRed; };
+
+    BoxCollider* getBoxCollider() const { return _box; }
+
+    void setLeft(Node* left) {  _left = left; };
+    void setRight(Node* right) {  _right = right; };
+
+    Node* getLeft() const { return _left; };
+    Node* getRight() const { return _right; };
 };

@@ -37,7 +37,7 @@ struct line {
 
 class PhysicsObject {
 public:
-    PhysicsObject(GameObject* gmobj, BoxCollider* collider, float mass = 1.0f);
+    PhysicsObject(GameObject* gmobj, BoxCollider* boxcollider, float mass = 1.0f);
     PhysicsObject(glm::vec3 position = glm::vec3(0), PHYSICS physics = NO_PHYSICS, float mass = 1.0f);
     ~PhysicsObject();
 
