@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.5.0)
 project(voxel3d VERSION 0.1.6)
 
 include(CTest)
@@ -22,6 +22,8 @@ set(SOURCE
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
 	src/graphics/mesh.cpp
+	src/graphics/textmesh.cpp
+	src/graphics/cube.cpp
 	src/graphics/renderer.cpp
 	src/graphics/voxelparticles.cpp
 	src/graphics/gui.cpp
@@ -32,6 +34,9 @@ set(SOURCE
 	src/graphics/batch2d.cpp
 
 	src/voxels/voxel.cpp
+	src/voxels/voxelmodel.cpp
+	# src/voxels/particle.cpp
+	src/voxels/particlesmodel.cpp
 
 	src/loaders/resourcemanager.cpp
 	src/loaders/png_loading.cpp
@@ -58,6 +63,8 @@ set(HEADER
 	src/graphics/shader.h 
 	src/graphics/texture.h 
 	src/graphics/mesh.h
+	src/graphics/textmesh.h
+	src/graphics/cube.h
 	src/graphics/renderer.h
 	src/graphics/voxelparticles.h
 	src/graphics/gui.h
@@ -68,6 +75,9 @@ set(HEADER
 	src/graphics/batch2d.h
 
 	src/voxels/voxel.h
+	src/voxels/voxelmodel.h
+	# src/voxels/particle.cpp
+	src/voxels/particlesmodel.h
 
 	src/loaders/resourcemanager.h
 	src/loaders/png_loading.h
@@ -87,11 +97,19 @@ set(HEADER
 	src/utils.h
 )
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(OpenGL_GL_PREFERENCE GLVND)
+
+find_package(Freetype REQUIRED)
+if(NOT Freetype_FOUND)
+	message(SEND_ERROR "Failed to find Freetype")
+	return()
+else()
+	include_directories(${FREETYPE_INCLUDE_DIRS})
+endif()
 
 find_package(GLEW REQUIRED)
 if(NOT GLEW_FOUND)
@@ -143,5 +161,6 @@ target_link_libraries(voxel3d
 	${OPENGL_gl_LIBRARY}
 	${GLU_LIBRARY}
 	${PNG_LIBRARY}
+	${FREETYPE_LIBRARY}
 )
 target_compile_options(voxel3d PRIVATE -g)

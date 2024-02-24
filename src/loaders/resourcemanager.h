@@ -1,9 +1,12 @@
 #pragma once
 
+#include "../graphics/renderer.h"
 #include "../graphics/shader.h"
-#include "../graphics/mesh.h"
 #include "../graphics/texture.h"
 #include "../graphics/voxelparticles.h"
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include <string>
 #include <map>
@@ -23,12 +26,16 @@ class ResourceManager {
     static std::map<std::string, VoxelModel*> _rowmodels;
     static std::map<std::string, Texture*> _textures;
     static std::map<std::string, Particles*> _particles;
+    static std::map<std::string, FT_Face> _faces;
 public:
     static void init(std::string str);
     static void loadShader(std::string str);
     static void loadTexture(std::string str);
     static void loadModel(std::string str, std::string type);
     static void loadVoxelParticles(std::string str);
+    static void loadFont(std::string str);
+
+    static void prepareModel(std::string str);
 
     static void addShader(Shader* shader, std::string name);
     static void addTexture(Texture* texture, std::string name);
@@ -40,4 +47,5 @@ public:
     static Texture* getTexture(std::string name);
     static VoxelModel* getModel(std::string name);
     static Particles* getParticles(std::string name);
+    static FT_Face getFont(std::string name);
 };

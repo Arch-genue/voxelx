@@ -6,10 +6,11 @@
 #include "../graphics/shader.h"
 #include "../voxels/voxel.h"
 #include "../loaders/resourcemanager.h"
-// #include "../graphics/renderer.h"
 
 
 GameObject::GameObject(const char* model) : TransformObject() {
+	_id = 9999999;
+	
 	_campos = glm::vec3(0);
 
     setVisible(true);
@@ -22,9 +23,15 @@ GameObject::GameObject(const char* model) : TransformObject() {
 	setPosition(glm::vec3(0));
 
     // !CREATE MESH!
-	_mesh = Renderer::render(_voxelmodel);
+	if (_voxelmodel->getMesh() == nullptr) {
+		_voxelmodel->setMesh(Renderer::render(_voxelmodel));
+	}
+
+	_mesh = _voxelmodel->getMesh();
 }
 GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject() {
+	_id = 9999999;
+	
 	_campos = glm::vec3(0);
 
     setVisible(true);
@@ -37,12 +44,16 @@ GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject(
 	setPosition(position);
 
     // !CREATE MESH!
-	_mesh = Renderer::render(_voxelmodel);
+	if (_voxelmodel->getMesh() == nullptr) {
+		_voxelmodel->setMesh(Renderer::render(_voxelmodel));
+	}
+
+	_mesh = _voxelmodel->getMesh();
 }
 GameObject::~GameObject() {}
 
 void GameObject::setID(uint id) {
-	if (_id != NULL){
+	if (_id != 9999999){
 		std::cerr << "ID already set!" << std::endl;
 	} else {
 		_id = id;

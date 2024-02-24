@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include "mesh.h"
-#include "../voxels/voxel.h"
+#include "../voxels/particlesmodel.h"
 
 class Mesh;
 class Shader;
@@ -44,7 +44,7 @@ enum _effects {
 class VoxelParticles {
     //? Objects
     Mesh* _mesh;
-    VoxelModel* _voxelsarray;
+    ParticlesModel* _particlesarray;
     Particles* _particles;
     
     //? Properties

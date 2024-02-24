@@ -14,6 +14,7 @@
 #include "../utils.h"
 #include <vector>
 
+
 /**
  * @brief Класс описывающий воксель
  * 
@@ -57,45 +58,3 @@ private:
 
     bool _visible;
 };
-
-/**
- * @brief Класс описывающий модель состоящую из вокселей как контейнер
- *
- */
-class VoxelModel {
-public:
-    VoxelModel();
-    ~VoxelModel();
-
-    void setLight(uint8_t side, glm::vec3 light);
-    glm::vec3 getLight(uint8_t side);
-    glm::vec3 *getLightArray();
-
-    void addVoxel(Voxel *voxel);
-
-    size_t getVoxelsCount();
-
-    void setVoxel(int num, Voxel *voxel);
-    Voxel *getVoxel(int num);
-    Voxel* getVoxel(glm::vec3 position);
-
-    void setSize(glm::vec3 size);
-    glm::vec3 getSize();
-
-    void setRenderSide(std::string renderside);
-    std::string getRenderSide();
-
-    //? Voxel Functions
-    void setVoxelPosition(int num, glm::vec3 position);
-    glm::vec3 getVoxelPosition(int num);
-
-private:
-    std::vector<Voxel *> _voxels;
-    glm::vec3 _size;
-    std::string _renderside;
-
-    glm::vec3 _light[6];
-};
-
-extern VoxelModel *load_model(std::string filename, const char *type);
-extern VoxelModel *genVoxel();

@@ -1,18 +1,21 @@
 #include "renderer.h"
 #include "mesh.h"
-#include "../voxels/voxel.h"
+#include "textmesh.h"
+#include "../voxels/particlesmodel.h"
 #include <glm/glm.hpp>
 
 #include <iostream>
+#include "../utils.h"
 
-#define VERTEX_SIZE (3 + 4 + 3)
-int chunk_attrs[] = {3,4,3, 0};
+// class Shader;
 
-#define IS_IN(X,Y,Z) ((X) >= 0 && (X) < voxels->m_size.x && (Y) >= 0 && (Y) < voxels->m_size.y && (Z) >= 0 && (Z) < voxels->m_size.z)
-#define VOXEL(X,Y,Z) (voxels->voxels[((Y) * (int)voxels->m_size.z + (Z)) * (int)voxels->m_size.x + (X)])
-#define IS_BLOCKED(X,Y,Z) (false) //((IS_IN(X, Y, Z)) && VOXEL(X, Y, Z).visible) //(false)//
+//TODO Пошаговый рендеринг мешей
 
-#define VERTEX(INDEX, X,Y,Z, CLR, LIGHT) \
+#define IS_IN(voxels, X,Y,Z) ((X) >= 0 && (X) < voxels->getSize().x && (Y) >= 0 && (Y) < voxels->getSize().y && (Z) >= 0 && (Z) < voxels->getSize().z)
+
+#define IS_BLOCKED(voxels, X,Y,Z) (IS_IN(voxels, X, Y, Z) && voxels->getVoxel(glm::vec3(X,Y,Z)))
+
+#define VERTEX(INDEX, X,Y,Z, CLR) \
 					buffer[INDEX+0] = (X); \
 					buffer[INDEX+1] = (Y); \
 					buffer[INDEX+2] = (Z); \
@@ -20,20 +23,27 @@ int chunk_attrs[] = {3,4,3, 0};
 					buffer[INDEX+4] = (CLR).y;\
 					buffer[INDEX+5] = (CLR).z;\
 					buffer[INDEX+6] = (CLR).w;\
-					buffer[INDEX+7] = (LIGHT).x;\
-					buffer[INDEX+8] = (LIGHT).y;\
-					buffer[INDEX+9] = (LIGHT).z;\
 					INDEX += VERTEX_SIZE;
+
+#define VERTEX_SIZE (3 + 4)
+
+int chunk_attrs[] = {3,4, 0};
+
 
 float* Renderer::buffer;
 size_t Renderer::capacity;
 
 Camera* Renderer::camera;
 
+// std::map<GLchar, Character> Characters;
+
 void Renderer::init(size_t capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
 	Renderer::capacity = capacity;
+
+	printf("Renderer initialized\nMax render size: %d\n", Renderer::capacity);
 }
+
 void Renderer::free() {
 	delete[] buffer;
 
@@ -42,139 +52,137 @@ void Renderer::addCamera(Camera* cam) {
 	camera = cam;
 }
 
-Mesh* Renderer::render(VoxelModel* voxels) {
+Mesh* Renderer::render(ParticlesModel* voxels) {
 	size_t index {0};
-	float x, y, z;
-
-	glm::vec3 light;
-
-	glm::vec3 position;
-	glm::vec4 clr;
-	glm::vec3* lightArray;
-	std::string renderside;
-	bool side[6]; //! top, bottom, left, right, front, back
-
-	renderside = voxels->getRenderSide();
-	lightArray = voxels->getLightArray();
 	
-	for(uint8_t i = 0; i < 6; i++) side[i] = false;
+	std::string renderside = voxels->getRenderSide();
 
 	for (size_t i = 0; i < voxels->getVoxelsCount(); i++) {
 		Voxel* voxel = voxels->getVoxel(i);
-		if (voxel == nullptr) continue;
-		if (!voxel->isVisible()) continue;
 
-		position = voxel->getPosition();
-		clr = voxel->getColor();
-
-		x = position.x;
-		y = position.y;
-		z = position.z;
-
-		if (renderside == "") {
-			for(uint8_t i = 0; i < 6; i++) side[i] = true;
-		} else if(renderside == "top") {
-			side[0] = true;
-		} else if(renderside == "bottom") {
-			side[1] = true;
-		} else if(renderside == "left") {
-			side[2] = true;
-		} else if(renderside == "right") {
-			side[3] = true;
-		} else if(renderside == "front") {
-			side[4] = true;
-		} else if(renderside == "back") {
-			side[5] = true;
-		}
-
-		//std::cout << renderside << std::endl;
-		
-		//? Y
-		if (!IS_BLOCKED(x,y+1,z) && side[0] == true) {
-			light = lightArray[0];
-			top(index, x, y, z, clr, light);
-		} 
-		if (!IS_BLOCKED(x,y-1,z) && side[1] == true) {
-			light = lightArray[1];
-			bottom(index, x, y, z, clr, light);
-		}
-
-		//? X
-		if (!IS_BLOCKED(x+1,y,z) && side[2] == true) {
-			light = lightArray[2];
-			left(index, x, y, z, clr, light);
-		}
-		if (!IS_BLOCKED(x-1,y,z) && side[3] == true) {
-			light = lightArray[3];
-			right(index, x, y, z, clr, light);
-		}
-
-		//? Z
-		if (!IS_BLOCKED(x,y,z+1) && side[4] == true) {
-			light = lightArray[4];
-			front(index, x, y, z, clr, light);
-		}
-		if (!IS_BLOCKED(x,y,z-1) && side[5] == true) {
-			light = lightArray[5];
-			back(index, x, y, z, clr, light);
-		}
+		computeVoxelRender(index, voxels, voxel, renderside);
 	}
 	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 
-void Renderer::top(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light) {
-	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr, light);
+Mesh* Renderer::render(VoxelModel* voxels) {
+	size_t index {0};
+	
+	std::string renderside = voxels->getRenderSide();
+	int i = 0;
+	auto start = std::chrono::high_resolution_clock::now();
+	for (size_t x = 0; x < voxels->getSize().x; x++) {
+		for (size_t y = 0; y < voxels->getSize().y; y++) {
+			for (size_t z = 0; z < voxels->getSize().z; z++) {
+				// auto start = std::chrono::steady_clock::now(); // Засекаем начало времени
+				Voxel* voxel = voxels->getVoxel(glm::ivec3(x, y, z));
 
-	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr, light);
+				// auto end = std::chrono::steady_clock::now(); // Засекаем конец времени
+
+				// // Вычисляем время выполнения в секундах
+				// float duration = std::chrono::duration<float>(end - start).count();
+				// std::cout << i << " " << "Time taken: " << duration << " seconds" << std::endl;
+
+				computeVoxelRender(index, voxels, voxel, renderside);
+				// float time = measureFunctionTime(computeVoxelRender, index, voxels, voxel, renderside);
+				// std::cout << i << " " << "Time taken: " << time << " seconds" << std::endl;
+				i++;
+			}
+		}
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<float> duration = end - start;
+	std::cout << "Render: " <<  voxels->getName() << "					Time:" << duration.count() << " seconds" << std::endl;
+	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
-void Renderer::bottom(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light) {
-	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr, light);
+void Renderer::computeVoxelRender(size_t& index, VoxelModel* voxels, Voxel* voxel, std::string renderside) {
+	if (voxel == nullptr) return;
+	if (!voxel->isVisible()) return;
 
-	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr, light);
+	int x = voxel->getPosition().x;
+	int y = voxel->getPosition().y;
+	int z = voxel->getPosition().z;
+	
+	glm::vec4 clr = voxel->getColor();
+	
+	//? Y
+	if (!IS_BLOCKED(voxels, x,y+1,z)) {
+		top(index, x, y, z, clr);
+	} 
+	if (!IS_BLOCKED(voxels, x,y-1,z)) {
+		bottom(index, x, y, z, clr);
+	}
+
+	//? X
+	if (!IS_BLOCKED(voxels, x+1,y,z)) {
+		left(index, x, y, z, clr);
+	}
+	if (!IS_BLOCKED(voxels, x-1,y,z)) {
+		right(index, x, y, z, clr);
+	}
+
+	//? Z
+	if (!IS_BLOCKED(voxels, x,y,z+1)) {
+		front(index, x, y, z, clr);
+	}
+	if (!IS_BLOCKED(voxels, x,y,z-1)) {
+		back(index, x, y, z, clr);
+	}
 }
-void Renderer::left(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light) {
-	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr, light);
 
-	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr, light);
+void Renderer::top(size_t &index, float x, float y, float z, glm::vec4 clr) {
+	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr);
+	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr);
+
+	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr);
 }
-void Renderer::right(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light) {
-	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr, light);
+void Renderer::bottom(size_t &index, float x, float y, float z, glm::vec4 clr) {
+	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr);
+	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr);
 
-	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr, light);
+	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr);
 }
-void Renderer::front(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light) {
-	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr, light);
+void Renderer::left(size_t &index, float x, float y, float z, glm::vec4 clr) {
+	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr);
 
-	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr, light);
+	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr);
+	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr);
 }
-void Renderer::back(size_t &index, float x, float y, float z, glm::vec4 clr, glm::vec3 light) {
-	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr, light);
+void Renderer::right(size_t &index, float x, float y, float z, glm::vec4 clr) {
+	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr);
+	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr);
 
-	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr, light);
-	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr, light);
+	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr);
+	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr);
+}
+void Renderer::front(size_t &index, float x, float y, float z, glm::vec4 clr) {
+	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr);
+	VERTEX(index, x - 0.5f, y + 0.5f, z + 0.5f, clr);
+
+	VERTEX(index, x - 0.5f, y - 0.5f, z + 0.5f, clr);
+	VERTEX(index, x + 0.5f, y - 0.5f, z + 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z + 0.5f, clr);
+}
+void Renderer::back(size_t &index, float x, float y, float z, glm::vec4 clr) {
+	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x - 0.5f, y + 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr);
+
+	VERTEX(index, x - 0.5f, y - 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y + 0.5f, z - 0.5f, clr);
+	VERTEX(index, x + 0.5f, y - 0.5f, z - 0.5f, clr);
 }
 
 Camera* Renderer::getCamera() {

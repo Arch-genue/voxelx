@@ -5,10 +5,26 @@
             "label": "build",
             "type": "shell",
             "command": "cmake",
-            "args": ["--build", "${workspaceFolder}/build"],
+            "args": ["--build", "${workspaceFolder}/build", "-j", "10"],
             "group": {
                 "kind": "build",
                 "isDefault": true
+            }
+        },
+        {
+            "label": "Valgrind",
+            "type": "shell",
+            "command": "valgrind",
+            "args": ["--tool=memcheck", "${workspaceFolder}/build/voxel3d"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": true
             }
         }
     ]

@@ -9,8 +9,11 @@ std::map<std::string, VoxelModel*> ResourceManager::_rowmodels;
 std::map<std::string, Texture*> ResourceManager::_textures;
 std::map<std::string, Particles*> ResourceManager::_particles;
 
+std::map<std::string, FT_Face> ResourceManager::_faces;
+
 void ResourceManager::init(std::string path) {
     _path = path;
+    printf("ResourceManager initialized\n");
 }
 
 void ResourceManager::loadShader(std::string str) {
@@ -54,6 +57,29 @@ void ResourceManager::loadVoxelParticles(std::string str) {
     std::cout << "Particles loaded: " << str << std::endl;
 }
 
+void ResourceManager::loadFont(std::string str) {
+    FT_Library ft;
+    if (FT_Init_FreeType(&ft))
+        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+    FT_Face face;
+    std::string strfull = "../res/fonts/" + str + ".ttf";
+    if (FT_New_Face(ft, strfull.c_str(), 0, &face)) {
+        std::cerr << "Failed to load font: " << str << "\n";
+        return;
+    }
+    FT_Set_Pixel_Sizes(face, 0, 48);
+    // Disable byte-alignment restriction
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
+
+    std::cout << "Font loaded: " << str << std::endl;
+    _faces[str] = face;
+}
+
+void ResourceManager::prepareModel(std::string str) {
+    Mesh* mesh = Renderer::render(_rowmodels[str]);
+    _rowmodels[str]->setMesh(mesh);
+}
+
 void ResourceManager::addShader(Shader* shader, std::string name) {
 	_shaders[name] = shader;
 }
@@ -61,6 +87,7 @@ void ResourceManager::addTexture(Texture* texture, std::string name) {
 	_textures[name] = texture;
 }
 void ResourceManager::addModel(VoxelModel* row, std::string name) {
+    row->setName(name);
 	_rowmodels[name] = row;
 }
 void ResourceManager::addParticles(Particles* particles, std::string name) {
@@ -78,4 +105,8 @@ VoxelModel* ResourceManager::getModel(std::string name) {
 }
 Particles* ResourceManager::getParticles(std::string name) {
     return _particles[name];
+}
+
+FT_Face ResourceManager::getFont(std::string name) {
+    return _faces[name];
 }

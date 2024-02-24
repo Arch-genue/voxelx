@@ -78,20 +78,7 @@ void PhysicsObject::applyForce(glm::vec3 force){
 void PhysicsObject::stopForce()
 {
     _acceleration = glm::vec3(0);
-}
-
-void PhysicsObject::explode(uint16_t explodeForce)
-{
-    GameManager *gm = _gameobject->getGameManager();
-    if (gm != nullptr)
-    {
-        // VoxelParticles* explosionEffect = new VoxelParticles(EFFECT_EXPLOSION, 70, false);
-        // std::cout << "obj.pos " << pGameObject->getPosition().x << " " << pGameObject->getPosition().y << " " << pGameObject->getPosition().z << "\n";
-        // std::cout << "effect.pos " << explosionEffect->getPosition().x << " " << explosionEffect->getPosition().y << " " << explosionEffect->getPosition().z << "\n";
-        // explosionEffect->setPosition(glm::vec3(15.0f, 30.0f, 1.5f));
-        // gm->addVoxelParticles(explosionEffect);
-        // explosionEffect->setReady(true);
-    }
+    _velocity = glm::vec3(0);
 }
 
 bool PhysicsObject::isGrounded() {

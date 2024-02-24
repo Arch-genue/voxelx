@@ -64,8 +64,6 @@ public:
     void applyForce(glm::vec3 force);
     void stopForce();
 
-    void explode(uint16_t explodeForce);
-
     bool isGrounded();
 
     bool checkGround(glm::vec3& position, glm::vec3& normal);

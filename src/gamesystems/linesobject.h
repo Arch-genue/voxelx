@@ -23,7 +23,7 @@ private:
 public:
     LinesObject(float* vertices, uint count);
 
-    void updateMesh(Mesh* mesh);
+    void updateMesh(float* vertices, uint count);
 
     void draw();
 };

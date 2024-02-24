@@ -11,10 +11,9 @@ GameManager::~GameManager() {
     _gameobjects.clear();
     _voxelparticles.clear();
 }
-#include <iomanip>
 
 void GameManager::addGameObject(GameObject* gameobject) {
-    gameobject->setID(getIncrement());
+    gameobject->setID(getNewID());
     gameobject->setGameManager(this);
     
     _gameobjects.push_back(gameobject);
@@ -98,9 +97,9 @@ void GameManager::UpdatePhysics(float deltaTime) {
             _physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
         }
 
-        glm::vec3 end;
-        glm::vec3 norm;
-        glm::vec3 iend;
+        // glm::vec3 end;
+        // glm::vec3 norm;
+        // glm::vec3 iend;
 
         // // if (i + 1 < _gameobjects.size()) {
         // // if (_physicsengine->raycast(_gameobjects[i], _gameobjects[i+1]->getPosition(), , 20.0f, end, norm, iend)) {
@@ -165,6 +164,7 @@ void GameManager::clearParticles() {
     _voxelparticles.clear();    
 }
 
-uint GameManager::getIncrement() {
-    return _gameobject_increment++;
+uint GameManager::getNewID() {
+    _gameobject_increment = _gameobject_increment + 1;
+    return _gameobject_increment;
 }

@@ -41,7 +41,7 @@ class GameManager {
 
         void clearParticles();
 
-        uint getIncrement();
+        uint getNewID();
     
     private:
         std::vector<GameObject*> _gameobjects;

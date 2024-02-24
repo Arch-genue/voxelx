@@ -30,6 +30,11 @@ void Shader::uniformFloat(std::string name, float val) {
     glUniform1f(transformLoc, val);
 }
 
+void Shader::uniformVec3(std::string name, glm::vec3 var) {
+    GLuint transformLoc = glGetUniformLocation(id, name.c_str());
+    glUniform3f(transformLoc, var.x, var.y, var.z);
+}
+
 Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     std::string vertexCode;
     std::string fragmentCode;

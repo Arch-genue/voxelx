@@ -7,6 +7,7 @@
 #include <fstream>
 
 std::mt19937 rng(std::random_device{}());
+
 uint8_t one_iter = 0;
 VoxelParticles::VoxelParticles(std::string name, uint16_t particlecount, glm::vec3 position): _name(name), _particlecount(particlecount), _position(position) {
     _particles = ResourceManager::getParticles(name);
@@ -15,7 +16,7 @@ VoxelParticles::VoxelParticles(std::string name, uint16_t particlecount, glm::ve
     }
     
     _gravity = glm::vec3(0, -9.8, 0);
-    _voxelsarray = new VoxelModel;
+    _particlesarray = new ParticlesModel(glm::vec3(0));
 
     glm::mat3x3 matrix = _particles->color;
     __red = glm::vec3(matrix[0][0], matrix[0][1], matrix[0][2]);
@@ -40,14 +41,14 @@ VoxelParticles::VoxelParticles(std::string name, uint16_t particlecount, glm::ve
         particle->setLifeTime(lifetime_generator(rng));
         // particle.visible = true;
         particle->setPosition(position);
-        _voxelsarray->addVoxel(particle); 
-        calculateAnimation(_voxelsarray->getVoxel(i));
+        _particlesarray->addVoxel(particle); 
+        calculateAnimation(_particlesarray->getVoxel(i));
     }
 
 }
 
 VoxelParticles::~VoxelParticles() {
-    delete _voxelsarray;
+    delete _particlesarray;
 }
 void VoxelParticles::setReady(bool ready) {
     _voxelsReady = ready;
@@ -65,13 +66,13 @@ void VoxelParticles::setSize(float size) {
 
 void VoxelParticles::update(float deltaTime) {
     for (uint16_t i = 0; i < _particlecount; i++) {
-        Voxel* voxel = _voxelsarray->getVoxel(i);
+        Voxel* voxel = _particlesarray->getVoxel(i);
         glm::vec3 position = voxel->getPosition();
         // std::cout << position.y << " " << (position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime).y << " " << deltaTime << std::endl;
         if (voxel->getLifeTime() >= 0.0f) {
             voxel->setLifeTime(voxel->getLifeTime() - deltaTime);
             if (position.y > 2) {
-                voxel->setPosition(position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime);
+                voxel->setPosition(position + _particlesarray->getVoxel(i)->getVelocity() * deltaTime);
                 // _voxelsarray->setVoxelPosition(i, glm::vec3(10));
                 // _voxelsarray->setVoxelPosition(i, position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime);
             } else {
@@ -82,12 +83,12 @@ void VoxelParticles::update(float deltaTime) {
         
             
         } else {
-            _voxelsarray->getVoxel(i)->setLifeTime(_voxelsarray->getVoxel(i)->getLifeTime() - deltaTime);
-            calculateAnimation(_voxelsarray->getVoxel(i));    
+            _particlesarray->getVoxel(i)->setLifeTime(_particlesarray->getVoxel(i)->getLifeTime() - deltaTime);
+            calculateAnimation(_particlesarray->getVoxel(i));    
         }
     }
 
-    _mesh = Renderer::render(_voxelsarray);
+    _mesh = Renderer::render(_particlesarray);
     _mesh->draw(GL_TRIANGLES);
     delete _mesh;
 }

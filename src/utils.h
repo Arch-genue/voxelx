@@ -4,7 +4,9 @@
 #include <cstring>
 #include <string>
 #include <regex>
+#include <chrono>
 #include <glm/glm.hpp>
+
 
 /**
  * @brief Разделяет строку на строки по разделителю
@@ -39,3 +41,24 @@ extern bool isNumeric(const std::string& str);
  * @return float* Массив float содержащий значения x, y либо одно значение
  */
 extern float* random_keyword_parse(std::string color);
+
+/**
+ * @brief Вызывает функцию и возвращает время затраченное на ее выполнение
+ * 
+ * @param func Функция
+ * @param args Аргументы функции
+ * @return float Время 
+ */
+template<typename Func, typename... Args>
+float measureFunctionTime(Func func, Args&&... args) {
+    auto start = std::chrono::steady_clock::now(); // Засекаем начало времени
+
+    // Вызываем переданную функцию с переданными аргументами
+    func(std::forward<Args>(args)...);
+
+    auto end = std::chrono::steady_clock::now(); // Засекаем конец времени
+
+    // Вычисляем время выполнения в секундах
+    float duration = std::chrono::duration<float>(end - start).count();
+    return duration;
+}

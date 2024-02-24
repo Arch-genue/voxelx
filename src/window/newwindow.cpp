@@ -63,7 +63,7 @@ void Window::_glClear() {
 }
 
 bool Window::swapBuffers() {
-    SDL_GL_SwapWindow(window); //glfwSwapBuffers(window);
+    SDL_GL_SwapWindow(window);
     return 1;
 }
 

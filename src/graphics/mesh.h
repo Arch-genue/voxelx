@@ -12,28 +12,30 @@
 #pragma once
 
 #include <stdlib.h>
-#include "../voxels/voxel.h"
 
 class VoxelModel;
+class Voxel;
 
 /**
  * @brief Класс для создания меша в с использованием OpenGL
  * 
  */
 class Mesh {
-    unsigned int vao;
-    unsigned int vbo;
+    unsigned int _vao;
+    unsigned int _vbo;
     
     int* _meshAttributes;
     float* _meshBuffer;
     
-    size_t vertices;
-    VoxelModel* voxels;
-    size_t vertexSize;
+    size_t _vertices;
+    VoxelModel* _voxels;
+    size_t _vertexSize;
 public:
     Mesh(VoxelModel* voxs, float* buffer, size_t vertices, int* attrs);
     Mesh(float* buffer, size_t vertices, int* attrs);
     ~Mesh();
+    Mesh* clone();
+
     void create_mesh_buff();
     void create_empty_mesh_buff();
 
