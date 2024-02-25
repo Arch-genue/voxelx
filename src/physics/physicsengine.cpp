@@ -7,6 +7,8 @@ class VoxelModel;
 PhysicsEngine::PhysicsEngine() {
     _gravity = glm::vec3(0, -9.81f, 0);
 	_root = nullptr;
+
+    errorprint("PHYSENG", "PhysicsEngine initialized",  MSGINFO);
 }
 PhysicsEngine::~PhysicsEngine() {}
 

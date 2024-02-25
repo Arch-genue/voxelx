@@ -11,6 +11,10 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+/**
+ * @brief Структура символа
+ * 
+ */
 struct Character {
     GLuint     TextureID; // ID текстуры глифа
     glm::ivec2 Size;      // Размеры глифа
@@ -18,6 +22,10 @@ struct Character {
     GLuint     Advance;   // Горизонтальное смещение до начала следующего глифа
 };
 
+/**
+ * @brief Класс для создания и отрисовки текста, аналог класса Mesh но для текста
+ * 
+ */
 class TextMesh {
 private:
     unsigned int _vao;
@@ -26,7 +34,6 @@ private:
     int* _meshAttributes;
     float* _meshBuffer;
     
-    // size_t _vertices;
     std::map<GLchar, Character> Characters;
 public:
     TextMesh(FT_Face &face);

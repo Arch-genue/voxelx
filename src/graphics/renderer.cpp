@@ -35,13 +35,12 @@ size_t Renderer::capacity;
 
 Camera* Renderer::camera;
 
-// std::map<GLchar, Character> Characters;
-
 void Renderer::init(size_t capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
 	Renderer::capacity = capacity;
 
-	printf("Renderer initialized\nMax render size: %d\n", Renderer::capacity);
+	errorprint("RENDERER", "Renderer initialized",  MSGSUCCESS);
+	errorprint("RENDERER", "Max render size: " + std::string(BLUE_COLOR) + std::to_string(Renderer::capacity) + std::string(RESET_COLOR),  MSGSUCCESS);
 }
 
 void Renderer::free() {
@@ -92,7 +91,8 @@ Mesh* Renderer::render(VoxelModel* voxels) {
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> duration = end - start;
-	std::cout << "Render: " <<  voxels->getName() << "					Time:" << duration.count() << " seconds" << std::endl;
+
+	errorprint("RENDERER", "GENERATED MESH: " + std::string(CYAN_COLOR) + voxels->getName() + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  MSGINFO);
 	return new Mesh(voxels, buffer, index / VERTEX_SIZE, chunk_attrs);
 }
 void Renderer::computeVoxelRender(size_t& index, VoxelModel* voxels, Voxel* voxel, std::string renderside) {

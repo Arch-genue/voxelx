@@ -39,6 +39,14 @@ class GameManager {
         void UpdatePhysics(float deltaTime);
         void UpdateParticles(float deltaTime);
 
+        uint32_t getGameObjectsSize() {
+            return _gameobjects.size();
+        }
+
+        uint32_t getVoxelParticlesSize() {
+            return _voxelparticles.size();
+        }
+
         void clearParticles();
 
         uint getNewID();

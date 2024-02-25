@@ -66,20 +66,27 @@ int WIDTH = 1024;
 int HEIGHT = 768;
 float MOUSE_SPEED = 1.3f;
 
+bool DEBUG_MODE = true;
+
 #include <random>
 #include <chrono>
 
 std::mt19937 rng1(std::random_device{}());
 
 int main() {
-    printf("Voxel 3D: %s\n", _VERSION);
+    printf("Voxel 3D: %s\n\n", _VERSION);
+    std::string _version = _VERSION;
+
     Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();
     ResourceManager::init("../res/");
+    
+    std::cout << std::endl;
 
     //! Global renderer
     Renderer::init(_RENDERSIZE);
-    // std::cout << std::endl;
+    
+    std::cout << std::endl;
 
     ResourceManager::loadShader("voxel");
     ResourceManager::loadShader("particle");
@@ -99,14 +106,18 @@ int main() {
     
     std::cout << std::endl;
 
+    ResourceManager::loadVoxelParticles("testgravity");
+    ResourceManager::loadVoxelParticles("what");
+    
+    std::cout << std::endl;
+    
     ResourceManager::loadFont("arial");
 
     std::cout << std::endl;
 
-    ResourceManager::loadVoxelParticles("testgravity");
-    ResourceManager::loadVoxelParticles("what");
-
     GameManager *gm = new GameManager();
+    
+    std::cout << std::endl;
     // PhysicsEngine* physicsengine = gm->getPhysicsEngine();
 
     //! Camera
@@ -271,6 +282,7 @@ int main() {
         glm::vec3 camera_right = camera->getRightVector();
 
         if (Input::jpressed(SDLK_ESCAPE)) quit = true;
+        if (Input::jpressed(SDLK_F3)) DEBUG_MODE = !DEBUG_MODE;
 
         if (Input::jpressed(SDLK_p)) {
             Window::setPause(!Window::getPause());
@@ -357,22 +369,29 @@ int main() {
         ResourceManager::getShader("particle")->use();
         ResourceManager::getShader("particle")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::scale(glm::mat4(1.0f), glm::vec3(0.05f)));
         // gm->UpdateParticles(deltaTime);
-        // Texture *texture = new Texture();
-        // texture->bind();
 
         ResourceManager::getShader("voxel")->use();
         ResourceManager::getShader("voxel")->uniformMatrix("projview", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView());
 
         gm->UpdatePhysics(deltaTime);
         gm->Update();
+        // gui.draw();
 
         ResourceManager::getShader("font")->use();
-        ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(1.0f, 0.0f, 0.0f));
         glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
         ResourceManager::getShader("font")->uniformMatrix("projection", projection);
-        textMesh->draw("TEST C++", 50.0f, 25.0f, 1.0f);
+        // std::string text( + _VERSION);
 
-        // gui.draw();
+        ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.1f, 0.1f));
+        textMesh->draw("Voxel 3D: " + _version, 5.0f, 580.0f, 0.4f);
+
+        if (DEBUG_MODE) {
+            ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.2f, 0.2f, 0.2f));
+            textMesh->draw("Debug", 5.0f, 550.0f, 0.5f);
+            textMesh->draw("FPS: " + std::to_string((int)(1.0f / deltaTime)), 5.0f, 525.0f, 0.4f);
+            textMesh->draw("GameObjects: " + std::to_string(gm->getGameObjectsSize()), 5.0f, 500.0f, 0.4f);
+            textMesh->draw("Particle Systems: " + std::to_string(gm->getVoxelParticlesSize()), 5.0f, 480.0f, 0.4f);
+        }
 
         Window::swapBuffers();
         Input::pullEvents();

@@ -59,9 +59,6 @@ TextMesh::TextMesh(FT_Face &face) {
 TextMesh::~TextMesh() {}
 
 void TextMesh::draw(std::string text, GLfloat x, GLfloat y, GLfloat scale) {
-    // // Activate corresponding render state
-    // s.use();
-    // glUniform3f(glGetUniformLocation(s.Program, "textColor"), color.x, color.y, color.z);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(_vao);
 

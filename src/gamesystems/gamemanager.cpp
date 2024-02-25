@@ -2,10 +2,11 @@
 
 #include <iostream>
 
-
-GameManager::GameManager(){
+GameManager::GameManager() {
     _physicsengine = new PhysicsEngine();
     _gameobject_increment = 0;
+
+    errorprint("GAMEMGR", "GameManager initialized",  MSGINFO);
 }
 GameManager::~GameManager() {
     _gameobjects.clear();
