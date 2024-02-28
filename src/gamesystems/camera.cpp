@@ -103,7 +103,7 @@ glm::mat4 Camera::getProjection() {
     float aspect = this->_aspect;
 	if (aspect == 0.0f) aspect = (float)Window::width / (float)Window::height;
 
-	if (_perspective) return glm::perspective(_fov*_zoom, aspect, 0.05f, 1500.0f);
+	if (_perspective) return glm::perspective(_fov*_zoom, aspect, 0.1f, 1500.0f);
 	else {
 		if (_flipped)
 			return glm::ortho(0.0f, _fov*aspect, _fov, 0.0f);

@@ -35,7 +35,7 @@ class GameManager {
 
         PhysicsEngine* getPhysicsEngine();
 
-        void Update();
+        void Update(Light & light);
         void UpdatePhysics(float deltaTime);
         void UpdateParticles(float deltaTime);
 

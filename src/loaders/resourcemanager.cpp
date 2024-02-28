@@ -17,6 +17,54 @@ void ResourceManager::init(std::string path) {
     errorprint("RESMGR", "ResourceManager initialized",  MSGINFO);
 }
 
+void ResourceManager::cleanup() {
+    float time;
+
+    errorprint("RESMGR", "Deleting shaders...",  MSGINFO);
+    time = measureFunctionTime(deleteShaders);
+    errorprint("RESMGR", "Shaders deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  MSGINFO);
+
+    errorprint("RESMGR", "Deleting models...",  MSGINFO);
+    time = measureFunctionTime(deleteModels);
+    errorprint("RESMGR", "Models deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  MSGINFO);
+
+    errorprint("RESMGR", "Deleting textures...",  MSGINFO);
+    time = measureFunctionTime(deleteTextures);
+    errorprint("RESMGR", "Textuers deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  MSGINFO);
+
+    errorprint("RESMGR", "Deleting particle systems...",  MSGINFO);
+    time = measureFunctionTime(deleteParticles);
+    errorprint("RESMGR", "Particle systems deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  MSGINFO);
+}
+
+void ResourceManager::deleteShaders() {
+    for (auto it = _shaders.begin(); it != _shaders.end(); it++) {
+        delete it->second;
+    }
+    _shaders.clear();
+}
+
+void ResourceManager::deleteModels() {
+    for (auto it = _rowmodels.begin(); it != _rowmodels.end(); it++) {
+        delete it->second;
+    }
+    _rowmodels.clear();
+}
+
+void ResourceManager::deleteTextures() {
+    for (auto it = _textures.begin(); it != _textures.end(); it++) {
+        delete it->second;
+    }
+    _textures.clear();
+}
+
+void ResourceManager::deleteParticles() {
+    for (auto it = _particles.begin(); it != _particles.end(); it++) {
+        delete it->second;
+    }
+    _particles.clear();
+}
+
 void ResourceManager::loadShader(std::string str) {
     Shader* shader = load_shader(_path + "shaders/" + str + ".glslv", _path + "/shaders/" + str + ".glslf");
 	if (shader == nullptr) {

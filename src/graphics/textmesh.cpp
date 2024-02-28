@@ -56,7 +56,10 @@ TextMesh::TextMesh(FT_Face &face) {
     glBindVertexArray(0);
 }
 
-TextMesh::~TextMesh() {}
+TextMesh::~TextMesh() {
+    glDeleteVertexArrays(1, &_vao);
+    glDeleteBuffers(1, &_vbo);
+}
 
 void TextMesh::draw(std::string text, GLfloat x, GLfloat y, GLfloat scale) {
     glActiveTexture(GL_TEXTURE0);
@@ -64,8 +67,7 @@ void TextMesh::draw(std::string text, GLfloat x, GLfloat y, GLfloat scale) {
 
     // Iterate through all characters
     std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++)
-    {
+    for (c = text.begin(); c != text.end(); c++) {
         Character ch = Characters[*c];
 
         GLfloat xpos = x + ch.Bearing.x * scale;

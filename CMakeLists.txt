@@ -16,9 +16,10 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(SOURCE 
     src/main.cpp 
 
-	src/window/newwindow.cpp 
-	src/window/newinput.cpp 
+	src/window/window.cpp 
+	src/window/input.cpp 
 
+	src/graphics/types/material.cpp
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
 	src/graphics/mesh.cpp
@@ -57,8 +58,10 @@ set(SOURCE
 )
 
 set(HEADER
-    src/window/newwindow.h
-	src/window/newinput.h 
+    src/window/window.h
+	src/window/input.h 
+
+	src/graphics/types/material.h
 
 	src/graphics/shader.h 
 	src/graphics/texture.h 

@@ -14,12 +14,23 @@
 #include "../utils.h"
 #include <vector>
 
+#include "../graphics/types/material.h"
 
 /**
  * @brief Класс описывающий воксель
  * 
  */
 class Voxel {
+private:
+    glm::vec3 _position;
+    glm::vec3 _velocity;
+    glm::vec4 _color;
+
+    Material _material;
+
+    float _lifetime;
+
+    bool _visible;
 public:
     Voxel();
     Voxel(glm::vec3 position);
@@ -43,18 +54,12 @@ public:
     void setColor(glm::vec4 color);
     glm::vec4 getColor();
 
+    void setMaterial(Material material);
+    Material getMaterial();
+
     void setVisible(bool visible);
     bool isVisible();
 
     void setLifeTime(float lifetime);
     float getLifeTime();
-
-private:
-    glm::vec3 _position;
-    glm::vec3 _velocity;
-    glm::vec4 _color;
-
-    float _lifetime;
-
-    bool _visible;
 };

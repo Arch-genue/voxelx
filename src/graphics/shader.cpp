@@ -8,7 +8,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+
+#include "../utils.h"
 
 Shader::Shader(unsigned int id) : id(id) {}
 
@@ -26,13 +27,36 @@ void Shader::uniformMatrix(std::string name, glm::mat4 matrix) {
 }
 void Shader::uniformFloat(std::string name, float val) {
     GLuint transformLoc = glGetUniformLocation(id, name.c_str());
-    //glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
     glUniform1f(transformLoc, val);
 }
 
 void Shader::uniformVec3(std::string name, glm::vec3 var) {
     GLuint transformLoc = glGetUniformLocation(id, name.c_str());
     glUniform3f(transformLoc, var.x, var.y, var.z);
+}
+
+void Shader::uniformLight(std::string name, Light &light) {
+    uniformVec3("light.position", light.position);
+    uniformVec3("light.direction", light.direction);
+    uniformFloat("light.cutOff", light.cutOff);
+    uniformFloat("light.outerCutOff", light.outerCutOff);
+
+    // light properties
+    uniformVec3("light.ambient", light.ambient);
+    // we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
+    // each environment and lighting type requires some tweaking to get the best out of your environment.
+    uniformVec3("light.diffuse", light.diffuse);
+    uniformVec3("light.specular", light.specular);
+    uniformFloat("light.constant", light.constant);
+    uniformFloat("light.linear", light.linear);
+    uniformFloat("light.quadratic", light.quadratic);
+}
+
+void Shader::uniformMaterial(std::string name, Material &material) {
+    uniformVec3(name + ".ambient", material.ambient);
+    uniformVec3(name + ".diffuse", material.diffuse);
+    uniformVec3(name + ".specular", material.specular);
+    uniformFloat(name + ".shininess", material.shininess);
 }
 
 Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
@@ -57,7 +81,7 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ\n";
+        errorprint("SHADER", "FILE_NOT_SUCCESSFULLY_READ",  MSGERROR);
         return nullptr;
     }
     const GLchar* vShaderCode = vertexCode.c_str();
@@ -74,8 +98,8 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n";
-        std::cerr << infoLog << std::endl;
+        std::string log = infoLog;
+        errorprint("SHADER", "VERTEX SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  MSGERROR);
         return nullptr;
     }
 
@@ -86,8 +110,8 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n";
-        std::cerr << infoLog << std::endl;
+        std::string log = infoLog;
+        errorprint("SHADER", "FRAGMENT SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  MSGERROR);
         return nullptr;
     }
 

@@ -32,6 +32,15 @@
 #define WHITE_BACKGROUND        "\033[47m"
 #define BRIGHT_YELLOW_BACKGROUND "\033[103m"
 
+
+const std::string RESET_COLOR_STR = RESET_COLOR;
+const std::string RED_COLOR_STR = RED_COLOR;
+const std::string BLUE_COLOR_STR = BLUE_COLOR;
+const std::string GREEN_COLOR_STR = GREEN_COLOR;
+const std::string YELLOW_COLOR_STR = YELLOW_COLOR;
+const std::string WHITE_COLOR_STR = WHITE_COLOR;
+const std::string MAGENTA_COLOR_STR = MAGENTA_COLOR;
+
 enum MSGTYPE {
     MSGERROR,
     MSGWARNING,

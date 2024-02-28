@@ -1,6 +1,6 @@
 #include "gui.h"
-#include "../window/newwindow.h"
-#include "../window/newinput.h"
+#include "../window/window.h"
+#include "../window/input.h"
 #include "mesh.h"
 #include "batch2d.h"
 #include "sprite.h"
@@ -69,7 +69,7 @@ void GUI::draw() {
 	for (unsigned i = 1; i < 10; i++) {
 		int x = defposx + (i-1) * step;
 		vec4 tint(1.0f);
-		if (!Input::_cursor_locked) {
+		if (!Input::getCursorLock()) {
 			int mx = Input::x;
 			int my = Input::y;
 			if (mx > x && mx < x + size && my > y && my < y + size) {

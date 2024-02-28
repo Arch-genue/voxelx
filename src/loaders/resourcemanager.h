@@ -29,6 +29,13 @@ class ResourceManager {
     static std::map<std::string, FT_Face> _faces;
 public:
     static void init(std::string str);
+    static void cleanup();
+
+    static void deleteShaders();
+    static void deleteModels();
+    static void deleteTextures();
+    static void deleteParticles();
+
     static void loadShader(std::string str);
     static void loadTexture(std::string str);
     static void loadModel(std::string str, std::string type);

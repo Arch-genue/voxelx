@@ -87,7 +87,7 @@ void GameObject::draw() {
 	if (isVisible()) {
 		ResourceManager::getShader("voxel")->uniformMatrix("model", getMatrix());
 		_mesh->draw(GL_TRIANGLES);
-		_boundingboxmesh->draw(GL_LINES);
+		// _boundingboxmesh->draw(GL_LINES);
 
 		// if (_camera != nullptr) 
 		// 	_raymesh->draw(GL_LINES);

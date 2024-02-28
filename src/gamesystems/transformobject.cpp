@@ -21,9 +21,8 @@ void TransformObject::update() {
     if (_visible == false) return;
     
     _modelmatrix = glm::scale(_modelmatrix, _scaling);
-    _modelmatrix = glm::translate(_modelmatrix, _position * (DEFAULT_SCALE / _scaling));
+    _modelmatrix = glm::translate(_modelmatrix, _position * _scaling);
     _modelmatrix = glm::rotate(_modelmatrix, _rotationAngle, _rotationAxis);
-    
     
     draw();
     _modelmatrix = glm::mat4(1.0f);

@@ -66,6 +66,12 @@ glm::vec4 Voxel::getColor() {
     return _color;
 }
 
+void Voxel::setMaterial(Material material) {
+    _material = material;
+}
+Material Voxel::getMaterial() {
+    return _material;
+}
 
 void Voxel::setVisible(bool visible) {
     _visible = visible;
