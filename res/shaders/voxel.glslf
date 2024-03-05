@@ -52,12 +52,12 @@ void main() {
     // float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // vec3 specular = light.specular * spec * material.specular;
     
-    // // spotlight (soft edges)
-    // // float theta = dot(lightDir, normalize(-light.direction)); 
-    // // float epsilon = (light.cutOff - light.outerCutOff);
-    // // float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-    // // diffuse  *= intensity;
-    // // specular *= intensity;
+    // spotlight (soft edges)
+    // float theta = dot(lightDir, normalize(-light.direction)); 
+    // float epsilon = (light.cutOff - light.outerCutOff);
+    // float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+    // diffuse  *= intensity;
+    // specular *= intensity;
     
     // // attenuation
     // float distance    = length(light.position - FragPos);
@@ -83,9 +83,9 @@ void main() {
     // Установка цвета фрагмента с учетом освещенности
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(light.position - FragPos);
+    lightDir *= 0.1f;
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * vec3(1.0f);
+    vec3 diffuse = diff * vec3(2.0f);
     vec3 result = (diffuse) * a_color.rgb;
     f_color = vec4(result, 1.0f);
-    // f_color = a_color;
 }

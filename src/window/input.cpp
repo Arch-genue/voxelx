@@ -2,10 +2,12 @@
 
 #include "../utils.h"
 
+SDL_Event Input::_sdlevent;
+
 bool* Input::_keys;
 
-uint* Input::_frames;
-uint Input::_current = 0;
+uint32_t* Input::_frames;
+uint32_t Input::_current = 0;
 float Input::deltaX = 0.0f;
 float Input::deltaY = 0.0f;
 float Input::x = 0.0f;
@@ -13,10 +15,32 @@ float Input::y = 0.0f;
 bool Input::_cursor_locked = false;
 bool Input::_cursor_started = false;
 
-SDL_Event Input::sdlEvent;
+std::unordered_map<uint32_t, std::function<void()> > Input::_pressedeventfunc; // Keyboard press
+std::unordered_map<uint32_t, std::function<void()> > Input::_jpressedeventfunc; // Keyboard pressed
+std::unordered_map<uint32_t, std::function<void()> > Input::_clickedeventfunc; // Mouse click
+std::unordered_map<uint32_t, std::function<void()> > Input::_jclickedeventfunc; // Mouse clicked
+std::unordered_map<uint32_t, std::function<void()> > Input::_mousemoteventfunc; // Mouse motion
 
 #define _MOUSE_BUTTONS 1024
 #define _SPECIAL_BUTTONS 1040
+
+#define F_KEY_MAGIC 1073741824
+
+int Input::init() {
+    _keys = new bool [1512];
+    _frames = new uint32_t [1512];
+
+    memset(_keys, false, 1512 * sizeof(bool));
+    memset(_frames, 0, 1512 * sizeof(uint32_t));
+
+    _pressedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
+    _jpressedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
+    _clickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
+    _jclickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
+
+    errorprint("INPUT", "Input system initialized, setup input buffers",  MSGINFO);
+    return 0;
+}
 
 void Input::cursor_position_callback(SDL_MouseMotionEvent e) {
     int xpos, ypos;
@@ -63,15 +87,60 @@ void Input::window_size_callback(int width, int height) {
     Window::height = height;
 }
 
-int Input::init() {
-    _keys = new bool [1512];
-    _frames = new uint [1512];
+void Input::add_event_handler(EVENT event, uint32_t btn,  void (*func)(void)) {
+    switch (event) {
+        case PRESSED:
+            _pressedeventfunc[btn] = func;
+            break;
+        case JPRESSED:
+            _jpressedeventfunc[btn] = func;
+            break;
+        case CLICKED:
+            _clickedeventfunc[btn] = func;
+            break;
+        case JCLICKED:
+            _jclickedeventfunc[btn] = func;
+            break;
+        case MOTION:
+            _mousemoteventfunc[btn] = func;
+            break;
+    }
+}
 
-    memset(_keys, false, 1512 * sizeof(bool));
-    memset(_frames, 0, 1512 * sizeof(uint));
+// template<typename Func>
+// void Input::add_event_handler(EVENT event, uint32_t btn, Func&& func) {
+//     switch (event) {
+//         case PRESSED:
+//             _pressedeventfunc[btn] = func;
+//             break;
+//         case JPRESSED:
+//             _jpressedeventfunc[btn] = func;
+//             break;
+//         case CLICKED:
+//             _clickedeventfunc[btn] = func;
+//             break;
+//         case JCLICKED:
+//             _jclickedeventfunc[btn] = func;
+//             break;
+//         case MOTION:
+//             _mousemoteventfunc[btn] = func;
+//             break;
+//     }
+// }
 
-    errorprint("INPUT", "Input system initialized, setup input buffers",  MSGINFO);
-    return 0;
+void Input::process_keys() {
+    for (auto it = _pressedeventfunc.begin(); it != _pressedeventfunc.end(); ++it) {
+        if (pressed(it->first)) it->second();
+    }
+    for (auto it = _jpressedeventfunc.begin(); it != _jpressedeventfunc.end(); ++it) {
+        if (jpressed(it->first)) it->second();
+    }
+    for (auto it = _clickedeventfunc.begin(); it != _clickedeventfunc.end(); ++it) {
+        if (clicked(it->first)) it->second();
+    }
+    for (auto it = _jclickedeventfunc.begin(); it != _jclickedeventfunc.end(); ++it) {
+        if (jpressed(it->first)) it->second();
+    }
 }
 
 void Input::cleanup() {
@@ -81,17 +150,17 @@ void Input::cleanup() {
 }
 
 void Input::setKey(int key, bool value) {
-    if (key >= 1073741824) {
-        uint index = (_SPECIAL_BUTTONS + key - 1073741824);
+    if (key >= F_KEY_MAGIC) {
+        uint32_t index = (_SPECIAL_BUTTONS + key - F_KEY_MAGIC);
         _keys[index] = value;
     } else {
         _keys[key] = value;
     }
 }
 
-void Input::setFrame(int key, uint value) {
-    if (key >= 1073741824) {
-        uint index = (_SPECIAL_BUTTONS + key - 1073741824);
+void Input::setFrame(int key, uint32_t value) {
+    if (key >= F_KEY_MAGIC) {
+        uint32_t index = (_SPECIAL_BUTTONS + key - F_KEY_MAGIC);
         _frames[index] = value;
     } else {
         _frames[key] = value;
@@ -99,39 +168,37 @@ void Input::setFrame(int key, uint value) {
 }
 
 bool Input::getKey(int keycode) {
-    if (keycode >= 1073741824) {
-        uint index = (_SPECIAL_BUTTONS + keycode - 1073741824);
+    if (keycode >= F_KEY_MAGIC) {
+        uint32_t index = (_SPECIAL_BUTTONS + keycode - F_KEY_MAGIC);
         return _keys[index];
     } else {
         return _keys[keycode];
     }
 }
 
-uint Input::getFrame(int keycode) {
-    if (keycode >= 1073741824) {
-        uint index = (_SPECIAL_BUTTONS + keycode - 1073741824);
+uint32_t Input::getFrame(int keycode) {
+    if (keycode >= F_KEY_MAGIC) {
+        uint32_t index = (_SPECIAL_BUTTONS + keycode - F_KEY_MAGIC);
         return _frames[index];
     } else {
         return _frames[keycode];
     }
 }
 
-bool Input::pressed(int keycode) {
+bool Input::pressed(uint32_t keycode) {
     if ( keycode < 0 || (keycode >= _MOUSE_BUTTONS && keycode < _SPECIAL_BUTTONS)) return false;
     return getKey(keycode);
-    // return false;
 }
-bool Input::jpressed(int keycode) {
+bool Input::jpressed(uint32_t keycode) {
     if ( keycode < 0 || (keycode >= _MOUSE_BUTTONS && keycode < _SPECIAL_BUTTONS)) return false;
-    // std::cout << "sdfsd " << std::endl;
     return getKey(keycode) && getFrame(keycode) == _current;
 }
 
-bool Input::clicked(int button) {
+bool Input::clicked(uint32_t button) {
     int index = _MOUSE_BUTTONS + button;
     return _keys[index];
 }
-bool Input::jclicked(int button) {
+bool Input::jclicked(uint32_t button) {
     int index = _MOUSE_BUTTONS + button;
     return _keys[index] && _frames[index] == _current;
 }
@@ -142,19 +209,19 @@ void Input::toggleCursor() {
 }
 
 void Input::processEvents(bool &quit) {
-    while (SDL_PollEvent(&sdlEvent) != 0) {
-        Uint8 b = sdlEvent.button.button;
+    while (SDL_PollEvent(&_sdlevent) != 0) {
+        Uint8 b = _sdlevent.button.button;
         int x1;int y1; SDL_GetMouseState(&x1, &y1);
-        if (sdlEvent.type == SDL_QUIT) quit = true;
-        if (sdlEvent.type == SDL_WINDOWEVENT) {
-            if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED ) window_size_callback(sdlEvent.window.data1, sdlEvent.window.data2);
+        if (_sdlevent.type == SDL_QUIT) quit = true;
+        if (_sdlevent.type == SDL_WINDOWEVENT) {
+            if (_sdlevent.window.event == SDL_WINDOWEVENT_RESIZED ) window_size_callback(_sdlevent.window.data1, _sdlevent.window.data2);
         }
 
-        else if (sdlEvent.type == SDL_MOUSEMOTION) cursor_position_callback(sdlEvent.motion);
-        else if (sdlEvent.type == SDL_MOUSEBUTTONDOWN) mouse_button_callback(b, 1);
-        else if (sdlEvent.type == SDL_MOUSEBUTTONUP) mouse_button_callback(b, 0);
-        else if (sdlEvent.type == SDL_KEYDOWN && sdlEvent.key.repeat == 0) key_callback(sdlEvent.key.keysym.sym, 1);
-        else if (sdlEvent.type == SDL_KEYUP) key_callback(sdlEvent.key.keysym.sym, 0);
+        else if (_sdlevent.type == SDL_MOUSEMOTION) cursor_position_callback(_sdlevent.motion);
+        else if (_sdlevent.type == SDL_MOUSEBUTTONDOWN) mouse_button_callback(b, 1);
+        else if (_sdlevent.type == SDL_MOUSEBUTTONUP) mouse_button_callback(b, 0);
+        else if (_sdlevent.type == SDL_KEYDOWN && _sdlevent.key.repeat == 0) key_callback(_sdlevent.key.keysym.sym, 1);
+        else if (_sdlevent.type == SDL_KEYUP) key_callback(_sdlevent.key.keysym.sym, 0);
     }
 }
 

@@ -17,32 +17,6 @@
 #include "voxel.h"
 class Mesh;
 
-struct OctreeNode {
-    OctreeNode* children[8]; // Дочерние узлы
-    std::vector<Voxel*> voxels; // Воксели в листовом узле
-};
-
-class Octree {
-public:
-    Octree(const glm::vec3& min, const glm::vec3& max, int maxDepth);
-
-    void insert(Voxel* voxel);
-    void remove(Voxel *voxel);
-    Voxel* find(const glm::vec3& position);
-
-private:
-    OctreeNode* _root;
-    glm::vec3 _minBounds;
-    glm::vec3 _maxBounds;
-    int _maxDepth;
-
-    void removeRecursive(OctreeNode *node, Voxel *voxel, const glm::vec3& min, const glm::vec3 &max, int depth);
-
-    void insertRecursive(OctreeNode* node, Voxel* voxel, const glm::vec3& min, const glm::vec3& max, int depth);
-    Voxel* findRecursive(OctreeNode *node, const glm::vec3 &position);
-    // Другие приватные методы
-};
-
 /**
  * @brief класс для хранения вокселей с доступом по координатам.
  * 
@@ -50,14 +24,14 @@ private:
 class VoxelModel {
 private:
     std::string _name;
-    Octree* _voxels;
+    vtype::array3<int32_t, Voxel*> _voxels;
 
     std::string _renderside;
-    glm::ivec3 _size;
+    glm::vec3 _size;
 
     //* Предзагруженный стандартный меш
     Mesh* _pmesh;
-
+    
 public:
     VoxelModel(glm::vec3 size, int depth = 5);
     ~VoxelModel();
@@ -79,8 +53,8 @@ public:
     void setRenderSide(std::string& renderside) const { renderside = _renderside; }
     std::string getRenderSide() const { return _renderside; }
 
-    void setSize(glm::ivec3 size) { _size = size; }
-    glm::ivec3 getSize() const { return _size; }
+    void setSize(glm::vec3 size) { _size = size; }
+    glm::vec3 getSize() const { return _size; }
 };
 
 extern VoxelModel *load_model(std::string filename, const char *type);

@@ -97,9 +97,6 @@ glm::vec3 Camera::getRightVector() {
 
 
 glm::mat4 Camera::getProjection() {
-    // float aspect = (float)Window::width / (float)Window::height;
-    
-    // return glm::perspective(fov, aspect, 0.1f, 100.0f);
     float aspect = this->_aspect;
 	if (aspect == 0.0f) aspect = (float)Window::width / (float)Window::height;
 
@@ -114,6 +111,6 @@ glm::mat4 Camera::getProjection() {
 
 glm::mat4 Camera::getView() {
     // return glm::lookAt(position, position+front, up);
-    if (_perspective) return glm::lookAt(_position, _position+_front, _up);
+    if (_perspective) return glm::lookAt(_position/0.1f, _position/0.1f+_front, _up);
 	else return glm::translate(glm::mat4(1.0f), _position);
 }

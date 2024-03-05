@@ -1,3 +1,14 @@
+/**
+ * @file gui.h
+ * @author Vlad Kartsaev
+ * @brief GUI implementation
+ * @version 0.1
+ * @date 2023-04-23
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include <GL/glew.h>

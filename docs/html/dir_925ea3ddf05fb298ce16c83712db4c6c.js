@@ -8,5 +8,5 @@ var dir_925ea3ddf05fb298ce16c83712db4c6c =
     [ "voxels", "dir_d10264b07bc55ec2791c7d4843d1307d.html", "dir_d10264b07bc55ec2791c7d4843d1307d" ],
     [ "window", "dir_11d8f236bee6777fe1ac44998c491eb5.html", "dir_11d8f236bee6777fe1ac44998c491eb5" ],
     [ "main.cpp", "main_8cpp.html", "main_8cpp" ],
-    [ "utils.h", "utils_8h_source.html", null ]
+    [ "utils.h", "utils_8h.html", "utils_8h" ]
 ];

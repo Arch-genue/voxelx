@@ -9,17 +9,37 @@
 \DoxyCodeLine{15 \textcolor{preprocessor}{\#include "{}../gamesystems/gameobject.h"{}}}
 \DoxyCodeLine{16 }
 \DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_engine}{PhysicsEngine}} \{}
-\DoxyCodeLine{22 \textcolor{keyword}{public}:}
-\DoxyCodeLine{23     std::vector<PhysicsObject*> objects;}
-\DoxyCodeLine{24 }
-\DoxyCodeLine{25     \textcolor{keywordtype}{void} addObject(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object});}
-\DoxyCodeLine{26     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* getObject(\textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{22 \textcolor{keyword}{private}:}
+\DoxyCodeLine{23     std::vector<PhysicsObject*> \_objects;}
+\DoxyCodeLine{24     glm::vec3 \_gravity;}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26     \mbox{\hyperlink{class_node}{Node}}* \_root;}
 \DoxyCodeLine{27 }
-\DoxyCodeLine{28     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
-\DoxyCodeLine{29 }
-\DoxyCodeLine{30     \textcolor{keywordtype}{bool} checkCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3\& surfacePosition, glm::vec3\& surfaceNormal);}
+\DoxyCodeLine{28 \textcolor{keyword}{public}:}
+\DoxyCodeLine{29     \mbox{\hyperlink{class_physics_engine}{PhysicsEngine}}();}
+\DoxyCodeLine{30     \mbox{\hyperlink{class_physics_engine}{\string~PhysicsEngine}}();}
 \DoxyCodeLine{31 }
-\DoxyCodeLine{32     \textcolor{keywordtype}{void} handleCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3 surfacePosition, glm::vec3 surfaceNormal);}
-\DoxyCodeLine{33 \};}
+\DoxyCodeLine{32     glm::vec3 getGravity();}
+\DoxyCodeLine{33 }
+\DoxyCodeLine{34     \textcolor{keywordtype}{void} addObject(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object});}
+\DoxyCodeLine{35     \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* getObject(\textcolor{keywordtype}{int} i);}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37     \textcolor{keywordtype}{void} update(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39     \textcolor{keywordtype}{bool} checkCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3\& surfacePosition, glm::vec3\& surfaceNormal);}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41     \textcolor{keywordtype}{void} handleCollision(\mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \textcolor{keywordtype}{object}, glm::vec3 surfacePosition, glm::vec3 surfaceNormal);}
+\DoxyCodeLine{42 }
+\DoxyCodeLine{43     \textcolor{keywordtype}{bool} raycast(\mbox{\hyperlink{class_game_object}{GameObject}}* gameobject, glm::vec3 pos, glm::vec3 dir, \textcolor{keywordtype}{float} maxDist, glm::vec3\& end, glm::vec3\& norm, glm::vec3\& iend);}
+\DoxyCodeLine{44     \textcolor{keywordtype}{bool} raycast(\textcolor{keyword}{const} glm::vec3\& rayOrigin, \textcolor{keyword}{const} glm::vec3\& rayDirection, \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* physicsobject);}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46     \mbox{\hyperlink{class_node}{Node}}* rotateLeft(\mbox{\hyperlink{class_node}{Node}}* root);}
+\DoxyCodeLine{47     \mbox{\hyperlink{class_node}{Node}}* rotateRight(\mbox{\hyperlink{class_node}{Node}}* root);}
+\DoxyCodeLine{48     \textcolor{keywordtype}{void} flipColors(\mbox{\hyperlink{class_node}{Node}}* root);}
+\DoxyCodeLine{49     \mbox{\hyperlink{class_node}{Node}}* insert(\mbox{\hyperlink{class_node}{Node}}* root, \mbox{\hyperlink{class_box_collider}{BoxCollider}}* box);}
+\DoxyCodeLine{50     \mbox{\hyperlink{class_node}{Node}}* findNearestObject(\mbox{\hyperlink{class_node}{Node}}* root, \mbox{\hyperlink{class_box_collider}{BoxCollider}}* area);}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52     \mbox{\hyperlink{class_node}{Node}}* getRootNode();}
+\DoxyCodeLine{53 \};}
 
 \end{DoxyCode}

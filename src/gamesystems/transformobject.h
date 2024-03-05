@@ -23,14 +23,15 @@
 class TransformObject {
 protected:
     glm::mat4 _modelmatrix;
+
     glm::vec3 _position;
-    glm::vec3 _lastposition;
+    glm::vec3 _scaling;
+    glm::vec3 _sizes;
+
     glm::vec3 _rotationAxis;
     float _rotationAngle;
-    glm::vec3 _scaling;
 
-    //* TEMPRORARY
-
+    //* TEMPORARY
     bool _visible;
 
 private:
@@ -99,6 +100,9 @@ public:
 
     void setScaling(glm::vec3 scaling);
     glm::vec3 getScaling();
+
+    void setSize(glm::vec3 size);
+    glm::vec3 getSize();
 
     /**
      * @brief Задать видимость объекта

@@ -24,40 +24,46 @@
 \DoxyCodeLine{34         \mbox{\hyperlink{class_game_object}{GameObject}}(\textcolor{keyword}{const} \textcolor{keywordtype}{char}* model, glm::vec3 position);}
 \DoxyCodeLine{35         \mbox{\hyperlink{class_game_object}{\string~GameObject}}();}
 \DoxyCodeLine{36 }
-\DoxyCodeLine{42         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a21d24661c2bc70290b2c6ed7cc6eb538}{setGameManager}}(\mbox{\hyperlink{class_game_manager}{GameManager}}* gamemanager);}
-\DoxyCodeLine{48         \mbox{\hyperlink{class_game_manager}{GameManager}}* \mbox{\hyperlink{class_game_object_a33244fc0d5391f774fd9f10fee6d4884}{getGameManager}}();}
-\DoxyCodeLine{49 }
-\DoxyCodeLine{55         \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \mbox{\hyperlink{class_game_object_a0f561fdb9713681659f305c08633220f}{getPhysicsObject}}();}
-\DoxyCodeLine{56 }
-\DoxyCodeLine{62         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a12fc8d506e2ef1099f2192295782bd00}{setPosition}}(glm::vec3 position) \textcolor{keyword}{override};}
-\DoxyCodeLine{63 }
-\DoxyCodeLine{69         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_acb52827652014ef1c18cb3e0afef481f}{setPhysics}}(PHYSICS physics);}
-\DoxyCodeLine{70 }
-\DoxyCodeLine{75         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a398169fc952e65caa836eb43d56e0e9f}{draw}}() \textcolor{keyword}{override};}
-\DoxyCodeLine{81         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a263aaa371cf1d346bd6483fccc9cab23}{updatePhysics}}(\textcolor{keywordtype}{float} deltaTime);}
-\DoxyCodeLine{82 }
-\DoxyCodeLine{89         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a3cbce4f9de4a0348763a8c5850412aa5}{attachCamera}}(\mbox{\hyperlink{class_camera}{Camera}}* camera, glm::vec3 stdpos);}
-\DoxyCodeLine{90 }
-\DoxyCodeLine{96         \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* \mbox{\hyperlink{class_game_object_aa09a0959a714a3f56ebd6380c02de6a8}{getVoxelModel}}();}
-\DoxyCodeLine{97 }
-\DoxyCodeLine{98         \textcolor{keywordtype}{bool} raycast(glm::vec3 position, glm::vec3 dir, \textcolor{keywordtype}{float} maxDist, glm::vec3\& end, glm::vec3\& norm, glm::vec3\& iend);}
-\DoxyCodeLine{99 }
-\DoxyCodeLine{100         \textcolor{keywordtype}{void} setMesh(\mbox{\hyperlink{class_mesh}{Mesh}}* mesh);}
-\DoxyCodeLine{101 }
-\DoxyCodeLine{107         \mbox{\hyperlink{class_mesh}{Mesh}}* \mbox{\hyperlink{class_game_object_acf4e61f71df3644d5eb0e9b70824b31a}{getMesh}}();}
-\DoxyCodeLine{108     \textcolor{keyword}{private}:}
-\DoxyCodeLine{109         \textcolor{comment}{//? OBJECTS}}
-\DoxyCodeLine{110         \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* \_voxelmodel;}
-\DoxyCodeLine{111         \mbox{\hyperlink{class_mesh}{Mesh}}* \_mesh;}
-\DoxyCodeLine{112         \mbox{\hyperlink{class_mesh}{Mesh}}* \_boundingboxmesh;}
-\DoxyCodeLine{113         \mbox{\hyperlink{class_camera}{Camera}}* \_camera;}
-\DoxyCodeLine{114         }
-\DoxyCodeLine{115         \textcolor{comment}{//? GameManager global object}}
-\DoxyCodeLine{116         \mbox{\hyperlink{class_game_manager}{GameManager}}* \_gm;}
-\DoxyCodeLine{117         }
-\DoxyCodeLine{118         glm::vec3 \_campos;}
-\DoxyCodeLine{119 }
-\DoxyCodeLine{121         \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \_physicsobject;}
-\DoxyCodeLine{122 \};}
+\DoxyCodeLine{37         \textcolor{keywordtype}{void} setID(uint \textcolor{keywordtype}{id});}
+\DoxyCodeLine{38             uint getID()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_id; \};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{45         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a21d24661c2bc70290b2c6ed7cc6eb538}{setGameManager}}(\mbox{\hyperlink{class_game_manager}{GameManager}}* gamemanager);}
+\DoxyCodeLine{51         \mbox{\hyperlink{class_game_manager}{GameManager}}* \mbox{\hyperlink{class_game_object_a33244fc0d5391f774fd9f10fee6d4884}{getGameManager}}();}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{58         \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \mbox{\hyperlink{class_game_object_a0f561fdb9713681659f305c08633220f}{getPhysicsObject}}();}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{65         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a12fc8d506e2ef1099f2192295782bd00}{setPosition}}(glm::vec3 position) \textcolor{keyword}{override};}
+\DoxyCodeLine{66 }
+\DoxyCodeLine{72         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_acb52827652014ef1c18cb3e0afef481f}{setPhysics}}(PHYSICS physics);}
+\DoxyCodeLine{73 }
+\DoxyCodeLine{78         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a398169fc952e65caa836eb43d56e0e9f}{draw}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{84         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a263aaa371cf1d346bd6483fccc9cab23}{updatePhysics}}(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{92         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_game_object_a3cbce4f9de4a0348763a8c5850412aa5}{attachCamera}}(\mbox{\hyperlink{class_camera}{Camera}}* camera, glm::vec3 stdpos);}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{99         \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* \mbox{\hyperlink{class_game_object_aa09a0959a714a3f56ebd6380c02de6a8}{getVoxelModel}}();}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101         \textcolor{keywordtype}{bool} raycast(glm::vec3 position, glm::vec3 dir, \textcolor{keywordtype}{float} maxDist, glm::vec3\& end, glm::vec3\& norm, glm::vec3\& iend);}
+\DoxyCodeLine{102 }
+\DoxyCodeLine{103         \textcolor{keywordtype}{void} setMesh(\mbox{\hyperlink{class_mesh}{Mesh}}* mesh);}
+\DoxyCodeLine{104 }
+\DoxyCodeLine{110         \mbox{\hyperlink{class_mesh}{Mesh}}* \mbox{\hyperlink{class_game_object_acf4e61f71df3644d5eb0e9b70824b31a}{getMesh}}();}
+\DoxyCodeLine{111     \textcolor{keyword}{private}:}
+\DoxyCodeLine{112         \textcolor{comment}{//? OBJECTS}}
+\DoxyCodeLine{113         \mbox{\hyperlink{class_voxel_model}{VoxelModel}}* \_voxelmodel;}
+\DoxyCodeLine{114         \mbox{\hyperlink{class_mesh}{Mesh}}* \_mesh;}
+\DoxyCodeLine{115         \mbox{\hyperlink{class_mesh}{Mesh}}* \_boundingboxmesh;}
+\DoxyCodeLine{116         \mbox{\hyperlink{class_mesh}{Mesh}}* \_raymesh;}
+\DoxyCodeLine{117         \mbox{\hyperlink{class_camera}{Camera}}* \_camera;}
+\DoxyCodeLine{118 }
+\DoxyCodeLine{119         uint \_id;}
+\DoxyCodeLine{120         }
+\DoxyCodeLine{121         \textcolor{comment}{//? GameManager global object}}
+\DoxyCodeLine{122         \mbox{\hyperlink{class_game_manager}{GameManager}}* \_gm;}
+\DoxyCodeLine{123         }
+\DoxyCodeLine{124         glm::vec3 \_campos;}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{127         \mbox{\hyperlink{class_physics_object}{PhysicsObject}}* \_physicsobject;}
+\DoxyCodeLine{128 \};}
 
 \end{DoxyCode}

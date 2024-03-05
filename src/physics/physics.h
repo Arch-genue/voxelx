@@ -15,6 +15,7 @@
 #include <glm/glm.hpp>
 // #include "../gamesystems/gameobject.h"
 #include "boxcollider.h"
+#include "../utils.h"
 
 // #include <iostream>
 
@@ -24,15 +25,6 @@ enum PHYSICS {
     NO_PHYSICS, 
     STATIC_PHYSICS,
     DYNAMIC_PHYSICS
-};
-
-struct vertex {
-    glm::vec3 position;
-};
-
-struct line {
-    glm::vec3 vertex1;
-    glm::vec3 vertex2;
 };
 
 class PhysicsObject {

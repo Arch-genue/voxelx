@@ -113,6 +113,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a31ded2aeafaa3289b07b65c94098a86c"><td class="memItemLeft" align="right" valign="top"><a id="a31ded2aeafaa3289b07b65c94098a86c" name="a31ded2aeafaa3289b07b65c94098a86c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>GameObject</b> (const char *model, glm::vec3 position)</td></tr>
 <tr class="separator:a31ded2aeafaa3289b07b65c94098a86c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83463a88e97993dc97a4e07bcbd9a8ad"><td class="memItemLeft" align="right" valign="top"><a id="a83463a88e97993dc97a4e07bcbd9a8ad" name="a83463a88e97993dc97a4e07bcbd9a8ad"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setID</b> (uint id)</td></tr>
+<tr class="separator:a83463a88e97993dc97a4e07bcbd9a8ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3d05ce32512f8db8a6afb32135c93e4"><td class="memItemLeft" align="right" valign="top"><a id="af3d05ce32512f8db8a6afb32135c93e4" name="af3d05ce32512f8db8a6afb32135c93e4"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>getID</b> () const</td></tr>
+<tr class="separator:af3d05ce32512f8db8a6afb32135c93e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21d24661c2bc70290b2c6ed7cc6eb538"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_object.html#a21d24661c2bc70290b2c6ed7cc6eb538">setGameManager</a> (<a class="el" href="class_game_manager.html">GameManager</a> *gamemanager)</td></tr>
 <tr class="memdesc:a21d24661c2bc70290b2c6ed7cc6eb538"><td class="mdescLeft">&#160;</td><td class="mdescRight">Задать указатель на объект <a class="el" href="class_game_manager.html" title="Класс для обработки игровых объектов, сущностей, систем частиц и т.д.">GameManager</a>.  <a href="class_game_object.html#a21d24661c2bc70290b2c6ed7cc6eb538">More...</a><br /></td></tr>
 <tr class="separator:a21d24661c2bc70290b2c6ed7cc6eb538"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -138,7 +144,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3cbce4f9de4a0348763a8c5850412aa5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Назначить объект <a class="el" href="class_camera.html" title="Класс игровой камеры">Camera</a> игровому объекту  <a href="class_game_object.html#a3cbce4f9de4a0348763a8c5850412aa5">More...</a><br /></td></tr>
 <tr class="separator:a3cbce4f9de4a0348763a8c5850412aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa09a0959a714a3f56ebd6380c02de6a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_voxel_model.html">VoxelModel</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_object.html#aa09a0959a714a3f56ebd6380c02de6a8">getVoxelModel</a> ()</td></tr>
-<tr class="memdesc:aa09a0959a714a3f56ebd6380c02de6a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Получить указатель на объект <a class="el" href="class_voxel_model.html" title="Класс описывающий модель состоящую из вокселей как контейнер">VoxelModel</a>.  <a href="class_game_object.html#aa09a0959a714a3f56ebd6380c02de6a8">More...</a><br /></td></tr>
+<tr class="memdesc:aa09a0959a714a3f56ebd6380c02de6a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Получить указатель на объект <a class="el" href="class_voxel_model.html" title="класс для хранения вокселей с доступом по координатам.">VoxelModel</a>.  <a href="class_game_object.html#aa09a0959a714a3f56ebd6380c02de6a8">More...</a><br /></td></tr>
 <tr class="separator:aa09a0959a714a3f56ebd6380c02de6a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e077e13b5e8a40af1c735b722a5470f"><td class="memItemLeft" align="right" valign="top"><a id="a7e077e13b5e8a40af1c735b722a5470f" name="a7e077e13b5e8a40af1c735b722a5470f"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>raycast</b> (glm::vec3 position, glm::vec3 dir, float maxDist, glm::vec3 &amp;end, glm::vec3 &amp;norm, glm::vec3 &amp;iend)</td></tr>
@@ -170,6 +176,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> ()</td></t
 <tr class="memitem:a057163a565e1e6d06253788198926b7e inherit pub_methods_class_transform_object"><td class="memItemLeft" align="right" valign="top">glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_transform_object.html#a057163a565e1e6d06253788198926b7e">getPosition</a> ()</td></tr>
 <tr class="memdesc:a057163a565e1e6d06253788198926b7e inherit pub_methods_class_transform_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Получить вектор позиции объекта  <a href="class_transform_object.html#a057163a565e1e6d06253788198926b7e">More...</a><br /></td></tr>
 <tr class="separator:a057163a565e1e6d06253788198926b7e inherit pub_methods_class_transform_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e091dcf9a811efd00ed33d6bd0abbf5 inherit pub_methods_class_transform_object"><td class="memItemLeft" align="right" valign="top"><a id="a1e091dcf9a811efd00ed33d6bd0abbf5" name="a1e091dcf9a811efd00ed33d6bd0abbf5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setRotationAroundPoint</b> (float angle, glm::vec3 rotation, glm::vec3 point)</td></tr>
+<tr class="separator:a1e091dcf9a811efd00ed33d6bd0abbf5 inherit pub_methods_class_transform_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a795edf14697772672ffdc9eeb8abb63a inherit pub_methods_class_transform_object"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_transform_object.html#a795edf14697772672ffdc9eeb8abb63a">setRotation</a> (float angle, glm::vec3 rotation)</td></tr>
 <tr class="memdesc:a795edf14697772672ffdc9eeb8abb63a inherit pub_methods_class_transform_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Задать вращение объекта  <a href="class_transform_object.html#a795edf14697772672ffdc9eeb8abb63a">More...</a><br /></td></tr>
 <tr class="separator:a795edf14697772672ffdc9eeb8abb63a inherit pub_methods_class_transform_object"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -361,8 +370,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>_visible</b></td></tr
       </table>
 </div><div class="memdoc">
 
-<p>Получить указатель на объект <a class="el" href="class_voxel_model.html" title="Класс описывающий модель состоящую из вокселей как контейнер">VoxelModel</a>. </p>
-<dl class="section return"><dt>Returns</dt><dd>Указатель на объект <a class="el" href="class_voxel_model.html" title="Класс описывающий модель состоящую из вокселей как контейнер">VoxelModel</a> или nullptr </dd></dl>
+<p>Получить указатель на объект <a class="el" href="class_voxel_model.html" title="класс для хранения вокселей с доступом по координатам.">VoxelModel</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>Указатель на объект <a class="el" href="class_voxel_model.html" title="класс для хранения вокселей с доступом по координатам.">VoxelModel</a> или nullptr </dd></dl>
 
 </div>
 </div>

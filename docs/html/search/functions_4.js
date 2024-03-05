@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['render_0',['render',['../class_renderer.html#a411c02d628b18d7e553510d21e9e9550',1,'Renderer']]],
-  ['rotate_1',['rotate',['../class_transform_object.html#a194abcd3ec8cbd7bdb51b7e72ceae12a',1,'TransformObject']]]
+  ['init_0',['init',['../class_input.html#ac62846ba449136812f7b2db9ba4e7045',1,'Input']]],
+  ['isnumeric_1',['isNumeric',['../utils_8h.html#ad48f9015cb68e6fe6ec48b0652cbaca5',1,'utils.cpp']]]
 ];

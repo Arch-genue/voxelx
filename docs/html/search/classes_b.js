@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['voxel_0',['Voxel',['../class_voxel.html',1,'']]],
-  ['voxelmodel_1',['VoxelModel',['../class_voxel_model.html',1,'']]],
-  ['voxelparticles_2',['VoxelParticles',['../class_voxel_particles.html',1,'']]]
+  ['shader_0',['Shader',['../class_shader.html',1,'']]],
+  ['sprite_1',['Sprite',['../class_sprite.html',1,'']]]
 ];

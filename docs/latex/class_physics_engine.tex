@@ -12,6 +12,9 @@
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{class_physics_engine_ae2c08284a1a0bee42cb97e2ae5464fd7}\label{class_physics_engine_ae2c08284a1a0bee42cb97e2ae5464fd7}} 
+glm\+::vec3 {\bfseries get\+Gravity} ()
+\item 
 \mbox{\Hypertarget{class_physics_engine_a7b1da6f4cfec5ed5d0fb29feaf1a689d}\label{class_physics_engine_a7b1da6f4cfec5ed5d0fb29feaf1a689d}} 
 void {\bfseries add\+Object} (\mbox{\hyperlink{class_physics_object}{Physics\+Object}} $\ast$object)
 \item 
@@ -26,12 +29,30 @@ bool {\bfseries check\+Collision} (\mbox{\hyperlink{class_physics_object}{Physic
 \item 
 \mbox{\Hypertarget{class_physics_engine_a57c3a2881d92566a15be845ae7badf09}\label{class_physics_engine_a57c3a2881d92566a15be845ae7badf09}} 
 void {\bfseries handle\+Collision} (\mbox{\hyperlink{class_physics_object}{Physics\+Object}} $\ast$object, glm\+::vec3 surface\+Position, glm\+::vec3 surface\+Normal)
-\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
-\begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_physics_engine_a9a7b44d3eb5ce523146d026409f9982a}\label{class_physics_engine_a9a7b44d3eb5ce523146d026409f9982a}} 
-std\+::vector$<$ \mbox{\hyperlink{class_physics_object}{Physics\+Object}} $\ast$ $>$ {\bfseries objects}
+\mbox{\Hypertarget{class_physics_engine_a3341498cf18aa1c143daf33a063e6c7e}\label{class_physics_engine_a3341498cf18aa1c143daf33a063e6c7e}} 
+bool {\bfseries raycast} (\mbox{\hyperlink{class_game_object}{Game\+Object}} $\ast$gameobject, glm\+::vec3 pos, glm\+::vec3 dir, float max\+Dist, glm\+::vec3 \&end, glm\+::vec3 \&norm, glm\+::vec3 \&iend)
+\item 
+\mbox{\Hypertarget{class_physics_engine_af19c453392c43a38c9a0029d741238e1}\label{class_physics_engine_af19c453392c43a38c9a0029d741238e1}} 
+bool {\bfseries raycast} (const glm\+::vec3 \&ray\+Origin, const glm\+::vec3 \&ray\+Direction, \mbox{\hyperlink{class_physics_object}{Physics\+Object}} $\ast$physicsobject)
+\item 
+\mbox{\Hypertarget{class_physics_engine_a86adda48b55359b1062715717d59888b}\label{class_physics_engine_a86adda48b55359b1062715717d59888b}} 
+\mbox{\hyperlink{class_node}{Node}} $\ast$ {\bfseries rotate\+Left} (\mbox{\hyperlink{class_node}{Node}} $\ast$root)
+\item 
+\mbox{\Hypertarget{class_physics_engine_ad465a495ebfd4c5687c469305146e008}\label{class_physics_engine_ad465a495ebfd4c5687c469305146e008}} 
+\mbox{\hyperlink{class_node}{Node}} $\ast$ {\bfseries rotate\+Right} (\mbox{\hyperlink{class_node}{Node}} $\ast$root)
+\item 
+\mbox{\Hypertarget{class_physics_engine_a2e249b878242d5c61991dc50585f0630}\label{class_physics_engine_a2e249b878242d5c61991dc50585f0630}} 
+void {\bfseries flip\+Colors} (\mbox{\hyperlink{class_node}{Node}} $\ast$root)
+\item 
+\mbox{\Hypertarget{class_physics_engine_abf50f88b67fd35ad2c8d654a45d921a9}\label{class_physics_engine_abf50f88b67fd35ad2c8d654a45d921a9}} 
+\mbox{\hyperlink{class_node}{Node}} $\ast$ {\bfseries insert} (\mbox{\hyperlink{class_node}{Node}} $\ast$root, \mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$box)
+\item 
+\mbox{\Hypertarget{class_physics_engine_a2e8df3b2b60899686e37f3cbdc48554d}\label{class_physics_engine_a2e8df3b2b60899686e37f3cbdc48554d}} 
+\mbox{\hyperlink{class_node}{Node}} $\ast$ {\bfseries find\+Nearest\+Object} (\mbox{\hyperlink{class_node}{Node}} $\ast$root, \mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$area)
+\item 
+\mbox{\Hypertarget{class_physics_engine_aa2ef77e1498740f8c9adfa2525204130}\label{class_physics_engine_aa2ef77e1498740f8c9adfa2525204130}} 
+\mbox{\hyperlink{class_node}{Node}} $\ast$ {\bfseries get\+Root\+Node} ()
 \end{DoxyCompactItemize}
 
 

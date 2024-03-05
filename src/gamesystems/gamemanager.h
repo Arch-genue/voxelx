@@ -50,7 +50,6 @@ class GameManager {
         void clearParticles();
 
         uint getNewID();
-    
     private:
         std::vector<GameObject*> _gameobjects;
         std::vector<VoxelParticles*> _voxelparticles;

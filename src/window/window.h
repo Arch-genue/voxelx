@@ -1,5 +1,5 @@
 /**
- * @file newwindow.h
+ * @file window.h
  * @author Vlad Kartsaev
  * @brief Window creation
  * @version 1.0
@@ -15,6 +15,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_ttf.h>
+#include <glm/glm.hpp>
 
 class SDL_Window;
 
@@ -32,6 +33,8 @@ public:
     static SDL_Window * window;
     static SDL_Renderer* guirenderer;
     static SDL_GLContext glContext;
+
+    static glm::vec3 sky;
     
     static int init(int width, int height, const char * title);
     static void _glInit();

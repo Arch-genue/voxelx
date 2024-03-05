@@ -12,12 +12,14 @@ GameObject::GameObject(const char* model) : TransformObject() {
 	_id = 9999999;
 	
 	_campos = glm::vec3(0);
+	setPosition(glm::vec3(0));
 
     setVisible(true);
 
 	_voxelmodel = ResourceManager::getModel(model);
+	_sizes = _voxelmodel->getSize();
 	
-	BoxCollider* collider = new BoxCollider(this, glm::vec3(0), glm::vec3(0));
+	BoxCollider* collider = new BoxCollider(this, glm::vec3(_position),_voxelmodel->getSize());
 
 	_physicsobject = new PhysicsObject(this, collider, 10.0f);
 	setPosition(glm::vec3(0));
@@ -37,6 +39,7 @@ GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject(
     setVisible(true);
 
 	_voxelmodel = ResourceManager::getModel(model);
+	_sizes = _voxelmodel->getSize();
 	
 	BoxCollider* collider = new BoxCollider(this, glm::vec3(position),_voxelmodel->getSize());
 
@@ -85,12 +88,8 @@ void GameObject::setPosition(glm::vec3 position) {
 
 void GameObject::draw() {
 	if (isVisible()) {
-		ResourceManager::getShader("voxel")->uniformMatrix("model", getMatrix());
-		_mesh->draw(GL_TRIANGLES);
+		_mesh->draw(GL_TRIANGLES, getMatrix(), ResourceManager::getShader("voxel"));
 		// _boundingboxmesh->draw(GL_LINES);
-
-		// if (_camera != nullptr) 
-		// 	_raymesh->draw(GL_LINES);
 	}
 };
 

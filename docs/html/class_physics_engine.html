@@ -86,7 +86,6 @@ $(document).ready(function(){initNavTree('class_physics_engine.html',''); initRe
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="class_physics_engine-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">PhysicsEngine Class Reference</div></div>
 </div><!--header-->
@@ -99,6 +98,9 @@ $(document).ready(function(){initNavTree('class_physics_engine.html',''); initRe
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ae2c08284a1a0bee42cb97e2ae5464fd7"><td class="memItemLeft" align="right" valign="top"><a id="ae2c08284a1a0bee42cb97e2ae5464fd7" name="ae2c08284a1a0bee42cb97e2ae5464fd7"></a>
+glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getGravity</b> ()</td></tr>
+<tr class="separator:ae2c08284a1a0bee42cb97e2ae5464fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b1da6f4cfec5ed5d0fb29feaf1a689d"><td class="memItemLeft" align="right" valign="top"><a id="a7b1da6f4cfec5ed5d0fb29feaf1a689d" name="a7b1da6f4cfec5ed5d0fb29feaf1a689d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>addObject</b> (<a class="el" href="class_physics_object.html">PhysicsObject</a> *object)</td></tr>
 <tr class="separator:a7b1da6f4cfec5ed5d0fb29feaf1a689d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,12 +116,30 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkCollision</b> (<
 <tr class="memitem:a57c3a2881d92566a15be845ae7badf09"><td class="memItemLeft" align="right" valign="top"><a id="a57c3a2881d92566a15be845ae7badf09" name="a57c3a2881d92566a15be845ae7badf09"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>handleCollision</b> (<a class="el" href="class_physics_object.html">PhysicsObject</a> *object, glm::vec3 surfacePosition, glm::vec3 surfaceNormal)</td></tr>
 <tr class="separator:a57c3a2881d92566a15be845ae7badf09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a9a7b44d3eb5ce523146d026409f9982a"><td class="memItemLeft" align="right" valign="top"><a id="a9a7b44d3eb5ce523146d026409f9982a" name="a9a7b44d3eb5ce523146d026409f9982a"></a>
-std::vector&lt; <a class="el" href="class_physics_object.html">PhysicsObject</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>objects</b></td></tr>
-<tr class="separator:a9a7b44d3eb5ce523146d026409f9982a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3341498cf18aa1c143daf33a063e6c7e"><td class="memItemLeft" align="right" valign="top"><a id="a3341498cf18aa1c143daf33a063e6c7e" name="a3341498cf18aa1c143daf33a063e6c7e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>raycast</b> (<a class="el" href="class_game_object.html">GameObject</a> *gameobject, glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3 &amp;end, glm::vec3 &amp;norm, glm::vec3 &amp;iend)</td></tr>
+<tr class="separator:a3341498cf18aa1c143daf33a063e6c7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af19c453392c43a38c9a0029d741238e1"><td class="memItemLeft" align="right" valign="top"><a id="af19c453392c43a38c9a0029d741238e1" name="af19c453392c43a38c9a0029d741238e1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>raycast</b> (const glm::vec3 &amp;rayOrigin, const glm::vec3 &amp;rayDirection, <a class="el" href="class_physics_object.html">PhysicsObject</a> *physicsobject)</td></tr>
+<tr class="separator:af19c453392c43a38c9a0029d741238e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a86adda48b55359b1062715717d59888b"><td class="memItemLeft" align="right" valign="top"><a id="a86adda48b55359b1062715717d59888b" name="a86adda48b55359b1062715717d59888b"></a>
+<a class="el" href="class_node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>rotateLeft</b> (<a class="el" href="class_node.html">Node</a> *root)</td></tr>
+<tr class="separator:a86adda48b55359b1062715717d59888b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad465a495ebfd4c5687c469305146e008"><td class="memItemLeft" align="right" valign="top"><a id="ad465a495ebfd4c5687c469305146e008" name="ad465a495ebfd4c5687c469305146e008"></a>
+<a class="el" href="class_node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>rotateRight</b> (<a class="el" href="class_node.html">Node</a> *root)</td></tr>
+<tr class="separator:ad465a495ebfd4c5687c469305146e008"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e249b878242d5c61991dc50585f0630"><td class="memItemLeft" align="right" valign="top"><a id="a2e249b878242d5c61991dc50585f0630" name="a2e249b878242d5c61991dc50585f0630"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>flipColors</b> (<a class="el" href="class_node.html">Node</a> *root)</td></tr>
+<tr class="separator:a2e249b878242d5c61991dc50585f0630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf50f88b67fd35ad2c8d654a45d921a9"><td class="memItemLeft" align="right" valign="top"><a id="abf50f88b67fd35ad2c8d654a45d921a9" name="abf50f88b67fd35ad2c8d654a45d921a9"></a>
+<a class="el" href="class_node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>insert</b> (<a class="el" href="class_node.html">Node</a> *root, <a class="el" href="class_box_collider.html">BoxCollider</a> *box)</td></tr>
+<tr class="separator:abf50f88b67fd35ad2c8d654a45d921a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e8df3b2b60899686e37f3cbdc48554d"><td class="memItemLeft" align="right" valign="top"><a id="a2e8df3b2b60899686e37f3cbdc48554d" name="a2e8df3b2b60899686e37f3cbdc48554d"></a>
+<a class="el" href="class_node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>findNearestObject</b> (<a class="el" href="class_node.html">Node</a> *root, <a class="el" href="class_box_collider.html">BoxCollider</a> *area)</td></tr>
+<tr class="separator:a2e8df3b2b60899686e37f3cbdc48554d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2ef77e1498740f8c9adfa2525204130"><td class="memItemLeft" align="right" valign="top"><a id="aa2ef77e1498740f8c9adfa2525204130" name="aa2ef77e1498740f8c9adfa2525204130"></a>
+<a class="el" href="class_node.html">Node</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getRootNode</b> ()</td></tr>
+<tr class="separator:aa2ef77e1498740f8c9adfa2525204130"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Физический движок ! УСТАРЕЛО ! </p>

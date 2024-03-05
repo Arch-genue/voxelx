@@ -76,5 +76,6 @@
         "format": "cpp",
         "regex": "cpp",
         "*.ipp": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

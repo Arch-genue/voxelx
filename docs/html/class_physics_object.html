@@ -93,9 +93,9 @@ $(document).ready(function(){initNavTree('class_physics_object.html',''); initRe
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acafb42a85d84ed186af623b3eedbe605"><td class="memItemLeft" align="right" valign="top"><a id="acafb42a85d84ed186af623b3eedbe605" name="acafb42a85d84ed186af623b3eedbe605"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>PhysicsObject</b> (<a class="el" href="class_game_object.html">GameObject</a> *gmobj, <a class="el" href="class_box_collider.html">BoxCollider</a> *collider, float mass=1.0f)</td></tr>
-<tr class="separator:acafb42a85d84ed186af623b3eedbe605"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad968b0f550d91d5d4255f604ed933cb2"><td class="memItemLeft" align="right" valign="top"><a id="ad968b0f550d91d5d4255f604ed933cb2" name="ad968b0f550d91d5d4255f604ed933cb2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>PhysicsObject</b> (<a class="el" href="class_game_object.html">GameObject</a> *gmobj, <a class="el" href="class_box_collider.html">BoxCollider</a> *boxcollider, float mass=1.0f)</td></tr>
+<tr class="separator:ad968b0f550d91d5d4255f604ed933cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a231aea3c3e685cd6ca8acfb79afc9c09"><td class="memItemLeft" align="right" valign="top"><a id="a231aea3c3e685cd6ca8acfb79afc9c09" name="a231aea3c3e685cd6ca8acfb79afc9c09"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>PhysicsObject</b> (glm::vec3 position=glm::vec3(0), PHYSICS physics=NO_PHYSICS, float mass=1.0f)</td></tr>
 <tr class="separator:a231aea3c3e685cd6ca8acfb79afc9c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,9 +144,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>applyForce</b> (glm::
 <tr class="memitem:a60c68eb8b9da99e27098b1ea9f6777aa"><td class="memItemLeft" align="right" valign="top"><a id="a60c68eb8b9da99e27098b1ea9f6777aa" name="a60c68eb8b9da99e27098b1ea9f6777aa"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>stopForce</b> ()</td></tr>
 <tr class="separator:a60c68eb8b9da99e27098b1ea9f6777aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a255090f5b14f3b6b91c973dede693bc7"><td class="memItemLeft" align="right" valign="top"><a id="a255090f5b14f3b6b91c973dede693bc7" name="a255090f5b14f3b6b91c973dede693bc7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>explode</b> (uint16_t explodeForce)</td></tr>
-<tr class="separator:a255090f5b14f3b6b91c973dede693bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa522db71ccab6484dff9d39e6f83a5ea"><td class="memItemLeft" align="right" valign="top"><a id="aa522db71ccab6484dff9d39e6f83a5ea" name="aa522db71ccab6484dff9d39e6f83a5ea"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>isGrounded</b> ()</td></tr>
 <tr class="separator:aa522db71ccab6484dff9d39e6f83a5ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,9 +153,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>checkGround</b> (glm:
 <tr class="memitem:ae3b279c2a6e48dfc97213cfab8c72d94"><td class="memItemLeft" align="right" valign="top"><a id="ae3b279c2a6e48dfc97213cfab8c72d94" name="ae3b279c2a6e48dfc97213cfab8c72d94"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> (float deltaTime)</td></tr>
 <tr class="separator:ae3b279c2a6e48dfc97213cfab8c72d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d4c1b4716bf6d4043f307399973f4e3"><td class="memItemLeft" align="right" valign="top"><a id="a0d4c1b4716bf6d4043f307399973f4e3" name="a0d4c1b4716bf6d4043f307399973f4e3"></a>
-float *&#160;</td><td class="memItemRight" valign="bottom"><b>getVertices</b> ()</td></tr>
-<tr class="separator:a0d4c1b4716bf6d4043f307399973f4e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8f15cb6b470f1eb424f888110ff1aa7"><td class="memItemLeft" align="right" valign="top"><a id="ad8f15cb6b470f1eb424f888110ff1aa7" name="ad8f15cb6b470f1eb424f888110ff1aa7"></a>
+std::vector&lt; <a class="el" href="structline.html">line</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getVertices</b> ()</td></tr>
+<tr class="separator:ad8f15cb6b470f1eb424f888110ff1aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/user/dev/voxel3d/src/physics/<a class="el" href="physics_8h_source.html">physics.h</a></li>

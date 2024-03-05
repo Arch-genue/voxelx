@@ -1,6 +1,9 @@
 #include "gamemanager.h"
 
-#include <iostream>
+#include <glm/glm.hpp>
+#include "../window/input.h"
+
+#define MOUSE_SPEED 1.0f
 
 GameManager::GameManager() {
     _physicsengine = new PhysicsEngine();

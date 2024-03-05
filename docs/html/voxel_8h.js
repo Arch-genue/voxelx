@@ -1,5 +1,4 @@
 var voxel_8h =
 [
-    [ "Voxel", "class_voxel.html", "class_voxel" ],
-    [ "VoxelModel", "class_voxel_model.html", null ]
+    [ "Voxel", "class_voxel.html", "class_voxel" ]
 ];

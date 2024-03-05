@@ -1,3 +1,14 @@
+/**
+ * @file renderer.h
+ * @author Vlad Kartsaev
+ * @brief Voxel generation functions
+ * @version 0.8
+ * @date 2023-04-13
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #pragma once
 
 #include <stdlib.h>

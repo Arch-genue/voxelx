@@ -20,6 +20,7 @@ set(SOURCE
 	src/window/input.cpp 
 
 	src/graphics/types/material.cpp
+	src/graphics/types/octotree.cpp
 	src/graphics/shader.cpp
 	src/graphics/texture.cpp
 	src/graphics/mesh.cpp
@@ -62,6 +63,7 @@ set(HEADER
 	src/window/input.h 
 
 	src/graphics/types/material.h
+	src/graphics/types/octotree.h
 
 	src/graphics/shader.h 
 	src/graphics/texture.h 
@@ -105,6 +107,22 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(OpenGL_GL_PREFERENCE GLVND)
+
+find_package(Boost COMPONENTS python3 REQUIRED)
+if (NOT Boost_FOUND)
+	message(SEND_ERROR "Failed to find Boost")
+	return()
+else()
+	include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
+find_package(Python3 REQUIRED COMPONENTS Development)
+if (NOT Python3_FOUND)
+	message(SEND_ERROR "Failed to find Python 3")
+	return()
+else()
+	include_directories(${Python3_INCLUDE_DIRS})
+endif()
 
 find_package(Freetype REQUIRED)
 if(NOT Freetype_FOUND)
@@ -157,6 +175,7 @@ else()
 endif()
 
 add_executable(voxel3d ${SOURCE})
+# add_library(voxel3d SHARED ${SOURCE})
 target_link_libraries(voxel3d 
 	${SDL2_LIBRARIES}
 	${SDL2_TTF_LIBRARIES}
@@ -165,5 +184,8 @@ target_link_libraries(voxel3d
 	${GLU_LIBRARY}
 	${PNG_LIBRARY}
 	${FREETYPE_LIBRARY}
+
+	${Boost_LIBRARIES}
+	${Python3_LIBRARY}
 )
 target_compile_options(voxel3d PRIVATE -g)

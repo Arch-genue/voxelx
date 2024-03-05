@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['uvregion_0',['UVRegion',['../class_u_v_region.html',1,'']]]
+  ['renderer_0',['Renderer',['../class_renderer.html',1,'']]],
+  ['resourcemanager_1',['ResourceManager',['../class_resource_manager.html',1,'']]]
 ];

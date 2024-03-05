@@ -23,7 +23,7 @@ private:
     std::vector<PhysicsObject*> _objects;
     glm::vec3 _gravity;
 
-    Node* _root;
+    // Node* _root;
 
 public:
     PhysicsEngine();
@@ -43,11 +43,11 @@ public:
     bool raycast(GameObject* gameobject, glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
     bool raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, PhysicsObject* physicsobject);
 
-    Node* rotateLeft(Node* root);
-    Node* rotateRight(Node* root);
-    void flipColors(Node* root);
-    Node* insert(Node* root, BoxCollider* box);
-    Node* findNearestObject(Node* root, BoxCollider* area);
+    // Node* rotateLeft(Node* root);
+    // Node* rotateRight(Node* root);
+    // void flipColors(Node* root);
+    // Node* insert(Node* root, BoxCollider* box);
+    // Node* findNearestObject(Node* root, BoxCollider* area);
 
-    Node* getRootNode();
+    // Node* getRootNode();
 };

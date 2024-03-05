@@ -13,16 +13,20 @@ Voxel3D Engine demo application.
 {\ttfamily \#include $<$SDL2/\+SDL\+\_\+ttf.\+h$>$}\newline
 {\ttfamily \#include $<$glm/glm.\+hpp$>$}\newline
 {\ttfamily \#include $<$glm/ext.\+hpp$>$}\newline
-{\ttfamily \#include \char`\"{}window/newwindow.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}window/newinput.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}window/window.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}window/input.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}graphics/renderer.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}graphics/gui.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}graphics/textmesh.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}loaders/resourcemanager.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}gamesystems/gamemanager.\+h\char`\"{}}\newline
-{\ttfamily \#include \char`\"{}voxels/voxel.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}voxels/voxelmodel.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}voxels/particlesmodel.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}gamesystems/camera.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}gamesystems/entity.\+h\char`\"{}}\newline
 {\ttfamily \#include \char`\"{}system/taskscheduler.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}graphics/cube.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$random$>$}\newline
 \doxysubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
@@ -32,14 +36,17 @@ Voxel3D Engine demo application.
 \mbox{\Hypertarget{main_8cpp_a069a1175d7ba5c8452e30b0213ed01c1}\label{main_8cpp_a069a1175d7ba5c8452e30b0213ed01c1}} 
 \#define {\bfseries \+\_\+\+VERSION}~\char`\"{}0.\+2.\+0\char`\"{}
 \begin{DoxyCompactList}\small\item\em Версия Voxel3D Engine. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{main_8cpp_ae4146c322465be6d75cef1bf365f4b19}\label{main_8cpp_ae4146c322465be6d75cef1bf365f4b19}} 
-\#define {\bfseries \+\_\+\+RENDERERSIZE}~1024 $\ast$ 1024
+\mbox{\Hypertarget{main_8cpp_a84ac1794eb1f8d07db4d3ddc6dec9741}\label{main_8cpp_a84ac1794eb1f8d07db4d3ddc6dec9741}} 
+\#define {\bfseries \+\_\+\+RENDERSIZE}~4096 $\ast$ 4096
 \begin{DoxyCompactList}\small\item\em Размера буфера рендера \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{main_8cpp_a60a56c499875b57369f7ef3a5a227cb9}\label{main_8cpp_a60a56c499875b57369f7ef3a5a227cb9}} 
 \#define {\bfseries TITLE}~\char`\"{}Voxel3D DEMO\char`\"{}
 \begin{DoxyCompactList}\small\item\em Заголовок окна \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Functions}
 \begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8cpp_a4b5bf90ae404bc2ce667b174d3c483cf}\label{main_8cpp_a4b5bf90ae404bc2ce667b174d3c483cf}} 
+std\+::mt19937 {\bfseries rng1} (std\+::random\+\_\+device\{\}())
 \item 
 int \mbox{\hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
 \end{DoxyCompactItemize}
@@ -54,6 +61,9 @@ int {\bfseries HEIGHT} = 768
 \item 
 \mbox{\Hypertarget{main_8cpp_a08bf8aef08795319523b879ac6d9805b}\label{main_8cpp_a08bf8aef08795319523b879ac6d9805b}} 
 float {\bfseries MOUSE\+\_\+\+SPEED} = 1.\+3f
+\item 
+\mbox{\Hypertarget{main_8cpp_af45d890adeeb7d0fee9c277eb84c1d3c}\label{main_8cpp_af45d890adeeb7d0fee9c277eb84c1d3c}} 
+bool {\bfseries DEBUG\+\_\+\+MODE} = true
 \end{DoxyCompactItemize}
 
 
@@ -83,12 +93,12 @@ Copyright (c) 2024
 
 Global renderer
 
-Game\+Objects
-
 \mbox{\hyperlink{class_camera}{Camera}}
 
 Attach camera to appleobj, apple hidden
 
 \mbox{\hyperlink{struct_particles}{Particles}}
+
+FREETYPE TEST
 
 ===MAIN-\/\+LOOP===

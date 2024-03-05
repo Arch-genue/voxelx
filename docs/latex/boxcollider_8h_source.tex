@@ -6,23 +6,52 @@
 \DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
 \DoxyCodeLine{13 }
 \DoxyCodeLine{14 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
-\DoxyCodeLine{15 }
-\DoxyCodeLine{16 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_bounding_box}{BoundingBox}} \{}
-\DoxyCodeLine{17     \textcolor{keywordtype}{float} xMin, xMax, yMin, yMax, zMin, zMax;}
-\DoxyCodeLine{18 \};}
-\DoxyCodeLine{19 }
-\DoxyCodeLine{20 \textcolor{keyword}{class }\mbox{\hyperlink{class_box_collider}{BoxCollider}}\{}
-\DoxyCodeLine{21 \textcolor{keyword}{private}:}
-\DoxyCodeLine{22     \mbox{\hyperlink{struct_bounding_box}{BoundingBox}}* \_boundingbox;}
+\DoxyCodeLine{15 \textcolor{comment}{// \#include <vector>}}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17 \textcolor{keyword}{class }\mbox{\hyperlink{class_game_object}{GameObject}};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19 \textcolor{keyword}{class }\mbox{\hyperlink{class_box_collider}{BoxCollider}} \{}
+\DoxyCodeLine{20 \textcolor{keyword}{private}:}
+\DoxyCodeLine{21     \mbox{\hyperlink{class_game_object}{GameObject}}* \_gameobject;}
+\DoxyCodeLine{22 }
 \DoxyCodeLine{23     glm::vec3 \_size;}
-\DoxyCodeLine{24 \textcolor{keyword}{public}:}
-\DoxyCodeLine{25     \mbox{\hyperlink{class_box_collider}{BoxCollider}}(\mbox{\hyperlink{struct_bounding_box}{BoundingBox}}\& \_boundingbox);}
-\DoxyCodeLine{26     \mbox{\hyperlink{class_box_collider}{\string~BoxCollider}}();}
-\DoxyCodeLine{27 }
-\DoxyCodeLine{28     \mbox{\hyperlink{struct_bounding_box}{BoundingBox}}* getBoundingbox() \textcolor{keyword}{const};}
-\DoxyCodeLine{29     }
-\DoxyCodeLine{30     \textcolor{keywordtype}{void} setSize(glm::vec3 size);}
-\DoxyCodeLine{31     glm::vec3 getSize() \textcolor{keyword}{const};}
-\DoxyCodeLine{32 \};}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25     glm::vec3 \_min; \textcolor{comment}{// Минимальные координаты BoundingBox}}
+\DoxyCodeLine{26     glm::vec3 \_max;}
+\DoxyCodeLine{27 \textcolor{keyword}{public}:}
+\DoxyCodeLine{28     \mbox{\hyperlink{class_box_collider}{BoxCollider}}(\mbox{\hyperlink{class_game_object}{GameObject}}* gameobject, glm::vec3 min, glm::vec3 max);}
+\DoxyCodeLine{29     \mbox{\hyperlink{class_box_collider}{\string~BoxCollider}}();}
+\DoxyCodeLine{30 }
+\DoxyCodeLine{31     \mbox{\hyperlink{class_game_object}{GameObject}}* getGameObject() \{ \textcolor{keywordflow}{return} \_gameobject; \}}
+\DoxyCodeLine{32     }
+\DoxyCodeLine{33     \textcolor{keywordtype}{void} setMin(glm::vec3 position);}
+\DoxyCodeLine{34     glm::vec3 getMin();}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36     \textcolor{keywordtype}{void} setMax(glm::vec3 size);}
+\DoxyCodeLine{37     glm::vec3 getMax();}
+\DoxyCodeLine{38 \};}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{40 \textcolor{comment}{// Узел красно-\/черного дерева BoundingBox}}
+\DoxyCodeLine{41 \textcolor{keyword}{class }\mbox{\hyperlink{class_node}{Node}} \{}
+\DoxyCodeLine{42 \textcolor{keyword}{private}:}
+\DoxyCodeLine{43     \mbox{\hyperlink{class_box_collider}{BoxCollider}}* \_box;}
+\DoxyCodeLine{44     \textcolor{keywordtype}{bool} \_isRed; \textcolor{comment}{// Цвет узла (true -\/ красный, false -\/ черный)}}
+\DoxyCodeLine{45     \mbox{\hyperlink{class_node}{Node}}* \_left;}
+\DoxyCodeLine{46     \mbox{\hyperlink{class_node}{Node}}* \_right;}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48 \textcolor{keyword}{public}:}
+\DoxyCodeLine{49     \mbox{\hyperlink{class_node}{Node}}(\mbox{\hyperlink{class_box_collider}{BoxCollider}}* box) : \_box(box), \_isRed(\textcolor{keyword}{true}), \_left(\textcolor{keyword}{nullptr}), \_right(\textcolor{keyword}{nullptr}) \{\}}
+\DoxyCodeLine{50     }
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} setIsRed(\textcolor{keywordtype}{bool} isRed) \{ \_isRed = isRed; \};}
+\DoxyCodeLine{52     \textcolor{keywordtype}{bool} isRed()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_isRed; \};}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54     \mbox{\hyperlink{class_box_collider}{BoxCollider}}* getBoxCollider()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_box; \}}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{56     \textcolor{keywordtype}{void} setLeft(\mbox{\hyperlink{class_node}{Node}}* left) \{  \_left = left; \};}
+\DoxyCodeLine{57     \textcolor{keywordtype}{void} setRight(\mbox{\hyperlink{class_node}{Node}}* right) \{  \_right = right; \};}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59     \mbox{\hyperlink{class_node}{Node}}* getLeft()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_left; \};}
+\DoxyCodeLine{60     \mbox{\hyperlink{class_node}{Node}}* getRight()\textcolor{keyword}{ const }\{ \textcolor{keywordflow}{return} \_right; \};}
+\DoxyCodeLine{61 \};}
 
 \end{DoxyCode}

@@ -1,7 +1,8 @@
 #include "resourcemanager.h"
-#include "../utils.h"
 
-#include <iostream>
+#include <filesystem>
+
+#include "../utils.h"
 
 std::string ResourceManager::_path = "";
 
@@ -12,8 +13,16 @@ std::map<std::string, Particles*> ResourceManager::_particles;
 
 std::map<std::string, FT_Face> ResourceManager::_faces;
 
+FT_Library ResourceManager:: _ft;
+
 void ResourceManager::init(std::string path) {
     _path = path;
+
+    if (FT_Init_FreeType(&_ft)) {
+        errorprint("RESMGR", "Failed to init FreeType Library",  MSGERROR);
+        std::exit(1);
+        return;
+    }
     errorprint("RESMGR", "ResourceManager initialized",  MSGINFO);
 }
 
@@ -30,7 +39,7 @@ void ResourceManager::cleanup() {
 
     errorprint("RESMGR", "Deleting textures...",  MSGINFO);
     time = measureFunctionTime(deleteTextures);
-    errorprint("RESMGR", "Textuers deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  MSGINFO);
+    errorprint("RESMGR", "Textures deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  MSGINFO);
 
     errorprint("RESMGR", "Deleting particle systems...",  MSGINFO);
     time = measureFunctionTime(deleteParticles);
@@ -111,18 +120,14 @@ void ResourceManager::loadVoxelParticles(std::string str) {
 }
 
 void ResourceManager::loadFont(std::string str) {
-    FT_Library ft;
-    if (FT_Init_FreeType(&ft))
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
     FT_Face face;
     std::string strfull = "../res/fonts/" + str + ".ttf";
-    if (FT_New_Face(ft, strfull.c_str(), 0, &face)) {
+    if (FT_New_Face(_ft, strfull.c_str(), 0, &face)) {
         errorprint("RESMGR", "Failed to load font: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  MSGERROR);
         std::exit(1);
         return;
     }
     FT_Set_Pixel_Sizes(face, 0, 48);
-    // Disable byte-alignment restriction
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
 
     errorprint("RESMGR", "Font loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  MSGSUCCESS);
@@ -144,8 +149,75 @@ void ResourceManager::addModel(VoxelModel* row, std::string name) {
     row->setName(name);
 	_rowmodels[name] = row;
 }
-void ResourceManager::addParticles(Particles* particles, std::string name) {
-	_particles[name] = particles;
+#include <iostream>
+void ResourceManager::loadShaders() {
+    std::string folder_path = _path + "../res/shaders/";
+    vtype::fndvector<std::string> files;
+    for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file()) {
+            std::string name = entry.path().filename();
+            std::string splitstr[2];
+            split(splitstr, name, '.');
+            if (!files.contains(splitstr[0])) {
+                files.push_back(splitstr[0]);
+                loadShader(splitstr[0]);
+            }
+        }
+    }
+    std::cout << " " << std::endl;
+}
+void ResourceManager::loadTextures() {
+    std::string folder_path = _path + "../res/textures/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file()) {
+            std::string name = entry.path().filename();
+            std::string splitstr[2];
+            split(splitstr, name, '.');
+            loadTexture(splitstr[0]);
+        }
+    }
+    std::cout << " " << std::endl;
+}
+void ResourceManager::loadModels() {
+    std::string folder_path = _path + "../res/models/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file()) {
+            std::string name = entry.path().filename();
+            std::string splitstr[2];
+            split(splitstr, name, '.');
+            loadModel(splitstr[0], "voxtxt");
+            ResourceManager::prepareModel(splitstr[0]);
+            std::cout << " " << std::endl;
+        }
+    }
+}
+void ResourceManager::loadParticlesSystems() {
+    std::string folder_path = _path + "../res/particles/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file()) {
+            std::string name = entry.path().filename();
+            std::string splitstr[2];
+            split(splitstr, name, '.');
+            loadVoxelParticles(splitstr[0]);
+        }
+    }
+    std::cout << " " << std::endl;
+}
+void ResourceManager::loadFonts() {
+    std::string folder_path = _path + "../res/fonts/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file()) {
+            std::string name = entry.path().filename();
+            std::string splitstr[2];
+            split(splitstr, name, '.');
+            loadFont(splitstr[0]);
+        }
+    }
+    std::cout << " " << std::endl;
+}
+
+void ResourceManager::addParticles(Particles *particles, std::string name) {
+    _particles[name] = particles;
 }
 // void ResourceManager::addFont(Font* particles, std::string name) {
 // 	_particles[name] = particles;

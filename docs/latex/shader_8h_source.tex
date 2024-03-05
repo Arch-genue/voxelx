@@ -7,17 +7,25 @@
 \DoxyCodeLine{3 \textcolor{preprocessor}{\#include <string>}}
 \DoxyCodeLine{4 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
 \DoxyCodeLine{5 }
-\DoxyCodeLine{6 \textcolor{keyword}{class }\mbox{\hyperlink{class_shader}{Shader}} \{}
-\DoxyCodeLine{7     \textcolor{keyword}{public}:}
-\DoxyCodeLine{8         \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} id;}
-\DoxyCodeLine{9         }
-\DoxyCodeLine{10         \mbox{\hyperlink{class_shader}{Shader}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id});}
-\DoxyCodeLine{11         \mbox{\hyperlink{class_shader}{\string~Shader}}();}
-\DoxyCodeLine{12 }
-\DoxyCodeLine{13         \textcolor{keywordtype}{void} use();}
-\DoxyCodeLine{14         \textcolor{keywordtype}{void} uniformMatrix(std::string name, glm::mat4 matrix);}
-\DoxyCodeLine{15         \textcolor{keywordtype}{void} uniformFloat(std::string name, \textcolor{keywordtype}{float} val);}
-\DoxyCodeLine{16 \};}
-\DoxyCodeLine{17 \textcolor{keyword}{extern} \mbox{\hyperlink{class_shader}{Shader}} * load\_shader(std::string vertexFile, std::string fragmentFile); }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{material_8h}{types/material.h}}"{}}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{class }\mbox{\hyperlink{class_shader}{Shader}} \{}
+\DoxyCodeLine{9 \textcolor{keyword}{public}:}
+\DoxyCodeLine{10     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} id;}
+\DoxyCodeLine{11     }
+\DoxyCodeLine{12     \mbox{\hyperlink{class_shader}{Shader}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \textcolor{keywordtype}{id});}
+\DoxyCodeLine{13     \mbox{\hyperlink{class_shader}{\string~Shader}}();}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15     \textcolor{keywordtype}{void} use();}
+\DoxyCodeLine{16     \textcolor{keywordtype}{void} uniformMatrix(std::string name, glm::mat4 matrix);}
+\DoxyCodeLine{17     \textcolor{keywordtype}{void} uniformFloat(std::string name, \textcolor{keywordtype}{float} val);}
+\DoxyCodeLine{18     \textcolor{keywordtype}{void} uniformVec3(std::string name, glm::vec3 var);}
+\DoxyCodeLine{19     }
+\DoxyCodeLine{20     \textcolor{comment}{//*Special functions*/}}
+\DoxyCodeLine{21     \textcolor{keywordtype}{void} uniformLight(std::string name, \mbox{\hyperlink{struct_light}{Light}} \&light);}
+\DoxyCodeLine{22     \textcolor{keywordtype}{void} uniformMaterial(std::string name, \mbox{\hyperlink{struct_material}{Material}} \&material);}
+\DoxyCodeLine{23     \textcolor{keywordtype}{void} uniformLightPosition(std::string name, glm::vec3 var);}
+\DoxyCodeLine{24 \};}
+\DoxyCodeLine{25 \textcolor{keyword}{extern} \mbox{\hyperlink{class_shader}{Shader}} * load\_shader(std::string vertexFile, std::string fragmentFile); }
 
 \end{DoxyCode}

@@ -102,16 +102,20 @@ $(document).ready(function(){initNavTree('main_8cpp.html',''); initResizable(); 
 <code>#include &lt;SDL2/SDL_ttf.h&gt;</code><br />
 <code>#include &lt;glm/glm.hpp&gt;</code><br />
 <code>#include &lt;glm/ext.hpp&gt;</code><br />
-<code>#include &quot;<a class="el" href="newwindow_8h_source.html">window/newwindow.h</a>&quot;</code><br />
-<code>#include &quot;window/newinput.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="window_8h_source.html">window/window.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="input_8h_source.html">window/input.h</a>&quot;</code><br />
 <code>#include &quot;graphics/renderer.h&quot;</code><br />
 <code>#include &quot;graphics/gui.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="textmesh_8h_source.html">graphics/textmesh.h</a>&quot;</code><br />
 <code>#include &quot;loaders/resourcemanager.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="gamemanager_8h_source.html">gamesystems/gamemanager.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="voxel_8h_source.html">voxels/voxel.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="voxelmodel_8h_source.html">voxels/voxelmodel.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="particlesmodel_8h_source.html">voxels/particlesmodel.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="camera_8h_source.html">gamesystems/camera.h</a>&quot;</code><br />
 <code>#include &quot;gamesystems/entity.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="taskscheduler_8h_source.html">system/taskscheduler.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="cube_8h_source.html">graphics/cube.h</a>&quot;</code><br />
+<code>#include &lt;random&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -122,10 +126,10 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>_VERSION</b>&#160;&#160;&#160;&quot;0.2.0&quot;</td></tr>
 <tr class="memdesc:a069a1175d7ba5c8452e30b0213ed01c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Версия Voxel3D Engine. <br /></td></tr>
 <tr class="separator:a069a1175d7ba5c8452e30b0213ed01c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4146c322465be6d75cef1bf365f4b19"><td class="memItemLeft" align="right" valign="top"><a id="ae4146c322465be6d75cef1bf365f4b19" name="ae4146c322465be6d75cef1bf365f4b19"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>_RENDERERSIZE</b>&#160;&#160;&#160;1024 * 1024</td></tr>
-<tr class="memdesc:ae4146c322465be6d75cef1bf365f4b19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Размера буфера рендера <br /></td></tr>
-<tr class="separator:ae4146c322465be6d75cef1bf365f4b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84ac1794eb1f8d07db4d3ddc6dec9741"><td class="memItemLeft" align="right" valign="top"><a id="a84ac1794eb1f8d07db4d3ddc6dec9741" name="a84ac1794eb1f8d07db4d3ddc6dec9741"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>_RENDERSIZE</b>&#160;&#160;&#160;4096 * 4096</td></tr>
+<tr class="memdesc:a84ac1794eb1f8d07db4d3ddc6dec9741"><td class="mdescLeft">&#160;</td><td class="mdescRight">Размера буфера рендера <br /></td></tr>
+<tr class="separator:a84ac1794eb1f8d07db4d3ddc6dec9741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60a56c499875b57369f7ef3a5a227cb9"><td class="memItemLeft" align="right" valign="top"><a id="a60a56c499875b57369f7ef3a5a227cb9" name="a60a56c499875b57369f7ef3a5a227cb9"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>TITLE</b>&#160;&#160;&#160;&quot;Voxel3D DEMO&quot;</td></tr>
 <tr class="memdesc:a60a56c499875b57369f7ef3a5a227cb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Заголовок окна <br /></td></tr>
@@ -133,6 +137,9 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a4b5bf90ae404bc2ce667b174d3c483cf"><td class="memItemLeft" align="right" valign="top"><a id="a4b5bf90ae404bc2ce667b174d3c483cf" name="a4b5bf90ae404bc2ce667b174d3c483cf"></a>
+std::mt19937&#160;</td><td class="memItemRight" valign="bottom"><b>rng1</b> (std::random_device{}())</td></tr>
+<tr class="separator:a4b5bf90ae404bc2ce667b174d3c483cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a> ()</td></tr>
 <tr class="separator:ae66f6b31b5ad750f1fe042a706a4e3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -147,6 +154,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>HEIGHT</b> = 768</td><
 <tr class="memitem:a08bf8aef08795319523b879ac6d9805b"><td class="memItemLeft" align="right" valign="top"><a id="a08bf8aef08795319523b879ac6d9805b" name="a08bf8aef08795319523b879ac6d9805b"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>MOUSE_SPEED</b> = 1.3f</td></tr>
 <tr class="separator:a08bf8aef08795319523b879ac6d9805b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af45d890adeeb7d0fee9c277eb84c1d3c"><td class="memItemLeft" align="right" valign="top"><a id="af45d890adeeb7d0fee9c277eb84c1d3c" name="af45d890adeeb7d0fee9c277eb84c1d3c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>DEBUG_MODE</b> = true</td></tr>
+<tr class="separator:af45d890adeeb7d0fee9c277eb84c1d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Voxel3D Engine demo application. </p>
@@ -170,10 +180,10 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>MOUSE_SPEED</b> = 1.
       </table>
 </div><div class="memdoc">
 <p >Global renderer</p>
-<p >GameObjects</p>
 <p ><a class="el" href="class_camera.html" title="Класс игровой камеры">Camera</a></p>
 <p >Attach camera to appleobj, apple hidden</p>
 <p ><a class="el" href="struct_particles.html">Particles</a></p>
+<p >FREETYPE TEST</p>
 <p >===MAIN-LOOP===</p>
 
 </div>

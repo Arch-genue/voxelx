@@ -10,29 +10,43 @@
 \DoxyCodeLine{16 \textcolor{preprocessor}{\#include "{}../physics/physicsengine.h"{}}}
 \DoxyCodeLine{17 \textcolor{preprocessor}{\#include "{}../graphics/voxelparticles.h"{}}}
 \DoxyCodeLine{18 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{gameobject_8h}{gameobject.h}}"{}}}
-\DoxyCodeLine{19 }
-\DoxyCodeLine{20 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_engine}{PhysicsEngine}};}
-\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}};}
-\DoxyCodeLine{22 }
-\DoxyCodeLine{27 \textcolor{keyword}{class }\mbox{\hyperlink{class_game_manager}{GameManager}} \{}
-\DoxyCodeLine{28     \textcolor{keyword}{public}:}
-\DoxyCodeLine{29         \mbox{\hyperlink{class_game_manager}{GameManager}}();}
-\DoxyCodeLine{30         \mbox{\hyperlink{class_game_manager}{\string~GameManager}}();}
-\DoxyCodeLine{31 }
-\DoxyCodeLine{32         \textcolor{keywordtype}{void} addGameObject(\mbox{\hyperlink{class_game_object}{GameObject}}* gameobject);}
-\DoxyCodeLine{33         \textcolor{keywordtype}{void} addVoxelParticles(\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}}* voxelparticles);}
-\DoxyCodeLine{34 }
-\DoxyCodeLine{35         \textcolor{keywordtype}{void} Update();}
-\DoxyCodeLine{36         \textcolor{keywordtype}{void} UpdatePhysics(\textcolor{keywordtype}{float} deltaTime);}
-\DoxyCodeLine{37         \textcolor{keywordtype}{void} UpdateParticles(\textcolor{keywordtype}{float} deltaTime);}
-\DoxyCodeLine{38 }
-\DoxyCodeLine{39         \textcolor{keywordtype}{void} clearParticles();}
-\DoxyCodeLine{40     }
-\DoxyCodeLine{41     \textcolor{keyword}{private}:}
-\DoxyCodeLine{42         std::vector<GameObject*> \_gameobjects;}
-\DoxyCodeLine{43         std::vector<VoxelParticles*> \_voxelparticles;}
-\DoxyCodeLine{44 }
-\DoxyCodeLine{45         \mbox{\hyperlink{class_physics_engine}{PhysicsEngine}}* \_physicsengine;}
-\DoxyCodeLine{46 \};}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include "{}linesobject.h"{}}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{keyword}{class }\mbox{\hyperlink{class_physics_engine}{PhysicsEngine}};}
+\DoxyCodeLine{22 \textcolor{keyword}{class }\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}};}
+\DoxyCodeLine{23 }
+\DoxyCodeLine{28 \textcolor{keyword}{class }\mbox{\hyperlink{class_game_manager}{GameManager}} \{}
+\DoxyCodeLine{29     \textcolor{keyword}{public}:}
+\DoxyCodeLine{30         \mbox{\hyperlink{class_game_manager}{GameManager}}();}
+\DoxyCodeLine{31         \mbox{\hyperlink{class_game_manager}{\string~GameManager}}();}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33         \textcolor{keywordtype}{void} addGameObject(\mbox{\hyperlink{class_game_object}{GameObject}}* gameobject);}
+\DoxyCodeLine{34         \textcolor{keywordtype}{void} addVoxelParticles(\mbox{\hyperlink{class_voxel_particles}{VoxelParticles}}* voxelparticles);}
+\DoxyCodeLine{35 }
+\DoxyCodeLine{36         \mbox{\hyperlink{class_physics_engine}{PhysicsEngine}}* getPhysicsEngine();}
+\DoxyCodeLine{37 }
+\DoxyCodeLine{38         \textcolor{keywordtype}{void} Update(\mbox{\hyperlink{struct_light}{Light}} \& light);}
+\DoxyCodeLine{39         \textcolor{keywordtype}{void} UpdatePhysics(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{40         \textcolor{keywordtype}{void} UpdateParticles(\textcolor{keywordtype}{float} deltaTime);}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42         uint32\_t getGameObjectsSize() \{}
+\DoxyCodeLine{43             \textcolor{keywordflow}{return} \_gameobjects.size();}
+\DoxyCodeLine{44         \}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46         uint32\_t getVoxelParticlesSize() \{}
+\DoxyCodeLine{47             \textcolor{keywordflow}{return} \_voxelparticles.size();}
+\DoxyCodeLine{48         \}}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50         \textcolor{keywordtype}{void} clearParticles();}
+\DoxyCodeLine{51 }
+\DoxyCodeLine{52         uint getNewID();}
+\DoxyCodeLine{53     }
+\DoxyCodeLine{54     \textcolor{keyword}{private}:}
+\DoxyCodeLine{55         std::vector<GameObject*> \_gameobjects;}
+\DoxyCodeLine{56         std::vector<VoxelParticles*> \_voxelparticles;}
+\DoxyCodeLine{57         uint \_gameobject\_increment;}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59         \mbox{\hyperlink{class_physics_engine}{PhysicsEngine}}* \_physicsengine;}
+\DoxyCodeLine{60 \};}
 
 \end{DoxyCode}

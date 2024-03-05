@@ -13,6 +13,8 @@
 
 #include <stdlib.h>
 
+#include "shader.h"
+
 class VoxelModel;
 class Voxel;
 
@@ -42,6 +44,7 @@ public:
     void update();
     void reload(float* buffer, size_t vertices);
     void draw(unsigned int primitive);
+    void draw(unsigned int primitive, glm::mat4 _modelmatrix, Shader *shader);
     void clear();
 
     void setVoxel(uint num, Voxel* vox);

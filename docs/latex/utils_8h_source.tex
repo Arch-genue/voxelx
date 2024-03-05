@@ -1,21 +1,80 @@
 \hypertarget{utils_8h_source}{}\doxysection{utils.\+h}
 \label{utils_8h_source}\index{/home/user/dev/voxel3d/src/utils.h@{/home/user/dev/voxel3d/src/utils.h}}
-
+\mbox{\hyperlink{utils_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{1 \textcolor{preprocessor}{\#pragma once}}
-\DoxyCodeLine{2 }
-\DoxyCodeLine{3 \textcolor{comment}{// \#include <iostream>}}
-\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <cstring>}}
-\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <string>}}
-\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <regex>}}
-\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
-\DoxyCodeLine{8 }
-\DoxyCodeLine{16 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} split(std::string* bufstr, std::string str, \textcolor{keywordtype}{char} separator);}
-\DoxyCodeLine{17 }
-\DoxyCodeLine{24 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} splitvalue(std::string* bufstr, std::string str);}
-\DoxyCodeLine{25 }
-\DoxyCodeLine{33 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} isNumeric(\textcolor{keyword}{const} std::string\& str);}
-\DoxyCodeLine{34 }
-\DoxyCodeLine{41 \textcolor{keyword}{extern} \textcolor{keywordtype}{float}* random\_keyword\_parse(std::string color);}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{12 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{comment}{// \#include <iostream>}}
+\DoxyCodeLine{15 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{16 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{17 \textcolor{preprocessor}{\#include <regex>}}
+\DoxyCodeLine{18 \textcolor{preprocessor}{\#include <chrono>}}
+\DoxyCodeLine{19 \textcolor{preprocessor}{\#include <glm/glm.hpp>}}
+\DoxyCodeLine{20 }
+\DoxyCodeLine{21 \textcolor{comment}{// Специальные символы ANSI для цвета текста}}
+\DoxyCodeLine{22 \textcolor{preprocessor}{\#define RESET\_COLOR         "{}\(\backslash\)033[0m"{}}}
+\DoxyCodeLine{23 \textcolor{preprocessor}{\#define BLACK\_COLOR         "{}\(\backslash\)033[0;30m"{}}}
+\DoxyCodeLine{24 \textcolor{preprocessor}{\#define RED\_COLOR           "{}\(\backslash\)033[0;31m"{}}}
+\DoxyCodeLine{25 \textcolor{preprocessor}{\#define GREEN\_COLOR         "{}\(\backslash\)033[0;32m"{}}}
+\DoxyCodeLine{26 \textcolor{preprocessor}{\#define YELLOW\_COLOR        "{}\(\backslash\)033[0;33m"{}}}
+\DoxyCodeLine{27 \textcolor{preprocessor}{\#define BLUE\_COLOR          "{}\(\backslash\)033[0;34m"{}}}
+\DoxyCodeLine{28 \textcolor{preprocessor}{\#define MAGENTA\_COLOR       "{}\(\backslash\)033[0;35m"{}}}
+\DoxyCodeLine{29 \textcolor{preprocessor}{\#define CYAN\_COLOR          "{}\(\backslash\)033[0;36m"{}}}
+\DoxyCodeLine{30 \textcolor{preprocessor}{\#define WHITE\_COLOR         "{}\(\backslash\)033[0;37m"{}}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{comment}{// Специальные символы ANSI для яркого цвета текста}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define BRIGHT\_BLACK\_COLOR  "{}\(\backslash\)033[1;30m"{}}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define BRIGHT\_RED\_COLOR    "{}\(\backslash\)033[1;31m"{}}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#define BRIGHT\_GREEN\_COLOR  "{}\(\backslash\)033[1;32m"{}}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#define BRIGHT\_YELLOW\_COLOR "{}\(\backslash\)033[1;33m"{}}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#define BRIGHT\_BLUE\_COLOR   "{}\(\backslash\)033[1;34m"{}}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define BRIGHT\_MAGENTA\_COLOR "{}\(\backslash\)033[1;35m"{}}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define BRIGHT\_CYAN\_COLOR   "{}\(\backslash\)033[1;36m"{}}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define BRIGHT\_WHITE\_COLOR  "{}\(\backslash\)033[1;37m"{}}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define BLACK\_BACKGROUND        "{}\(\backslash\)033[40m"{}}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#define WHITE\_BACKGROUND        "{}\(\backslash\)033[47m"{}}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define BRIGHT\_YELLOW\_BACKGROUND "{}\(\backslash\)033[103m"{}}}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46 }
+\DoxyCodeLine{47 \textcolor{keyword}{const} std::string RESET\_COLOR\_STR = RESET\_COLOR;}
+\DoxyCodeLine{48 \textcolor{keyword}{const} std::string RED\_COLOR\_STR = RED\_COLOR;}
+\DoxyCodeLine{49 \textcolor{keyword}{const} std::string BLUE\_COLOR\_STR = BLUE\_COLOR;}
+\DoxyCodeLine{50 \textcolor{keyword}{const} std::string GREEN\_COLOR\_STR = GREEN\_COLOR;}
+\DoxyCodeLine{51 \textcolor{keyword}{const} std::string YELLOW\_COLOR\_STR = YELLOW\_COLOR;}
+\DoxyCodeLine{52 \textcolor{keyword}{const} std::string WHITE\_COLOR\_STR = WHITE\_COLOR;}
+\DoxyCodeLine{53 \textcolor{keyword}{const} std::string MAGENTA\_COLOR\_STR = MAGENTA\_COLOR;}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \textcolor{keyword}{enum} MSGTYPE \{}
+\DoxyCodeLine{56     MSGERROR,}
+\DoxyCodeLine{57     MSGWARNING,}
+\DoxyCodeLine{58     MSGINFO,}
+\DoxyCodeLine{59     MSGSUCCESS}
+\DoxyCodeLine{60 \};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{69 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{utils_8h_a60eb8700fea3fcdad1710a3cb6b803af}{split}}(std::string* bufstr, std::string str, \textcolor{keywordtype}{char} separator);}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{77 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{utils_8h_a631fb6b35c282e1d1d7bdfecf237e160}{splitvalue}}(std::string* bufstr, std::string str);}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{86 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} \mbox{\hyperlink{utils_8h_ad48f9015cb68e6fe6ec48b0652cbaca5}{isNumeric}}(\textcolor{keyword}{const} std::string\& str);}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{94 \textcolor{keyword}{extern} \textcolor{keywordtype}{float}* \mbox{\hyperlink{utils_8h_a0abb1c42b4e7dd0e6754b4dda9f66b65}{random\_keyword\_parse}}(std::string color);}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{96 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} errorprint(std::string subject, std::string msg, MSGTYPE type);}
+\DoxyCodeLine{97 }
+\DoxyCodeLine{105 \textcolor{keyword}{template}<\textcolor{keyword}{typename} Func, \textcolor{keyword}{typename}... Args>}
+\DoxyCodeLine{106 \textcolor{keywordtype}{float} \mbox{\hyperlink{utils_8h_a7294b0871013375af49fbeddd521cf10}{measureFunctionTime}}(Func func, Args\&\&... args) \{}
+\DoxyCodeLine{107     \textcolor{keyword}{auto} start = std::chrono::steady\_clock::now(); \textcolor{comment}{// Засекаем начало времени}}
+\DoxyCodeLine{108 }
+\DoxyCodeLine{109     \textcolor{comment}{// Вызываем переданную функцию с переданными аргументами}}
+\DoxyCodeLine{110     func(std::forward<Args>(args)...);}
+\DoxyCodeLine{111 }
+\DoxyCodeLine{112     \textcolor{keyword}{auto} end = std::chrono::steady\_clock::now(); \textcolor{comment}{// Засекаем конец времени}}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{114     \textcolor{comment}{// Вычисляем время выполнения в секундах}}
+\DoxyCodeLine{115     \textcolor{keywordtype}{float} duration = std::chrono::duration<float>(end -\/ start).count();}
+\DoxyCodeLine{116     \textcolor{keywordflow}{return} duration;}
+\DoxyCodeLine{117 \}}
 
 \end{DoxyCode}

@@ -80,7 +80,6 @@ void Mesh::create_empty_mesh_buff() {
     glBindVertexArray(0);
 }
 
-
 VoxelModel* Mesh::getVoxels() {
     return _voxels;
 }
@@ -110,6 +109,14 @@ void Mesh::reload(float* buffer, size_t vertices) {
 
 void Mesh::draw(unsigned int primitive) {
     glBindVertexArray(_vao);
+    glDrawArrays(primitive, 0, _vertices);
+    glBindVertexArray(0);
+}
+
+void Mesh::draw(unsigned int primitive, glm::mat4 _modelmatrix, Shader* shader) {
+    glBindVertexArray(_vao);
+
+    shader->uniformMatrix("model", _modelmatrix);
     glDrawArrays(primitive, 0, _vertices);
     glBindVertexArray(0);
 }

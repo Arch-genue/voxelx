@@ -6,7 +6,7 @@ class VoxelModel;
 
 PhysicsEngine::PhysicsEngine() {
     _gravity = glm::vec3(0, -9.81f, 0);
-	_root = nullptr;
+	// _root = nullptr;
 
     errorprint("PHYSENG", "PhysicsEngine initialized",  MSGINFO);
 }
@@ -18,7 +18,7 @@ glm::vec3 PhysicsEngine::getGravity() {
 
 void PhysicsEngine::addObject(PhysicsObject* object) {
     _objects.push_back(object);
-	_root = insert(_root, object->getCollider());
+	// _root = insert(_root, object->getCollider());
 }
 PhysicsObject* PhysicsEngine::getObject(int i) {
     return _objects[i];
@@ -60,117 +60,6 @@ void PhysicsEngine::handleCollision(PhysicsObject* object, glm::vec3 surfacePosi
     
     GameObject* gmobj = object->getGameObject(); 
     gmobj->setPosition(surfacePosition + surfaceNormal * 0.0f);    
-}
-
-// Функция для выполнения левого поворота в красно-черном дереве
-Node* PhysicsEngine::rotateLeft(Node* root) {
-    Node* newRoot = root->getRight();
-    root->setRight(newRoot->getLeft());
-    newRoot->setLeft(root);
-    newRoot->setIsRed(root->isRed());
-    root->setIsRed(true);
-    return newRoot;
-}
-
-// Функция для выполнения правого поворота в красно-черном дереве
-Node* PhysicsEngine::rotateRight(Node* root) {
-    Node* newRoot = root->getLeft();
-    root->setLeft(newRoot->getRight());
-    newRoot->setRight(root);
-    newRoot->setIsRed(root->isRed());
-    root->setIsRed(true);
-    return newRoot;
-}
-
-// Функция для перекрашивания узлов в красно-черном дереве
-void PhysicsEngine::flipColors(Node* root) {
-    root->setIsRed(!root->isRed());
-    root->getLeft()->setIsRed(!root->getLeft()->isRed());
-    root->getRight()->setIsRed(!root->getRight()->isRed());
-}
-
-// Функция для добавления узла в красно-черное дерево
-Node* PhysicsEngine::insert(Node* root, BoxCollider* box) {
-    if (!root) {
-		// std::cout << "root is null" << std::endl;
-        return new Node(box);
-    }
-
-    // Рекурсивное добавление узла
-    if (box->getMin().x < root->getBoxCollider()->getMin().x) {
-        root->setLeft(insert(root->getLeft(), box));
-    } else {
-        root->setRight(insert(root->getRight(), box));
-    }
-
-    // Балансировка дерева
-    if (root->getRight() && root->getRight()->isRed() && !(root->getLeft() && root->getLeft()->isRed())) {
-        root = rotateLeft(root);
-    }
-    if (root->getLeft() && root->getLeft()->isRed() && root->getLeft()->getLeft() && root->getLeft()->getLeft()->isRed()) {
-        root = rotateRight(root);
-    }
-    if (root->getLeft() && root->getLeft()->isRed() && root->getRight() && root->getRight()->isRed()) {
-        flipColors(root);
-    }
-
-    return root;
-}
-
-// Функция для поиска ближайшего объекта в дереве AABB
-Node* PhysicsEngine::findNearestObject(Node* root, BoxCollider* area) {
-    if (!root) {
-        return nullptr;
-    }
-
-	// std::cout << "Root bounding box: " << root->getBoxCollider()->getMin().x << ", " << root->getBoxCollider()->getMin().y << ", " << root->getBoxCollider()->getMin().z << std::endl;
-	// std::cout << "Area bounding box: " << area->getMin().x << ", " << area->getMin().y << ", " << area->getMin().z << std::endl;
-	// a.minX <= b.maxX &&
-    // a.maxX >= b.minX &&
-    // a.minY <= b.maxY &&
-    // a.maxY >= b.minY &&
-    // a.minZ <= b.maxZ &&
-    // a.maxZ >= b.minZ
-	// std::cout << root->getBoxCollider()->getGameObject()->getID() << std::endl;
-
-	if (root->getBoxCollider()->getMin().x <= area->getMax().x && root->getBoxCollider()->getMax().x >= area->getMin().x &&
-	   	root->getBoxCollider()->getMin().y <= area->getMax().y && root->getBoxCollider()->getMax().y >= area->getMin().y &&
-		root->getBoxCollider()->getMin().z <= area->getMax().z && root->getBoxCollider()->getMax().z >= area->getMin().z
-	   ) {
-		// std::cout << "Intersect";
-	} else {
-		return nullptr;
-	}
-
-    // Если текущий узел пересекается с заданной областью, проверяем его дочерние узлы
-    Node* nearestLeft = findNearestObject(root->getLeft(), area);
-    Node* nearestRight = findNearestObject(root->getRight(), area);
-
-    // Выбираем ближайший узел из дочерних
-    Node* nearest = nearestLeft ? nearestLeft : nearestRight;
-
-    // Проверяем, нужно ли заменить ближайший узел на текущий
-    if (nearest) {
-        float nearestDist = (nearest->getBoxCollider()->getMin().x - area->getMax().x) * (nearest->getBoxCollider()->getMin().x - area->getMax().x) +
-                            (nearest->getBoxCollider()->getMin().y - area->getMax().y) * (nearest->getBoxCollider()->getMin().y - area->getMax().y) +
-                            (nearest->getBoxCollider()->getMin().z - area->getMax().z) * (nearest->getBoxCollider()->getMin().z - area->getMax().z);
-
-        float rootDist = (root->getBoxCollider()->getMin().x - area->getMax().x) * (root->getBoxCollider()->getMin().x - area->getMax().x) +
-                         (root->getBoxCollider()->getMin().y - area->getMax().y) * (root->getBoxCollider()->getMin().y - area->getMax().y) +
-                         (root->getBoxCollider()->getMin().z - area->getMax().z) * (root->getBoxCollider()->getMin().z - area->getMax().z);
-
-        if (rootDist < nearestDist) {
-            nearest = root;
-        }
-    } else {
-        nearest = root;
-    }
-
-    return nearest;
-}
-
-Node *PhysicsEngine::getRootNode() {
-    return _root;
 }
 
 // Функция для проверки столкновения луча с BoundingBox

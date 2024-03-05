@@ -1,3 +1,13 @@
+/**
+ * @file textmesh.h
+ * @author Vlad Kartsaev
+ * @brief Implementation of TextMesh class
+ * @version 0.1
+ * @date 2024-02-24
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #pragma once
 
 #include <stdlib.h>

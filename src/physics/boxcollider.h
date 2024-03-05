@@ -38,24 +38,24 @@ public:
 };
 
 // Узел красно-черного дерева BoundingBox
-class Node {
-private:
-    BoxCollider* _box;
-    bool _isRed; // Цвет узла (true - красный, false - черный)
-    Node* _left;
-    Node* _right;
+// class Node {
+// private:
+//     BoxCollider* _box;
+//     bool _isRed; // Цвет узла (true - красный, false - черный)
+//     Node* _left;
+//     Node* _right;
 
-public:
-    Node(BoxCollider* box) : _box(box), _isRed(true), _left(nullptr), _right(nullptr) {}
+// public:
+//     Node(BoxCollider* box) : _box(box), _isRed(true), _left(nullptr), _right(nullptr) {}
     
-    void setIsRed(bool isRed) { _isRed = isRed; };
-    bool isRed() const { return _isRed; };
+//     void setIsRed(bool isRed) { _isRed = isRed; };
+//     bool isRed() const { return _isRed; };
 
-    BoxCollider* getBoxCollider() const { return _box; }
+//     BoxCollider* getBoxCollider() const { return _box; }
 
-    void setLeft(Node* left) {  _left = left; };
-    void setRight(Node* right) {  _right = right; };
+//     void setLeft(Node* left) {  _left = left; };
+//     void setRight(Node* right) {  _right = right; };
 
-    Node* getLeft() const { return _left; };
-    Node* getRight() const { return _right; };
-};
+//     Node* getLeft() const { return _left; };
+//     Node* getRight() const { return _right; };
+// };

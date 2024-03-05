@@ -2,61 +2,70 @@
 \label{class_voxel_model}\index{VoxelModel@{VoxelModel}}
 
 
-Класс описывающий модель состоящую из вокселей как контейнер  
+класс для хранения вокселей с доступом по координатам.  
 
 
 
 
-{\ttfamily \#include $<$voxel.\+h$>$}
+{\ttfamily \#include $<$voxelmodel.\+h$>$}
 
+Inheritance diagram for Voxel\+Model\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_voxel_model}
+\end{center}
+\end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_voxel_model_a9ac2eed55465ef2fa702f8be60c5aecc}\label{class_voxel_model_a9ac2eed55465ef2fa702f8be60c5aecc}} 
-void {\bfseries set\+Light} (uint8\+\_\+t side, glm\+::vec3 light)
+\mbox{\Hypertarget{class_voxel_model_a7f408e4024ce769be817fd1cf34f76b4}\label{class_voxel_model_a7f408e4024ce769be817fd1cf34f76b4}} 
+{\bfseries Voxel\+Model} (glm\+::vec3 size, int depth=5)
 \item 
-\mbox{\Hypertarget{class_voxel_model_a966a47b812a091af0afc2b74a5c72882}\label{class_voxel_model_a966a47b812a091af0afc2b74a5c72882}} 
-glm\+::vec3 {\bfseries get\+Light} (uint8\+\_\+t side)
+\mbox{\Hypertarget{class_voxel_model_ad170caa6f31c2ebe4ca219afb092d6cb}\label{class_voxel_model_ad170caa6f31c2ebe4ca219afb092d6cb}} 
+void {\bfseries set\+Name} (std\+::string name)
 \item 
-\mbox{\Hypertarget{class_voxel_model_a8284c7a4e051bea4625f20b2e06407bf}\label{class_voxel_model_a8284c7a4e051bea4625f20b2e06407bf}} 
-glm\+::vec3 $\ast$ {\bfseries get\+Light\+Array} ()
+\mbox{\Hypertarget{class_voxel_model_ac2c67ef7d160bf9da179cf4faa4a1f04}\label{class_voxel_model_ac2c67ef7d160bf9da179cf4faa4a1f04}} 
+std\+::string {\bfseries get\+Name} ()
 \item 
 \mbox{\Hypertarget{class_voxel_model_acf23d5e70b4121477bb73e8e51f79b66}\label{class_voxel_model_acf23d5e70b4121477bb73e8e51f79b66}} 
-void {\bfseries add\+Voxel} (\mbox{\hyperlink{class_voxel}{Voxel}} $\ast$voxel)
+virtual void {\bfseries add\+Voxel} (\mbox{\hyperlink{class_voxel}{Voxel}} $\ast$voxel)
 \item 
-\mbox{\Hypertarget{class_voxel_model_af5b130acff29b725aa81ee5c374884ee}\label{class_voxel_model_af5b130acff29b725aa81ee5c374884ee}} 
-int {\bfseries get\+Voxels\+Count} ()
+\mbox{\Hypertarget{class_voxel_model_a71387a71db3a32116317c1c228088674}\label{class_voxel_model_a71387a71db3a32116317c1c228088674}} 
+virtual void {\bfseries remove\+Voxel} (glm\+::vec3 position)
 \item 
-\mbox{\Hypertarget{class_voxel_model_a44c5c58af320e66610f30fac48bcd203}\label{class_voxel_model_a44c5c58af320e66610f30fac48bcd203}} 
-void {\bfseries set\+Voxel} (int num, \mbox{\hyperlink{class_voxel}{Voxel}} $\ast$voxel)
+\mbox{\Hypertarget{class_voxel_model_a473e339354aa7868f8e186e9a0bad0ed}\label{class_voxel_model_a473e339354aa7868f8e186e9a0bad0ed}} 
+virtual void {\bfseries set\+Voxel\+Visible} (glm\+::ivec3 position, bool visible)
 \item 
-\mbox{\Hypertarget{class_voxel_model_adb7390c2ac27e7e31b6c79191505d32e}\label{class_voxel_model_adb7390c2ac27e7e31b6c79191505d32e}} 
-\mbox{\hyperlink{class_voxel}{Voxel}} $\ast$ {\bfseries get\+Voxel} (int num)
+\mbox{\Hypertarget{class_voxel_model_ad072aa5a20d436ff4339e10ff6ce0c8f}\label{class_voxel_model_ad072aa5a20d436ff4339e10ff6ce0c8f}} 
+\mbox{\hyperlink{class_voxel}{Voxel}} $\ast$ {\bfseries get\+Voxel} (glm\+::ivec3 position)
 \item 
-\mbox{\Hypertarget{class_voxel_model_a63921460b45f71ed4dfd7de2fd277555}\label{class_voxel_model_a63921460b45f71ed4dfd7de2fd277555}} 
-void {\bfseries set\+Size} (glm\+::vec3 size)
+\mbox{\Hypertarget{class_voxel_model_ab4cf18e479285edda3faa5a56fc44391}\label{class_voxel_model_ab4cf18e479285edda3faa5a56fc44391}} 
+void {\bfseries fill\+Color} (glm\+::vec4 color)
 \item 
-\mbox{\Hypertarget{class_voxel_model_afb3df7346a80b93dede14851083c9528}\label{class_voxel_model_afb3df7346a80b93dede14851083c9528}} 
-glm\+::vec3 {\bfseries get\+Size} ()
+\mbox{\Hypertarget{class_voxel_model_adfac09f11ed82db5e5a51bf38903a4c9}\label{class_voxel_model_adfac09f11ed82db5e5a51bf38903a4c9}} 
+void {\bfseries set\+Mesh} (\mbox{\hyperlink{class_mesh}{Mesh}} $\ast$mesh)
 \item 
-\mbox{\Hypertarget{class_voxel_model_a7ee5a360082d729aef0e18a49ccb3845}\label{class_voxel_model_a7ee5a360082d729aef0e18a49ccb3845}} 
-void {\bfseries set\+Render\+Side} (std\+::string renderside)
+\mbox{\Hypertarget{class_voxel_model_a3c343dbdee0e188e21a5235995085250}\label{class_voxel_model_a3c343dbdee0e188e21a5235995085250}} 
+\mbox{\hyperlink{class_mesh}{Mesh}} $\ast$ {\bfseries get\+Mesh} ()
 \item 
-\mbox{\Hypertarget{class_voxel_model_a00d54edf4825fed35fc4354ef38c6171}\label{class_voxel_model_a00d54edf4825fed35fc4354ef38c6171}} 
-std\+::string {\bfseries get\+Render\+Side} ()
+\mbox{\Hypertarget{class_voxel_model_a3568943a649284bc667ebdac9cd670f9}\label{class_voxel_model_a3568943a649284bc667ebdac9cd670f9}} 
+void {\bfseries set\+Render\+Side} (std\+::string \&renderside) const
 \item 
-\mbox{\Hypertarget{class_voxel_model_ad99dd90d66da4106a2d70c76b658dac3}\label{class_voxel_model_ad99dd90d66da4106a2d70c76b658dac3}} 
-void {\bfseries set\+Voxel\+Position} (int num, glm\+::vec3 position)
+\mbox{\Hypertarget{class_voxel_model_a380c3cd6ae283f3840d55d48ed382db9}\label{class_voxel_model_a380c3cd6ae283f3840d55d48ed382db9}} 
+std\+::string {\bfseries get\+Render\+Side} () const
 \item 
-\mbox{\Hypertarget{class_voxel_model_ab89feb5e7602e73cc05bfe4ef2ed1404}\label{class_voxel_model_ab89feb5e7602e73cc05bfe4ef2ed1404}} 
-glm\+::vec3 {\bfseries get\+Voxel\+Position} (int num)
+\mbox{\Hypertarget{class_voxel_model_a3de4e7b9b8406b7c5597d9c6d992c29f}\label{class_voxel_model_a3de4e7b9b8406b7c5597d9c6d992c29f}} 
+void {\bfseries set\+Size} (glm\+::ivec3 size)
+\item 
+\mbox{\Hypertarget{class_voxel_model_ab3fd830b28ba8c91b0df620607b08766}\label{class_voxel_model_ab3fd830b28ba8c91b0df620607b08766}} 
+glm\+::ivec3 {\bfseries get\+Size} () const
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-Класс описывающий модель состоящую из вокселей как контейнер 
+класс для хранения вокселей с доступом по координатам. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-/home/user/dev/voxel3d/src/voxels/\mbox{\hyperlink{voxel_8h}{voxel.\+h}}\item 
-/home/user/dev/voxel3d/src/voxels/voxel.\+cpp\end{DoxyCompactItemize}
+/home/user/dev/voxel3d/src/voxels/\mbox{\hyperlink{voxelmodel_8h}{voxelmodel.\+h}}\item 
+/home/user/dev/voxel3d/src/voxels/voxelmodel.\+cpp\end{DoxyCompactItemize}

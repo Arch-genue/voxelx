@@ -12,6 +12,8 @@ bool Window::_pause;
 int Window::width = 0;
 int Window::height = 0;
 
+glm::vec3 Window::sky(0);
+
 int Window::init(int width, int height, const char* title) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -58,7 +60,7 @@ int Window::init(int width, int height, const char* title) {
 void Window::_glInit() {
     glViewport(0, 0, width, height);
 
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     
     glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -67,6 +69,7 @@ void Window::_glInit() {
 }
 void Window::_glClear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(sky.x, sky.y, sky.z, 1.0f);
 }
 
 bool Window::swapBuffers() {
@@ -90,7 +93,7 @@ bool Window::getPause() {
 
 void Window::toggleFullscreen() {
     uint32_t flags = SDL_GetWindowFlags(window);
-    SDL_SetWindowFullscreen(window, (flags & SDL_WINDOW_FULLSCREEN) ? 0 : SDL_WINDOW_FULLSCREEN);
+    SDL_SetWindowFullscreen(window, (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
 void Window::exit() {

@@ -3,8 +3,8 @@
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_physics_object_acafb42a85d84ed186af623b3eedbe605}\label{class_physics_object_acafb42a85d84ed186af623b3eedbe605}} 
-{\bfseries Physics\+Object} (\mbox{\hyperlink{class_game_object}{Game\+Object}} $\ast$gmobj, \mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$collider, float mass=1.\+0f)
+\mbox{\Hypertarget{class_physics_object_ad968b0f550d91d5d4255f604ed933cb2}\label{class_physics_object_ad968b0f550d91d5d4255f604ed933cb2}} 
+{\bfseries Physics\+Object} (\mbox{\hyperlink{class_game_object}{Game\+Object}} $\ast$gmobj, \mbox{\hyperlink{class_box_collider}{Box\+Collider}} $\ast$boxcollider, float mass=1.\+0f)
 \item 
 \mbox{\Hypertarget{class_physics_object_a231aea3c3e685cd6ca8acfb79afc9c09}\label{class_physics_object_a231aea3c3e685cd6ca8acfb79afc9c09}} 
 {\bfseries Physics\+Object} (glm\+::vec3 position=glm\+::vec3(0), PHYSICS physics=NO\+\_\+\+PHYSICS, float mass=1.\+0f)
@@ -54,9 +54,6 @@ void {\bfseries apply\+Force} (glm\+::vec3 force)
 \mbox{\Hypertarget{class_physics_object_a60c68eb8b9da99e27098b1ea9f6777aa}\label{class_physics_object_a60c68eb8b9da99e27098b1ea9f6777aa}} 
 void {\bfseries stop\+Force} ()
 \item 
-\mbox{\Hypertarget{class_physics_object_a255090f5b14f3b6b91c973dede693bc7}\label{class_physics_object_a255090f5b14f3b6b91c973dede693bc7}} 
-void {\bfseries explode} (uint16\+\_\+t explode\+Force)
-\item 
 \mbox{\Hypertarget{class_physics_object_aa522db71ccab6484dff9d39e6f83a5ea}\label{class_physics_object_aa522db71ccab6484dff9d39e6f83a5ea}} 
 bool {\bfseries is\+Grounded} ()
 \item 
@@ -66,8 +63,8 @@ bool {\bfseries check\+Ground} (glm\+::vec3 \&position, glm\+::vec3 \&normal)
 \mbox{\Hypertarget{class_physics_object_ae3b279c2a6e48dfc97213cfab8c72d94}\label{class_physics_object_ae3b279c2a6e48dfc97213cfab8c72d94}} 
 void {\bfseries update} (float delta\+Time)
 \item 
-\mbox{\Hypertarget{class_physics_object_a0d4c1b4716bf6d4043f307399973f4e3}\label{class_physics_object_a0d4c1b4716bf6d4043f307399973f4e3}} 
-float $\ast$ {\bfseries get\+Vertices} ()
+\mbox{\Hypertarget{class_physics_object_ad8f15cb6b470f1eb424f888110ff1aa7}\label{class_physics_object_ad8f15cb6b470f1eb424f888110ff1aa7}} 
+std\+::vector$<$ \mbox{\hyperlink{structline}{line}} $>$ {\bfseries get\+Vertices} ()
 \end{DoxyCompactItemize}
 
 

@@ -23,14 +23,14 @@ public:
 
     void setVoxel(int num, Voxel *voxel);
     Voxel* getVoxel(int num);
-    Voxel* getVoxel(glm::vec3 position);
+    Voxel* getVoxel(glm::ivec3 position);
 
     void setSize(glm::vec3 size);
     glm::vec3 getSize();
 
     //? Voxel Functions
-    void setVoxelPosition(int num, glm::vec3 position);
-    glm::vec3 getVoxelPosition(int num);
+    void setVoxelPosition(int num, glm::ivec3 position);
+    glm::ivec3 getVoxelPosition(int num);
 
 private:
     std::vector<Voxel*> _voxels;

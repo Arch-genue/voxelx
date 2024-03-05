@@ -87,27 +87,91 @@ $(document).ready(function(){initNavTree('utils_8h_source.html',''); initResizab
   <div class="headertitle"><div class="title">utils.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// #include &lt;iostream&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;regex&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">extern</span> <span class="keywordtype">void</span> split(std::string* bufstr, std::string str, <span class="keywordtype">char</span> separator);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">extern</span> <span class="keywordtype">void</span> splitvalue(std::string* bufstr, std::string str);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">extern</span> <span class="keywordtype">bool</span> isNumeric(<span class="keyword">const</span> std::string&amp; str);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">extern</span> <span class="keywordtype">float</span>* random_keyword_parse(std::string color);</div>
+<a href="utils_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">// #include &lt;iostream&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;cstring&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;regex&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;chrono&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;glm/glm.hpp&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// Специальные символы ANSI для цвета текста</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#define RESET_COLOR         &quot;\033[0m&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#define BLACK_COLOR         &quot;\033[0;30m&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#define RED_COLOR           &quot;\033[0;31m&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#define GREEN_COLOR         &quot;\033[0;32m&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#define YELLOW_COLOR        &quot;\033[0;33m&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#define BLUE_COLOR          &quot;\033[0;34m&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#define MAGENTA_COLOR       &quot;\033[0;35m&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#define CYAN_COLOR          &quot;\033[0;36m&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#define WHITE_COLOR         &quot;\033[0;37m&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">// Специальные символы ANSI для яркого цвета текста</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#define BRIGHT_BLACK_COLOR  &quot;\033[1;30m&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#define BRIGHT_RED_COLOR    &quot;\033[1;31m&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#define BRIGHT_GREEN_COLOR  &quot;\033[1;32m&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#define BRIGHT_YELLOW_COLOR &quot;\033[1;33m&quot;</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#define BRIGHT_BLUE_COLOR   &quot;\033[1;34m&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#define BRIGHT_MAGENTA_COLOR &quot;\033[1;35m&quot;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#define BRIGHT_CYAN_COLOR   &quot;\033[1;36m&quot;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#define BRIGHT_WHITE_COLOR  &quot;\033[1;37m&quot;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#define BLACK_BACKGROUND        &quot;\033[40m&quot;</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#define WHITE_BACKGROUND        &quot;\033[47m&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#define BRIGHT_YELLOW_BACKGROUND &quot;\033[103m&quot;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">const</span> std::string RESET_COLOR_STR = RESET_COLOR;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">const</span> std::string RED_COLOR_STR = RED_COLOR;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">const</span> std::string BLUE_COLOR_STR = BLUE_COLOR;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">const</span> std::string GREEN_COLOR_STR = GREEN_COLOR;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="keyword">const</span> std::string YELLOW_COLOR_STR = YELLOW_COLOR;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="keyword">const</span> std::string WHITE_COLOR_STR = WHITE_COLOR;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">const</span> std::string MAGENTA_COLOR_STR = MAGENTA_COLOR;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">enum</span> MSGTYPE {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    MSGERROR,</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    MSGWARNING,</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    MSGINFO,</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    MSGSUCCESS</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>};</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code hl_function" href="utils_8h.html#a60eb8700fea3fcdad1710a3cb6b803af">split</a>(std::string* bufstr, std::string str, <span class="keywordtype">char</span> separator);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">extern</span> <span class="keywordtype">void</span> <a class="code hl_function" href="utils_8h.html#a631fb6b35c282e1d1d7bdfecf237e160">splitvalue</a>(std::string* bufstr, std::string str);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">extern</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="utils_8h.html#ad48f9015cb68e6fe6ec48b0652cbaca5">isNumeric</a>(<span class="keyword">const</span> std::string&amp; str);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">extern</span> <span class="keywordtype">float</span>* <a class="code hl_function" href="utils_8h.html#a0abb1c42b4e7dd0e6754b4dda9f66b65">random_keyword_parse</a>(std::string color);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">extern</span> <span class="keywordtype">void</span> errorprint(std::string subject, std::string msg, MSGTYPE type);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Func, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="utils_8h.html#a7294b0871013375af49fbeddd521cf10">  106</a></span><span class="keywordtype">float</span> <a class="code hl_function" href="utils_8h.html#a7294b0871013375af49fbeddd521cf10">measureFunctionTime</a>(Func func, Args&amp;&amp;... args) {</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">auto</span> start = std::chrono::steady_clock::now(); <span class="comment">// Засекаем начало времени</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="comment">// Вызываем переданную функцию с переданными аргументами</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    func(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">auto</span> end = std::chrono::steady_clock::now(); <span class="comment">// Засекаем конец времени</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// Вычисляем время выполнения в секундах</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">float</span> duration = std::chrono::duration&lt;float&gt;(end - start).count();</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keywordflow">return</span> duration;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>}</div>
+<div class="ttc" id="autils_8h_html_a0abb1c42b4e7dd0e6754b4dda9f66b65"><div class="ttname"><a href="utils_8h.html#a0abb1c42b4e7dd0e6754b4dda9f66b65">random_keyword_parse</a></div><div class="ttdeci">float * random_keyword_parse(std::string color)</div><div class="ttdoc">Парсинг параметра который может содержать функцию random()</div><div class="ttdef"><b>Definition:</b> utils.cpp:49</div></div>
+<div class="ttc" id="autils_8h_html_a60eb8700fea3fcdad1710a3cb6b803af"><div class="ttname"><a href="utils_8h.html#a60eb8700fea3fcdad1710a3cb6b803af">split</a></div><div class="ttdeci">void split(std::string *bufstr, std::string str, char separator)</div><div class="ttdoc">Разделяет строку на строки по разделителю</div><div class="ttdef"><b>Definition:</b> utils.cpp:3</div></div>
+<div class="ttc" id="autils_8h_html_a631fb6b35c282e1d1d7bdfecf237e160"><div class="ttname"><a href="utils_8h.html#a631fb6b35c282e1d1d7bdfecf237e160">splitvalue</a></div><div class="ttdeci">void splitvalue(std::string *bufstr, std::string str)</div><div class="ttdoc">Разделяет строку с переменной VoxParticles.</div><div class="ttdef"><b>Definition:</b> utils.cpp:18</div></div>
+<div class="ttc" id="autils_8h_html_a7294b0871013375af49fbeddd521cf10"><div class="ttname"><a href="utils_8h.html#a7294b0871013375af49fbeddd521cf10">measureFunctionTime</a></div><div class="ttdeci">float measureFunctionTime(Func func, Args &amp;&amp;... args)</div><div class="ttdoc">Вызывает функцию и возвращает время затраченное на ее выполнение</div><div class="ttdef"><b>Definition:</b> utils.h:106</div></div>
+<div class="ttc" id="autils_8h_html_ad48f9015cb68e6fe6ec48b0652cbaca5"><div class="ttname"><a href="utils_8h.html#ad48f9015cb68e6fe6ec48b0652cbaca5">isNumeric</a></div><div class="ttdeci">bool isNumeric(const std::string &amp;str)</div><div class="ttdoc">Проверка является ли эта строка числом</div><div class="ttdef"><b>Definition:</b> utils.cpp:35</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5fc0168d11760b9445bd29fa15d9290f.html">dev</a></li><li class="navelem"><a class="el" href="dir_7941761466d13d401c4d0859fb831fc2.html">voxel3d</a></li><li class="navelem"><a class="el" href="dir_925ea3ddf05fb298ce16c83712db4c6c.html">src</a></li><li class="navelem"><b>utils.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5fc0168d11760b9445bd29fa15d9290f.html">dev</a></li><li class="navelem"><a class="el" href="dir_7941761466d13d401c4d0859fb831fc2.html">voxel3d</a></li><li class="navelem"><a class="el" href="dir_925ea3ddf05fb298ce16c83712db4c6c.html">src</a></li><li class="navelem"><a class="el" href="utils_8h.html">utils.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

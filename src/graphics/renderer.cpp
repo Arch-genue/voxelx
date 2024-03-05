@@ -13,9 +13,9 @@
 
 #define IS_BLOCKED(voxels, X,Y,Z) (IS_IN(voxels, X, Y, Z) && voxels->getVoxel(glm::vec3(X,Y,Z)))
 
-#define VERTEX_SIZE (3 + 3 + 3 + 4)
+#define VERTEX_SIZE (3 + 3 + 4)
 
-int chunk_attrs[] = {3,3,3,4, 0};
+int chunk_attrs[] = {3,3,4, 0};
 
 float* Renderer::buffer;
 size_t Renderer::capacity;
@@ -23,6 +23,8 @@ size_t Renderer::capacity;
 Camera* Renderer::camera;
 
 size_t Renderer::_index;
+
+float asize = 0.5f;
 
 void Renderer::init(size_t capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
@@ -83,6 +85,9 @@ void Renderer::computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string 
 	
 	glm::vec4 clr = voxel->getColor();
 	
+	// if (!voxels->getVoxel(glm::vec3(x, y+1, z)))
+		// std::cout << "ERROR:" << std::endl;
+
 	//? Y
 	if (!IS_BLOCKED(voxels, x,y+1,z)) {
 		top(_index, x, y, z, clr);
@@ -112,19 +117,15 @@ void Renderer::vertex(float x, float y, float z, float vert_x, float vert_y, flo
 	buffer[_index]   = x + vert_x;
 	buffer[_index+1] = y + vert_y;
 	buffer[_index+2] = z + vert_z;
-
-	buffer[_index+3] = vert_x;
-	buffer[_index+4] = vert_y;
-	buffer[_index+5] = vert_z;
 	
-	buffer[_index+6] = normal.x;
-	buffer[_index+7] = normal.y;
-	buffer[_index+8] = normal.z;
+	buffer[_index+3] = normal.x;
+	buffer[_index+4] = normal.y;
+	buffer[_index+5] = normal.z;
 
-	buffer[_index+9] = clr.x;
-	buffer[_index+10] = clr.y;
-	buffer[_index+11] = clr.z;
-	buffer[_index+12] = clr.w;
+	buffer[_index+6] =  clr.x;
+	buffer[_index+7] = clr.y;
+	buffer[_index+8] = clr.z;
+	buffer[_index+9] = clr.w;
 
 	_index += VERTEX_SIZE;
 }
@@ -132,63 +133,63 @@ void Renderer::vertex(float x, float y, float z, float vert_x, float vert_y, flo
 void Renderer::top(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(0.0f, 1.0f, 0.0f);
 	
-	vertex(x,y,z, -0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, -0.5f, normal, clr);
+	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
 }
 void Renderer::bottom(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(0.0f, -1.0f, 0.0f);
 
-	vertex(x,y,z, -0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, -0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, -0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, -0.5f, +0.5f, normal, clr);
+	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
 }
 void Renderer::left(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(1.0f, 0.0f, 0.0f);
 
-	vertex(x,y,z, +0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, +0.5f, normal, clr);
+	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
 
-	vertex(x,y,z, +0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, -0.5f, +0.5f, normal, clr);
+	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
 }
 void Renderer::right(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(-1.0f, 0.0f, 0.0f);
 
-	vertex(x,y,z, -0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, -0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, +0.5f, normal, clr);
+	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
 }
 void Renderer::front(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(0.0f, 0.0f, 1.0f);
 
-	vertex(x,y,z, -0.5f, -0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, -0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, -0.5f, +0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, +0.5f, normal, clr);
+	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
 }
 void Renderer::back(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(0.0f, 0.0f, -1.0f);
 
-	vertex(x,y,z, -0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, -0.5f, -0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, +0.5f, -0.5f, normal, clr);
-	vertex(x,y,z, +0.5f, -0.5f, -0.5f, normal, clr);
+	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
+	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
 }
 
 Camera* Renderer::getCamera() {

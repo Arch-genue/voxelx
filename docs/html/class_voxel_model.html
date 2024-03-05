@@ -91,58 +91,70 @@ $(document).ready(function(){initNavTree('class_voxel_model.html',''); initResiz
 </div><!--header-->
 <div class="contents">
 
-<p>Класс описывающий модель состоящую из вокселей как контейнер  
+<p>класс для хранения вокселей с доступом по координатам.  
  <a href="class_voxel_model.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="voxel_8h_source.html">voxel.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="voxelmodel_8h_source.html">voxelmodel.h</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for VoxelModel:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_voxel_model.png" usemap="#VoxelModel_map" alt=""/>
+  <map id="VoxelModel_map" name="VoxelModel_map">
+<area href="class_particles_model.html" alt="ParticlesModel" shape="rect" coords="0,56,96,80"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9ac2eed55465ef2fa702f8be60c5aecc"><td class="memItemLeft" align="right" valign="top"><a id="a9ac2eed55465ef2fa702f8be60c5aecc" name="a9ac2eed55465ef2fa702f8be60c5aecc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setLight</b> (uint8_t side, glm::vec3 light)</td></tr>
-<tr class="separator:a9ac2eed55465ef2fa702f8be60c5aecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a966a47b812a091af0afc2b74a5c72882"><td class="memItemLeft" align="right" valign="top"><a id="a966a47b812a091af0afc2b74a5c72882" name="a966a47b812a091af0afc2b74a5c72882"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getLight</b> (uint8_t side)</td></tr>
-<tr class="separator:a966a47b812a091af0afc2b74a5c72882"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8284c7a4e051bea4625f20b2e06407bf"><td class="memItemLeft" align="right" valign="top"><a id="a8284c7a4e051bea4625f20b2e06407bf" name="a8284c7a4e051bea4625f20b2e06407bf"></a>
-glm::vec3 *&#160;</td><td class="memItemRight" valign="bottom"><b>getLightArray</b> ()</td></tr>
-<tr class="separator:a8284c7a4e051bea4625f20b2e06407bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f408e4024ce769be817fd1cf34f76b4"><td class="memItemLeft" align="right" valign="top"><a id="a7f408e4024ce769be817fd1cf34f76b4" name="a7f408e4024ce769be817fd1cf34f76b4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VoxelModel</b> (glm::vec3 size, int depth=5)</td></tr>
+<tr class="separator:a7f408e4024ce769be817fd1cf34f76b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad170caa6f31c2ebe4ca219afb092d6cb"><td class="memItemLeft" align="right" valign="top"><a id="ad170caa6f31c2ebe4ca219afb092d6cb" name="ad170caa6f31c2ebe4ca219afb092d6cb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setName</b> (std::string name)</td></tr>
+<tr class="separator:ad170caa6f31c2ebe4ca219afb092d6cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c67ef7d160bf9da179cf4faa4a1f04"><td class="memItemLeft" align="right" valign="top"><a id="ac2c67ef7d160bf9da179cf4faa4a1f04" name="ac2c67ef7d160bf9da179cf4faa4a1f04"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> ()</td></tr>
+<tr class="separator:ac2c67ef7d160bf9da179cf4faa4a1f04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf23d5e70b4121477bb73e8e51f79b66"><td class="memItemLeft" align="right" valign="top"><a id="acf23d5e70b4121477bb73e8e51f79b66" name="acf23d5e70b4121477bb73e8e51f79b66"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addVoxel</b> (<a class="el" href="class_voxel.html">Voxel</a> *voxel)</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>addVoxel</b> (<a class="el" href="class_voxel.html">Voxel</a> *voxel)</td></tr>
 <tr class="separator:acf23d5e70b4121477bb73e8e51f79b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5b130acff29b725aa81ee5c374884ee"><td class="memItemLeft" align="right" valign="top"><a id="af5b130acff29b725aa81ee5c374884ee" name="af5b130acff29b725aa81ee5c374884ee"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getVoxelsCount</b> ()</td></tr>
-<tr class="separator:af5b130acff29b725aa81ee5c374884ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44c5c58af320e66610f30fac48bcd203"><td class="memItemLeft" align="right" valign="top"><a id="a44c5c58af320e66610f30fac48bcd203" name="a44c5c58af320e66610f30fac48bcd203"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setVoxel</b> (int num, <a class="el" href="class_voxel.html">Voxel</a> *voxel)</td></tr>
-<tr class="separator:a44c5c58af320e66610f30fac48bcd203"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb7390c2ac27e7e31b6c79191505d32e"><td class="memItemLeft" align="right" valign="top"><a id="adb7390c2ac27e7e31b6c79191505d32e" name="adb7390c2ac27e7e31b6c79191505d32e"></a>
-<a class="el" href="class_voxel.html">Voxel</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVoxel</b> (int num)</td></tr>
-<tr class="separator:adb7390c2ac27e7e31b6c79191505d32e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63921460b45f71ed4dfd7de2fd277555"><td class="memItemLeft" align="right" valign="top"><a id="a63921460b45f71ed4dfd7de2fd277555" name="a63921460b45f71ed4dfd7de2fd277555"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setSize</b> (glm::vec3 size)</td></tr>
-<tr class="separator:a63921460b45f71ed4dfd7de2fd277555"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb3df7346a80b93dede14851083c9528"><td class="memItemLeft" align="right" valign="top"><a id="afb3df7346a80b93dede14851083c9528" name="afb3df7346a80b93dede14851083c9528"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getSize</b> ()</td></tr>
-<tr class="separator:afb3df7346a80b93dede14851083c9528"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ee5a360082d729aef0e18a49ccb3845"><td class="memItemLeft" align="right" valign="top"><a id="a7ee5a360082d729aef0e18a49ccb3845" name="a7ee5a360082d729aef0e18a49ccb3845"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setRenderSide</b> (std::string renderside)</td></tr>
-<tr class="separator:a7ee5a360082d729aef0e18a49ccb3845"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00d54edf4825fed35fc4354ef38c6171"><td class="memItemLeft" align="right" valign="top"><a id="a00d54edf4825fed35fc4354ef38c6171" name="a00d54edf4825fed35fc4354ef38c6171"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getRenderSide</b> ()</td></tr>
-<tr class="separator:a00d54edf4825fed35fc4354ef38c6171"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad99dd90d66da4106a2d70c76b658dac3"><td class="memItemLeft" align="right" valign="top"><a id="ad99dd90d66da4106a2d70c76b658dac3" name="ad99dd90d66da4106a2d70c76b658dac3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setVoxelPosition</b> (int num, glm::vec3 position)</td></tr>
-<tr class="separator:ad99dd90d66da4106a2d70c76b658dac3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab89feb5e7602e73cc05bfe4ef2ed1404"><td class="memItemLeft" align="right" valign="top"><a id="ab89feb5e7602e73cc05bfe4ef2ed1404" name="ab89feb5e7602e73cc05bfe4ef2ed1404"></a>
-glm::vec3&#160;</td><td class="memItemRight" valign="bottom"><b>getVoxelPosition</b> (int num)</td></tr>
-<tr class="separator:ab89feb5e7602e73cc05bfe4ef2ed1404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71387a71db3a32116317c1c228088674"><td class="memItemLeft" align="right" valign="top"><a id="a71387a71db3a32116317c1c228088674" name="a71387a71db3a32116317c1c228088674"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>removeVoxel</b> (glm::vec3 position)</td></tr>
+<tr class="separator:a71387a71db3a32116317c1c228088674"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a473e339354aa7868f8e186e9a0bad0ed"><td class="memItemLeft" align="right" valign="top"><a id="a473e339354aa7868f8e186e9a0bad0ed" name="a473e339354aa7868f8e186e9a0bad0ed"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setVoxelVisible</b> (glm::ivec3 position, bool visible)</td></tr>
+<tr class="separator:a473e339354aa7868f8e186e9a0bad0ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad072aa5a20d436ff4339e10ff6ce0c8f"><td class="memItemLeft" align="right" valign="top"><a id="ad072aa5a20d436ff4339e10ff6ce0c8f" name="ad072aa5a20d436ff4339e10ff6ce0c8f"></a>
+<a class="el" href="class_voxel.html">Voxel</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getVoxel</b> (glm::ivec3 position)</td></tr>
+<tr class="separator:ad072aa5a20d436ff4339e10ff6ce0c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4cf18e479285edda3faa5a56fc44391"><td class="memItemLeft" align="right" valign="top"><a id="ab4cf18e479285edda3faa5a56fc44391" name="ab4cf18e479285edda3faa5a56fc44391"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>fillColor</b> (glm::vec4 color)</td></tr>
+<tr class="separator:ab4cf18e479285edda3faa5a56fc44391"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfac09f11ed82db5e5a51bf38903a4c9"><td class="memItemLeft" align="right" valign="top"><a id="adfac09f11ed82db5e5a51bf38903a4c9" name="adfac09f11ed82db5e5a51bf38903a4c9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setMesh</b> (<a class="el" href="class_mesh.html">Mesh</a> *mesh)</td></tr>
+<tr class="separator:adfac09f11ed82db5e5a51bf38903a4c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c343dbdee0e188e21a5235995085250"><td class="memItemLeft" align="right" valign="top"><a id="a3c343dbdee0e188e21a5235995085250" name="a3c343dbdee0e188e21a5235995085250"></a>
+<a class="el" href="class_mesh.html">Mesh</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>getMesh</b> ()</td></tr>
+<tr class="separator:a3c343dbdee0e188e21a5235995085250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3568943a649284bc667ebdac9cd670f9"><td class="memItemLeft" align="right" valign="top"><a id="a3568943a649284bc667ebdac9cd670f9" name="a3568943a649284bc667ebdac9cd670f9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setRenderSide</b> (std::string &amp;renderside) const</td></tr>
+<tr class="separator:a3568943a649284bc667ebdac9cd670f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a380c3cd6ae283f3840d55d48ed382db9"><td class="memItemLeft" align="right" valign="top"><a id="a380c3cd6ae283f3840d55d48ed382db9" name="a380c3cd6ae283f3840d55d48ed382db9"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getRenderSide</b> () const</td></tr>
+<tr class="separator:a380c3cd6ae283f3840d55d48ed382db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3de4e7b9b8406b7c5597d9c6d992c29f"><td class="memItemLeft" align="right" valign="top"><a id="a3de4e7b9b8406b7c5597d9c6d992c29f" name="a3de4e7b9b8406b7c5597d9c6d992c29f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setSize</b> (glm::ivec3 size)</td></tr>
+<tr class="separator:a3de4e7b9b8406b7c5597d9c6d992c29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3fd830b28ba8c91b0df620607b08766"><td class="memItemLeft" align="right" valign="top"><a id="ab3fd830b28ba8c91b0df620607b08766" name="ab3fd830b28ba8c91b0df620607b08766"></a>
+glm::ivec3&#160;</td><td class="memItemRight" valign="bottom"><b>getSize</b> () const</td></tr>
+<tr class="separator:ab3fd830b28ba8c91b0df620607b08766"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Класс описывающий модель состоящую из вокселей как контейнер </p>
+<div class="textblock"><p >класс для хранения вокселей с доступом по координатам. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/user/dev/voxel3d/src/voxels/<a class="el" href="voxel_8h_source.html">voxel.h</a></li>
-<li>/home/user/dev/voxel3d/src/voxels/voxel.cpp</li>
+<li>/home/user/dev/voxel3d/src/voxels/<a class="el" href="voxelmodel_8h_source.html">voxelmodel.h</a></li>
+<li>/home/user/dev/voxel3d/src/voxels/voxelmodel.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

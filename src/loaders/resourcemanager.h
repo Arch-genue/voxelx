@@ -27,6 +27,8 @@ class ResourceManager {
     static std::map<std::string, Texture*> _textures;
     static std::map<std::string, Particles*> _particles;
     static std::map<std::string, FT_Face> _faces;
+
+    static FT_Library _ft;
 public:
     static void init(std::string str);
     static void cleanup();
@@ -35,6 +37,12 @@ public:
     static void deleteModels();
     static void deleteTextures();
     static void deleteParticles();
+
+    static void loadShaders();
+    static void loadTextures();
+    static void loadModels();
+    static void loadParticlesSystems();
+    static void loadFonts();
 
     static void loadShader(std::string str);
     static void loadTexture(std::string str);

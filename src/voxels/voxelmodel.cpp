@@ -6,14 +6,10 @@
 
 #include <iostream>
 
-class Octree;
-
 VoxelModel::VoxelModel(glm::vec3 size, int depth) : _size(size) {
-    _voxels = new Octree(glm::vec3(0), glm::vec3(_size.x, _size.y, _size.z), depth);
+    _voxels = vtype::array3<int32_t, Voxel*>(size.x, size.y, size.z);
 }
-VoxelModel::~VoxelModel() {
-    delete _voxels;
-}
+VoxelModel::~VoxelModel() {}
 
 void VoxelModel::setName(std::string name) {
     _name = name;
@@ -22,28 +18,24 @@ std::string VoxelModel::getName() {
     return _name;
 }
 
-
 void VoxelModel::addVoxel(Voxel *voxel) {
-    _voxels->insert(voxel);
-
+    glm::vec3 pos = voxel->getPosition();
+    _voxels.add(pos.x, pos.y, pos.z, voxel);
 }
 // Метод для удаления вокселя по координатам и освобождения памяти
 void VoxelModel::removeVoxel(glm::vec3 position) {
-    Voxel* vox = _voxels->find(position);
-    if (vox != nullptr) {
-        _voxels->remove(_voxels->find(position));
-    }
+    // delete _voxels[position];
+    // _voxels.erase(position);
 }
 void VoxelModel::setVoxelVisible(glm::ivec3 position, bool visible) { 
     Voxel* voxel = getVoxel(position);
-    
     if (voxel != nullptr) {
         voxel->setVisible(visible); 
     }
 }
 
 Voxel* VoxelModel::getVoxel(glm::ivec3 position) {
-    return _voxels->find(position);
+    return _voxels.get(position.x, position.y, position.z);
 }
 
 void VoxelModel::fillColor(glm::vec4 color) {
@@ -152,121 +144,4 @@ VoxelModel* genVoxel() {
     Voxel* voxel = new Voxel(glm::vec3(0), glm::vec4(0));
     nullvox->addVoxel(voxel);
     return nullvox;
-}
-
-Octree::Octree(const glm::vec3 &min, const glm::vec3 &max, int maxDepth) 
-    : _root(nullptr), _minBounds(min), _maxBounds(max), _maxDepth(maxDepth) {
-    _root = new OctreeNode(); // Создаем корневой узел
-}
-
-void Octree::insert(Voxel *voxel) {
-    insertRecursive(_root, voxel, _minBounds, _maxBounds, 0);
-}
-
-void Octree::insertRecursive(OctreeNode* node, Voxel* voxel, const glm::vec3& min, const glm::vec3& max, int depth) {
-    // Проверяем, находится ли воксель в пределах узла
-    if (voxel->getPosition().x < min.x || voxel->getPosition().x >= max.x ||
-        voxel->getPosition().y < min.y || voxel->getPosition().y >= max.y ||
-        voxel->getPosition().z < min.z || voxel->getPosition().z >= max.z) {
-        return;
-    }
-
-    // Если достигнута максимальная глубина или узел является листовым, добавляем воксель в узел
-    if (depth == _maxDepth || !node->children[0]) {
-        node->voxels.push_back(voxel);
-        return;
-    }
-
-    // Разделяем узел, если это необходимо
-    glm::vec3 mid = (min + max) * 0.5f;
-    int childIndex = 0;
-    if (voxel->getPosition().x >= mid.x) childIndex |= 1;
-    if (voxel->getPosition().y >= mid.y) childIndex |= 2;
-    if (voxel->getPosition().z >= mid.z) childIndex |= 4;
-
-    if (!node->children[childIndex]) {
-        // Создаем дочерний узел, если он еще не создан
-        node->children[childIndex] = new OctreeNode();
-        // Вычисляем границы дочернего узла
-        glm::vec3 childMin, childMax;
-        childMin.x = (childIndex & 1) ? mid.x : min.x;
-        childMax.x = (childIndex & 1) ? max.x : mid.x;
-        childMin.y = (childIndex & 2) ? mid.y : min.y;
-        childMax.y = (childIndex & 2) ? max.y : mid.y;
-        childMin.z = (childIndex & 4) ? mid.z : min.z;
-        childMax.z = (childIndex & 4) ? max.z : mid.z;
-        // Рекурсивно вставляем воксель в дочерний узел
-        insertRecursive(node->children[childIndex], voxel, childMin, childMax, depth + 1);
-    } else {
-        // Рекурсивно вставляем воксель в существующий дочерний узел
-        insertRecursive(node->children[childIndex], voxel, mid, max, depth + 1);
-    }
-}
-
-void Octree::remove(Voxel* voxel) {
-    removeRecursive(_root, voxel, _minBounds, _maxBounds, 0);
-}
-
-void Octree::removeRecursive(OctreeNode* node, Voxel* voxel, const glm::vec3& min, const glm::vec3& max, int depth) {
-    // Проверяем, находится ли воксель в пределах узла
-    if (voxel->getPosition().x < min.x || voxel->getPosition().x >= max.x ||
-        voxel->getPosition().y < min.y || voxel->getPosition().y >= max.y ||
-        voxel->getPosition().z < min.z || voxel->getPosition().z >= max.z) {
-        return;
-    }
-
-    // Если достигнута максимальная глубина или узел является листовым, удаляем воксель из узла
-    if (depth == _maxDepth || !node->children[0]) {
-        for (auto it = node->voxels.begin(); it != node->voxels.end(); ++it) {
-            if (*it == voxel) {
-                node->voxels.erase(it);
-                break;
-            }
-        }
-        return;
-    }
-
-    // Разделяем узел, если это необходимо
-    glm::vec3 mid = (min + max) * 0.5f;
-    int childIndex = 0;
-    if (voxel->getPosition().x >= mid.x) childIndex |= 1;
-    if (voxel->getPosition().y >= mid.y) childIndex |= 2;
-    if (voxel->getPosition().z >= mid.z) childIndex |= 4;
-
-    if (node->children[childIndex]) {
-        removeRecursive(node->children[childIndex], voxel, mid, max, depth + 1);
-    }
-}
-
-Voxel* Octree::find(const glm::vec3& position) {
-    return findRecursive(_root, position);
-}
-
-Voxel* Octree::findRecursive(OctreeNode* node, const glm::vec3& position) {
-    // Если узел пуст или позиция находится за пределами границ узла, возвращаем nullptr
-    if (!node || position.x < _minBounds.x || position.x > _maxBounds.x ||
-        position.y < _minBounds.y || position.y > _maxBounds.y ||
-        position.z < _minBounds.z || position.z > _maxBounds.z) {
-        return nullptr;
-    }
-
-    // Если узел является листовым, проверяем воксели в нем
-    if (node->voxels.size() > 0) {
-        // Проверяем каждый воксель в узле на точное соответствие позиции
-        for (Voxel* voxel : node->voxels) {
-            if (glm::all(glm::equal(voxel->getPosition(), position, glm::epsilon<float>()))) {
-                return voxel;  // Найден воксель, возвращаем его
-            }
-        }
-        return nullptr;  // Воксель не найден в узле
-    }
-
-    // Рекурсивно ищем воксель в дочерних узлах, в которых находится позиция
-    glm::vec3 mid = (_minBounds + _maxBounds) * 0.5f;
-    int childIndex = 0;
-    if (position.x >= mid.x) childIndex |= 1;
-    if (position.y >= mid.y) childIndex |= 2;
-    if (position.z >= mid.z) childIndex |= 4;
-
-    return findRecursive(node->children[childIndex], position);
 }

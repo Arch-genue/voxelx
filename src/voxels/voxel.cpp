@@ -1,35 +1,32 @@
 #include "voxel.h"
 
-#include <iostream>
-
 Voxel::Voxel() {
     setPosition(glm::vec3(0));
     setVelocity(glm::vec3(0));
     setColor(glm::vec4(1));
     setVisible(true);
 }
-Voxel::Voxel(glm::vec3 position) {
+Voxel::Voxel(glm::ivec3 position) {
     setPosition(position);
     setVelocity(glm::vec3(0));
     setColor(glm::vec4(1));
     setVisible(true);
 }
-Voxel::Voxel(glm::vec3 position, glm::vec4 color): _position(position), _color(color) {
+Voxel::Voxel(glm::ivec3 position, glm::vec4 color): _position(position), _color(color) {
     setVelocity(glm::vec3(0));
     setVisible(true);
 }
-Voxel::Voxel(glm::vec3 position, glm::vec3 velocity, glm::vec4 color): _position(position), _velocity(velocity), _color(color) {
+Voxel::Voxel(glm::ivec3 position, glm::vec3 velocity, glm::vec4 color): _position(position), _velocity(velocity), _color(color) {
     setVisible(true);
 }
 Voxel::~Voxel() {}
-
 
 /**
  * @brief Set the position of the Voxel.
  * 
  * @param position The new position of the Voxel.
  */
-void Voxel::setPosition(glm::vec3 position) {
+void Voxel::setPosition(glm::ivec3 position) {
     _position = position;
 }
 /**
@@ -37,10 +34,9 @@ void Voxel::setPosition(glm::vec3 position) {
  * 
  * @return glm::vec3 
  */
-glm::vec3 Voxel::getPosition() {
+glm::ivec3 Voxel::getPosition() {
     return  _position;
 }
-
 
 /**
  * @brief Sets the velocity of the Voxel.
