@@ -9,13 +9,13 @@ GameManager::GameManager() {
     _physicsengine = new PhysicsEngine();
     _gameobject_increment = 0;
 
-    errorprint("GAMEMGR", "GameManager initialized",  MSGINFO);
+    Logger::eprint("GAMEMGR", "GameManager initialized",  LOGLEVEL::INFO);
 }
 GameManager::~GameManager() {
     _gameobjects.clear();
     _voxelparticles.clear();
-    errorprint("GAMEMGR", "GameObjects deleted",  MSGINFO);
-    errorprint("GAMEMGR", "VoxelParticles deleted",  MSGINFO);
+    Logger::eprint("GAMEMGR", "GameObjects deleted",  LOGLEVEL::INFO);
+    Logger::eprint("GAMEMGR", "VoxelParticles deleted",  LOGLEVEL::INFO);
 }
 
 void GameManager::addGameObject(GameObject* gameobject) {

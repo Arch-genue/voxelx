@@ -75,33 +75,3 @@ float* random_keyword_parse(std::string color) {
         return nullptr;
     }
 }
-#include <iostream>
-void errorprint(std::string subject, std::string msg, MSGTYPE type) {
-    std::string msgtype;
-    std::string clr;
-    std::string spacer;
-    switch(type) {
-        case MSGERROR:
-            msgtype = "ERROR";
-            spacer = "    ";
-            clr = BRIGHT_RED_COLOR;
-            break;
-        case MSGWARNING:
-            msgtype = "WARNING";
-            spacer = "  ";
-            clr = BRIGHT_YELLOW_COLOR;
-            break;
-        case MSGINFO:
-            msgtype = "INFO";
-            spacer = "     ";
-            clr = BRIGHT_CYAN_COLOR;
-            break;
-        case MSGSUCCESS:
-            msgtype = "SUCCESS";
-            spacer = "  ";
-            clr = BRIGHT_GREEN_COLOR;
-            break;
-    }
-    std::string text = clr + std::string("[" + msgtype + "]") + spacer + BRIGHT_WHITE_COLOR + std::string("[" + subject + "]  ") + RESET_COLOR + msg + "\n";
-    printf(text.c_str());
-}

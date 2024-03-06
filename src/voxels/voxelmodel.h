@@ -15,6 +15,9 @@
 #include <vector>
 
 #include "voxel.h"
+#include "../utilities/vtype.h"
+#include "../utilities/logger.h"
+
 class Mesh;
 
 /**
@@ -24,7 +27,7 @@ class Mesh;
 class VoxelModel {
 private:
     std::string _name;
-    vtype::array3<int32_t, Voxel*> _voxels;
+    vtype::array3<int32_t, Voxel*> *_voxels;
 
     std::string _renderside;
     glm::vec3 _size;
@@ -33,14 +36,14 @@ private:
     Mesh* _pmesh;
     
 public:
-    VoxelModel(glm::vec3 size, int depth = 5);
+    VoxelModel(glm::i16vec3 size, int depth = 5);
     ~VoxelModel();
 
     void setName(std::string name);
     std::string getName();
 
     virtual void addVoxel(Voxel* voxel);
-    virtual void removeVoxel(glm::vec3 position);
+    virtual void removeVoxel(glm::ivec3 position);
     virtual void setVoxelVisible(glm::ivec3 position, bool visible);
 
     Voxel* getVoxel(glm::ivec3 position);
@@ -53,8 +56,8 @@ public:
     void setRenderSide(std::string& renderside) const { renderside = _renderside; }
     std::string getRenderSide() const { return _renderside; }
 
-    void setSize(glm::vec3 size) { _size = size; }
-    glm::vec3 getSize() const { return _size; }
+    void setSize(glm::ivec3 size) { _size = size; }
+    glm::ivec3 getSize() const { return _size; }
 };
 
 extern VoxelModel *load_model(std::string filename, const char *type);

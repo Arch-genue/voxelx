@@ -2,23 +2,18 @@
 
 Voxel::Voxel() {
     setPosition(glm::vec3(0));
-    setVelocity(glm::vec3(0));
     setColor(glm::vec4(1));
     setVisible(true);
 }
 Voxel::Voxel(glm::ivec3 position) {
     setPosition(position);
-    setVelocity(glm::vec3(0));
     setColor(glm::vec4(1));
     setVisible(true);
 }
 Voxel::Voxel(glm::ivec3 position, glm::vec4 color): _position(position), _color(color) {
-    setVelocity(glm::vec3(0));
     setVisible(true);
 }
-Voxel::Voxel(glm::ivec3 position, glm::vec3 velocity, glm::vec4 color): _position(position), _velocity(velocity), _color(color) {
-    setVisible(true);
-}
+
 Voxel::~Voxel() {}
 
 /**
@@ -36,23 +31,6 @@ void Voxel::setPosition(glm::ivec3 position) {
  */
 glm::ivec3 Voxel::getPosition() {
     return  _position;
-}
-
-/**
- * @brief Sets the velocity of the Voxel.
- * 
- * @param velocity The new velocity of the Voxel.
- */
-void Voxel::setVelocity(glm::vec3 velocity) {
-    _velocity = velocity;
-}
-/**
- * @brief Returns the velocity of the Voxel.
- * 
- * @return The velocity of the Voxel.
- */
-glm::vec3 Voxel::getVelocity() {
-    return _velocity;
 }
 
 void Voxel::setColor(glm::vec4 color) {

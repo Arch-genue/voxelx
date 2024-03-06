@@ -14,10 +14,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
-#include <map>
+
+#include <GL/glew.h>
 
 #include "../gamesystems/camera.h"
-#include <GL/glew.h>
 
 class Mesh;
 class Camera;

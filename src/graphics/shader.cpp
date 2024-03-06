@@ -9,7 +9,7 @@
 
 #include <GL/glew.h>
 
-#include "../utils.h"
+#include "../utilities/logger.h"
 
 Shader::Shader(unsigned int id) : id(id) {}
 
@@ -81,7 +81,7 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
         vertexCode = vShaderStream.str();
         fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
-        errorprint("SHADER", "FILE_NOT_SUCCESSFULLY_READ",  MSGERROR);
+        Logger::eprint("SHADER", "FILE_NOT_SUCCESSFULLY_READ",  LOGLEVEL::ERROR);
         return nullptr;
     }
     const GLchar* vShaderCode = vertexCode.c_str();
@@ -99,7 +99,7 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     if (!success) {
         glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
         std::string log = infoLog;
-        errorprint("SHADER", "VERTEX SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  MSGERROR);
+        Logger::eprint("SHADER", "VERTEX SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  LOGLEVEL::ERROR);
         return nullptr;
     }
 
@@ -111,7 +111,7 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     if (!success) {
         glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
         std::string log = infoLog;
-        errorprint("SHADER", "FRAGMENT SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  MSGERROR);
+        Logger::eprint("SHADER", "FRAGMENT SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  LOGLEVEL::ERROR);
         return nullptr;
     }
 

@@ -11,9 +11,6 @@
 
 #pragma once
 
-#include "../utils.h"
-#include <vector>
-
 #include "../graphics/types/material.h"
 
 /**
@@ -23,7 +20,6 @@
 class Voxel {
 private:
     glm::vec3 _position;
-    glm::vec3 _velocity;
     glm::vec4 _color;
 
     Material _material;
@@ -35,7 +31,7 @@ public:
     Voxel();
     Voxel(glm::ivec3 position);
     Voxel(glm::ivec3 position, glm::vec4 color);
-    Voxel(glm::ivec3 position, glm::vec3 velocity, glm::vec4 color);
+    // Voxel(glm::ivec3 position, glm::vec3 velocity, glm::vec4 color);
 
     ~Voxel();
 
@@ -47,9 +43,6 @@ public:
      * @return glm::vec3 
      */
     glm::ivec3 getPosition();
-
-    void setVelocity(glm::vec3 velocity);
-    glm::vec3 getVelocity();
 
     void setColor(glm::vec4 color);
     glm::vec4 getColor();

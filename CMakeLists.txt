@@ -55,7 +55,9 @@ set(SOURCE
 
 	src/system/taskscheduler.cpp
 
-	src/utils.cpp
+	src/utilities/utils.cpp
+	src/utilities/vtype.cpp
+	src/utilities/logger.cpp
 )
 
 set(HEADER
@@ -81,7 +83,6 @@ set(HEADER
 
 	src/voxels/voxel.h
 	src/voxels/voxelmodel.h
-	# src/voxels/particle.cpp
 	src/voxels/particlesmodel.h
 
 	src/loaders/resourcemanager.h
@@ -99,7 +100,9 @@ set(HEADER
 
 	src/system/taskscheduler.h
 
-	src/utils.h
+	src/utilities/utils.h
+	src/utilities/vtype.h
+	src/utilities/logger.h
 )
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
@@ -108,21 +111,21 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(OpenGL_GL_PREFERENCE GLVND)
 
-find_package(Boost COMPONENTS python3 REQUIRED)
-if (NOT Boost_FOUND)
-	message(SEND_ERROR "Failed to find Boost")
-	return()
-else()
-	include_directories(${Boost_INCLUDE_DIRS})
-endif()
+# find_package(Boost COMPONENTS python3 REQUIRED)
+# if (NOT Boost_FOUND)
+# 	message(SEND_ERROR "Failed to find Boost")
+# 	return()
+# else()
+# 	include_directories(${Boost_INCLUDE_DIRS})
+# endif()
 
-find_package(Python3 REQUIRED COMPONENTS Development)
-if (NOT Python3_FOUND)
-	message(SEND_ERROR "Failed to find Python 3")
-	return()
-else()
-	include_directories(${Python3_INCLUDE_DIRS})
-endif()
+# find_package(Python3 REQUIRED COMPONENTS Development)
+# if (NOT Python3_FOUND)
+# 	message(SEND_ERROR "Failed to find Python 3")
+# 	return()
+# else()
+# 	include_directories(${Python3_INCLUDE_DIRS})
+# endif()
 
 find_package(Freetype REQUIRED)
 if(NOT Freetype_FOUND)
@@ -168,7 +171,7 @@ find_package(GLU REQUIRED)
 
 find_package(PNG REQUIRED)
 if(NOT PNG_FOUND)
-	message(SEND_ERROR "Failed to find Libpng")
+	message(SEND_ERROR "Failed to find LibPNG")
 	return()
 else()
 	include_directories(${PNG_INCLUDE_DIR})
@@ -185,7 +188,7 @@ target_link_libraries(voxel3d
 	${PNG_LIBRARY}
 	${FREETYPE_LIBRARY}
 
-	${Boost_LIBRARIES}
-	${Python3_LIBRARY}
+	# ${Boost_LIBRARIES}
+	# ${Python3_LIBRARY}
 )
 target_compile_options(voxel3d PRIVATE -g)

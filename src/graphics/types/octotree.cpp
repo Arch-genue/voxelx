@@ -147,7 +147,7 @@ void OctoNode::insert(uint16_t maxdepth) {
                     _children[i]->setDepth(_depth + 1);
                     _children[i]->insert(maxdepth);
 
-                    // errorprint("OctoNode", std::to_string(iterator) + " " + std::to_string(xn) + " " + std::to_string(yn) + " " + std::to_string(zn), MSGINFO);
+                    // Logger::eprint("OctoNode", std::to_string(iterator) + " " + std::to_string(xn) + " " + std::to_string(yn) + " " + std::to_string(zn), LOGLEVEL::INFO);
                     i++;
                 }
             }

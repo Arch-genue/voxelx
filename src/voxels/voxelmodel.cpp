@@ -6,8 +6,8 @@
 
 #include <iostream>
 
-VoxelModel::VoxelModel(glm::vec3 size, int depth) : _size(size) {
-    _voxels = vtype::array3<int32_t, Voxel*>(size.x, size.y, size.z);
+VoxelModel::VoxelModel(glm::i16vec3 size, int depth) : _size(size) {
+    _voxels = new vtype::array3<int32_t, Voxel*>(size.x, size.y, size.z);
 }
 VoxelModel::~VoxelModel() {}
 
@@ -19,13 +19,13 @@ std::string VoxelModel::getName() {
 }
 
 void VoxelModel::addVoxel(Voxel *voxel) {
-    glm::vec3 pos = voxel->getPosition();
-    _voxels.add(pos.x, pos.y, pos.z, voxel);
+    glm::ivec3 pos = voxel->getPosition();
+    _voxels->add(pos.x, pos.y, pos.z, voxel);
 }
 // Метод для удаления вокселя по координатам и освобождения памяти
-void VoxelModel::removeVoxel(glm::vec3 position) {
-    // delete _voxels[position];
-    // _voxels.erase(position);
+void VoxelModel::removeVoxel(glm::ivec3 position) {
+    delete _voxels->get(position.x, position.y, position.z);
+    // _voxels->
 }
 void VoxelModel::setVoxelVisible(glm::ivec3 position, bool visible) { 
     Voxel* voxel = getVoxel(position);
@@ -35,7 +35,7 @@ void VoxelModel::setVoxelVisible(glm::ivec3 position, bool visible) {
 }
 
 Voxel* VoxelModel::getVoxel(glm::ivec3 position) {
-    return _voxels.get(position.x, position.y, position.z);
+    return _voxels->get(position.x, position.y, position.z);
 }
 
 void VoxelModel::fillColor(glm::vec4 color) {
@@ -51,6 +51,8 @@ Mesh* VoxelModel::getMesh() {
 }
 
 VoxelModel* load_model(std::string filename, const char* type) {
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::ifstream in(filename);
     if (in.is_open()) {
         std::string line;
@@ -130,11 +132,16 @@ VoxelModel* load_model(std::string filename, const char* type) {
             __voxels[i] = nullptr;
         }
         voxels->setSize(glm::vec3(x_max + 1, y_max + 1, z_max + 1));
-        // delete __voxels;
         in.close();
+        
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<float> duration = end - start;
+
+        Logger::eprint("LOADER", "Loaded model: " + std::string(CYAN_COLOR) + filename + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
         return voxels;
     } else {
-        std::cerr << "ERROR::VOXMODEL::Voxel model not loaded: " << filename << std::endl;
+        // Logger::eprint("LOADER", "", LOGLEVEL::ERROR)
+        // std::cerr << "ERROR::VOXMODEL::Voxel model not loaded: " << filename << std::endl;
         return nullptr;
     }
 }

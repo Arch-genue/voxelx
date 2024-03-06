@@ -8,7 +8,7 @@ PhysicsEngine::PhysicsEngine() {
     _gravity = glm::vec3(0, -9.81f, 0);
 	// _root = nullptr;
 
-    errorprint("PHYSENG", "PhysicsEngine initialized",  MSGINFO);
+    Logger::eprint("PHYSENG", "PhysicsEngine initialized",  LOGLEVEL::INFO);
 }
 PhysicsEngine::~PhysicsEngine() {}
 

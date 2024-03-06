@@ -42,9 +42,9 @@ class Camera {
         void setFlipped(bool flipped);
         bool getFlipped();
 
-        glm::vec3 getFrontVector();
-        glm::vec3 getUpVector();
-        glm::vec3 getRightVector();
+        glm::vec3 getTarget();
+        glm::vec3 getUp();
+        glm::vec3 getRight();
 
         glm::mat4 getProjection();
         glm::mat4 getView();

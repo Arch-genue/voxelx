@@ -1,9 +1,8 @@
 #include "voxelparticles.h"
 #include "../loaders/resourcemanager.h"
 #include "renderer.h"
-#include "../utils.h"
+#include "../utilities/logger.h"
 
-#include <iostream>
 #include <fstream>
 
 std::mt19937 rng(std::random_device{}());
@@ -72,7 +71,7 @@ void VoxelParticles::update(float deltaTime) {
         if (voxel->getLifeTime() >= 0.0f) {
             voxel->setLifeTime(voxel->getLifeTime() - deltaTime);
             if (position.y > 2) {
-                voxel->setPosition(position + _particlesarray->getVoxel(i)->getVelocity() * deltaTime);
+                // voxel->setPosition(position + _particlesarray->getVoxel(i)->getVelocity() * deltaTime);
                 // _voxelsarray->setVoxelPosition(i, glm::vec3(10));
                 // _voxelsarray->setVoxelPosition(i, position + _voxelsarray->getVoxel(i)->getVelocity() * deltaTime);
             } else {
@@ -96,7 +95,7 @@ void VoxelParticles::update(float deltaTime) {
 void VoxelParticles::calculateAnimation(Voxel* voxel) {
     glm::vec3 position = voxel->getPosition();
     voxel->setPosition(_position + glm::vec3(pos_generator(rng), 0, pos_generator(rng)));
-    voxel->setVelocity(glm::vec3(0, vel_generator(rng) + _gravity.y, 0));
+    // voxel->setVelocity(glm::vec3(0, vel_generator(rng) + _gravity.y, 0));
 
     float _tmpclrred = (__red.x == -1) ? __red.y : redclr_generator(rng);
     float _tmpclrgreen = (__red.x == -1) ? __red.y : redclr_generator(rng);

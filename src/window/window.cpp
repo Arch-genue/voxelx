@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 #include "window.h"
-#include "../utils.h"
+#include "../utilities/logger.h"
 // #include <iostream>
 
 SDL_Window* Window::window;
@@ -21,7 +21,7 @@ int Window::init(int width, int height, const char* title) {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::string err = SDL_GetError();
-        errorprint("WINDOW", "SDL could not initialize! SDL_Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  MSGERROR);
+        Logger::eprint("WINDOW", "SDL could not initialize! SDL_Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
         std::exit(1);
 		return 1;
 	}
@@ -29,7 +29,7 @@ int Window::init(int width, int height, const char* title) {
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == NULL) {
         std::string err = SDL_GetError();
-        errorprint("WINDOW", "Window could not be created! SDL_Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  MSGERROR);
+        Logger::eprint("WINDOW", "Window could not be created! SDL_Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
         std::exit(1);
         return 1;
     }
@@ -38,14 +38,14 @@ int Window::init(int width, int height, const char* title) {
 
     if (glContext == NULL) {
         std::string err = SDL_GetError();
-        errorprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  MSGERROR);
+        Logger::eprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
         std::exit(1);
         return 1;
     }
     glewInit();
 
     if (TTF_Init() != 0) {
-        errorprint("WINDOW", "SDL_TTF could not initialize!",  MSGERROR);
+        Logger::eprint("WINDOW", "SDL_TTF could not initialize!",  LOGLEVEL::ERROR);
         std::exit(1);
         return 1;
     }
@@ -97,7 +97,7 @@ void Window::toggleFullscreen() {
 }
 
 void Window::exit() {
-    errorprint("WINDOW", "Deleting GL context, closing window",  MSGINFO);
+    Logger::eprint("WINDOW", "Deleting GL context, closing window",  LOGLEVEL::INFO);
     SDL_DestroyRenderer(guirenderer);
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);

@@ -35,7 +35,7 @@ void Camera::rotate(glm::vec2 rot, float z) {
     _updateVectors();
 }
 void Camera::setPosition(glm::vec3 pos) {
-    _position = pos;
+    _position = pos / 10.0f;
 }
 glm::vec3 Camera::getPosition() {
     return _position * 10.0f;
@@ -85,13 +85,13 @@ bool Camera::getFlipped() {
 }
 
 
-glm::vec3 Camera::getFrontVector() {
+glm::vec3 Camera::getTarget() {
     return _front;
 }
-glm::vec3 Camera::getUpVector() {
+glm::vec3 Camera::getUp() {
     return _up;
 }
-glm::vec3 Camera::getRightVector() {
+glm::vec3 Camera::getRight() {
     return _right;
 }
 

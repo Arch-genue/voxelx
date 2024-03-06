@@ -15,9 +15,9 @@
 
 #define GLEW_STATIC
 #include <GL/glew.h>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_ttf.h>
+// #include <SDL2/SDL.h>
+// #include <SDL2/SDL_opengl.h>
+// #include <SDL2/SDL_ttf.h>
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -36,13 +36,11 @@ using namespace glm;
 #include "gamesystems/gamemanager.h"
 
 #include "voxels/voxelmodel.h"
-#include "voxels/particlesmodel.h"
+// #include "voxels/particlesmodel.h"
 #include "gamesystems/camera.h"
 #include "gamesystems/entity.h"
 
 #include "system/taskscheduler.h"
-
-#include "graphics/cube.h"
 
 #include "graphics/types/octotree.h"
 
@@ -61,7 +59,7 @@ using namespace glm;
  * @brief Заголовок окна
  *
  */
-#define TITLE "Voxel3D DEMO"
+#define TITLE "VoxelX 0.2"
 
 int WIDTH = 1024;
 int HEIGHT = 768;
@@ -114,19 +112,17 @@ int test() {
 
 std::mt19937 rng1(std::random_device{}());
 int main() {
-    printf("Voxel 3D: %s\n\n", _VERSION);
+    Logger::setLogLevel(LOGLEVEL::WARNING);
+
     std::string _version = _VERSION;
+    Logger::eprint("ENGINE", "VoxelX " + _version + "\n", LOGLEVEL::ALL);    
 
     Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();
 
     ResourceManager::init("../res/");
-    
-    std::cout << std::endl;
 
     Renderer::init(_RENDERSIZE);
-    
-    std::cout << std::endl;
 
     ResourceManager::loadShaders();
     ResourceManager::loadTextures();
@@ -155,7 +151,6 @@ int main() {
             }
         }
     }
-
     VoxelModel *boxvox = new VoxelModel(glm::ivec3(10, 10, 10));
     for (int y1 = 0; y1 < boxvox->getSize().y; y1++) {
         for (int z1 = 0; z1 < boxvox->getSize().z; z1++) { 
@@ -180,7 +175,7 @@ int main() {
     ResourceManager::addModel(floorvox, "floor");
     ResourceManager::addModel(boxvox, "box");
     ResourceManager::addModel(lightvox, "light");
-    
+
     ResourceManager::prepareModel("floor");
     ResourceManager::prepareModel("box");
     ResourceManager::prepareModel("light");
@@ -204,7 +199,7 @@ int main() {
     appleobj->attachCamera(camera, vec3(0, 50, 40)); //! Attach camera to appleobj, apple hidden
     appleobj->setPhysics(DYNAMIC_PHYSICS);
     appleobj->setVisible(true);
-    
+
     // auto test1 = [tree](GameObject* gameobject) {
     //     return tree->getRoot()->insert(gameobject);
     // };
@@ -212,7 +207,7 @@ int main() {
     // std::cout << time << std::endl;
     tree->generate();
 
-    errorprint("OCTREE", "Node count: " + std::to_string(tree->getRoot()->getNodeCount()), MSGINFO);
+    Logger::eprint("OCTREE", "Node count: " + std::to_string(tree->getRoot()->getNodeCount()), LOGLEVEL::INFO);
 
     GameObject *appleobj1 = new GameObject("apple", vec3(0, 15, 10));
     appleobj1->setPhysics(DYNAMIC_PHYSICS);
@@ -246,14 +241,21 @@ int main() {
 
     GUI gui;
 
-    FT_Face test = ResourceManager::getFont("arial");
-    TextMesh* textMesh = new TextMesh(test);
+    FT_Face face = ResourceManager::getFont("arial");
+    TextMesh* textMesh = new TextMesh(face);
 
     Input::add_event_handler(JPRESSED, SDLK_ESCAPE, exit_game);
     Input::add_event_handler(JPRESSED, SDLK_TAB, Input::toggleCursor);
     Input::add_event_handler(JPRESSED, SDLK_F3, debug_mode);
     Input::add_event_handler(JPRESSED, SDLK_F11, Window::toggleFullscreen);
     Input::add_event_handler(JPRESSED, SDLK_p, pause_mode);
+
+    Logger::eprint("DBG", "VEC3 Size " + std::to_string(sizeof(glm::vec3(1.0f))), LOGLEVEL::WARNING);
+    Logger::eprint("DBG", "IVEC3 Size " + std::to_string(sizeof(glm::ivec3(1))), LOGLEVEL::WARNING);
+    Logger::eprint("DBG", "Voxel Size " + std::to_string(sizeof(Voxel)), LOGLEVEL::WARNING);
+    Logger::eprint("DBG", "VoxelModel Size " + std::to_string(sizeof(VoxelModel)), LOGLEVEL::WARNING);
+    Logger::eprint("DBG", "Array3 Size " + std::to_string(sizeof(vtype::array3<int, Voxel*>)), LOGLEVEL::WARNING);
+    Logger::eprint("DBG", "Mesh Size " + std::to_string(sizeof(Mesh)), LOGLEVEL::WARNING);
 
     Window::setPause(false);
     Input::toggleCursor();
@@ -277,17 +279,16 @@ int main() {
             cam.y += -Input::deltaY * MOUSE_SPEED / Window::height;
             if (cam.y < -glm::radians(89.0f))
                 cam.y = -glm::radians(89.0f);
-
-            if (cam.y > glm::radians(89.0f))
+            else if (cam.y > glm::radians(89.0f))
                 cam.y = glm::radians(89.0f);
 
             camera->setRotation(glm::mat4(1.0f));
             camera->rotate(cam, 0);
             appleobj->setRotation(cam.x, glm::vec3(0, 1, 0));
-            camera->setPosition((appleobj->getPosition() + glm::vec3(0, 3, 0)) / 10.0f);
+            camera->setPosition(appleobj->getPosition() + glm::vec3(0, 3, 0));
         }
-        glm::vec3 camera_front = camera->getFrontVector();
-        glm::vec3 camera_right = camera->getRightVector();
+        glm::vec3 camera_front = camera->getTarget();
+        glm::vec3 camera_right = camera->getRight();
 
         if (!Window::getPause()) {
             if (Input::pressed(SDLK_w))
@@ -344,7 +345,7 @@ int main() {
 
         Light light;
         light.position = lightobj->getPosition();
-        light.direction = camera->getFrontVector();
+        light.direction = camera->getTarget();
         light.cutOff = glm::cos(glm::radians(15.0f));
         light.outerCutOff = glm::cos(glm::radians(30.0f));
         
@@ -367,8 +368,8 @@ int main() {
         //? TEXT
         ResourceManager::getShader("font")->use();
         ResourceManager::getShader("font")->uniformMatrix("projection", glm::ortho(0.0f, (float)Window::width, 0.0f, (float)Window::height));
-        ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.1f, 0.1f));
-        textMesh->draw("Voxel 3D: " + _version, 5.0f, (float)Window::height-20.0f, 0.4f);
+        ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.9f, 0.3f, 0.9f));
+        textMesh->draw("VoxelX: " + _version, 5.0f, (float)Window::height-20.0f, 0.4f);
 
         if (DEBUG_MODE) {
             ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.5f, 0.1f));
@@ -380,7 +381,7 @@ int main() {
 
             textMesh->draw("Camera position: " + std::to_string(camera->getPosition().x)    + " " + std::to_string(camera->getPosition().y)    + " " + std::to_string(camera->getPosition().z), 5.0f,    Window::height - 115.0f, 0.4f);
             textMesh->draw("Player position: " + std::to_string(appleobj->getPosition().x)  + " " + std::to_string(appleobj->getPosition().y)  + " " + std::to_string(appleobj->getPosition().z), 5.0f,  Window::height - 135.0f, 0.4f);
-            textMesh->draw("Camera Front: "    + std::to_string(camera->getFrontVector().x) + " " + std::to_string(camera->getFrontVector().y) + " " + std::to_string(camera->getFrontVector().z), 5.0f, Window::height - 155.0f, 0.4f);
+            textMesh->draw("Camera Front: "    + std::to_string(camera->getTarget().x) + " " + std::to_string(camera->getTarget().y) + " " + std::to_string(camera->getTarget().z), 5.0f, Window::height - 155.0f, 0.4f);
             textMesh->draw("LIGHT Object position: " + std::to_string(lightobj->getPosition().x)  + " " + std::to_string(lightobj->getPosition().y)  + " " + std::to_string(lightobj->getPosition().z), 5.0f,  Window::height - 175.0f, 0.4f);
             textMesh->draw("BOX Object position: " + std::to_string(boxobj->getPosition().x)  + " " + std::to_string(boxobj->getPosition().y)  + " " + std::to_string(boxobj->getPosition().z), 5.0f,  Window::height - 195.0f, 0.4f);
         

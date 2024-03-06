@@ -18,7 +18,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../mesh.h"
-#include "../../utils.h"
+#include "../../utilities/utils.h"
 
 #include "../../gamesystems/gameobject.h"
 

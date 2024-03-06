@@ -1,6 +1,6 @@
 #include "input.h"
 
-#include "../utils.h"
+#include "../utilities/logger.h"
 
 SDL_Event Input::_sdlevent;
 
@@ -38,7 +38,7 @@ int Input::init() {
     _clickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
     _jclickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
 
-    errorprint("INPUT", "Input system initialized, setup input buffers",  MSGINFO);
+    Logger::eprint("INPUT", "Input system initialized, setup input buffers",  LOGLEVEL::INFO);
     return 0;
 }
 
@@ -144,7 +144,7 @@ void Input::process_keys() {
 }
 
 void Input::cleanup() {
-    errorprint("INPUT", "Clear input buffers",  MSGINFO);
+    Logger::eprint("INPUT", "Clear input buffers",  LOGLEVEL::INFO);
     delete []_keys;
     delete []_frames;
 }

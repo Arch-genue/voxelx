@@ -15,7 +15,8 @@
 #include <glm/glm.hpp>
 // #include "../gamesystems/gameobject.h"
 #include "boxcollider.h"
-#include "../utils.h"
+#include "../utilities/utils.h"
+#include "../utilities/logger.h"
 
 // #include <iostream>
 
