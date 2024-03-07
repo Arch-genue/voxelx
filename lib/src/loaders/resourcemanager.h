@@ -5,7 +5,7 @@
 #include "../graphics/texture.h"
 #include "../graphics/voxelparticles.h"
 
-#include <ft2build.h>
+#include <freetype2/ft2build.h>
 #include FT_FREETYPE_H
 
 #include <string>

@@ -5,7 +5,7 @@
             "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/voxel3d",
+            "program": "${workspaceFolder}/build/editor/voxelx-editor",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/",

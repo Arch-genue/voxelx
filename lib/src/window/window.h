@@ -37,6 +37,11 @@ public:
     static glm::vec3 sky;
     
     static int init(int width, int height, const char * title);
+    static int createWindow(int width, int height, const char* title);
+    static int createContext();
+
+    static int SDL_TTF_INIT();
+
     static void _glInit();
     static void _glClear();
     static void exit();

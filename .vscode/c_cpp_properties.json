@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "/home/user/dev/voxel3d/**",
+                "/home/user/dev/voxel3d/lib/src/**",
+                "/home/user/dev/voxel3d/editor/src/**",
                 "/usr/include/freetype2/**",
                 "/usr/include/freetype2"
             ],

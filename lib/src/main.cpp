@@ -21,7 +21,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-using namespace glm;
 
 // #include <boost/python.hpp>
 
@@ -29,7 +28,7 @@ using namespace glm;
 #include "window/input.h"
 
 #include "graphics/renderer.h"
-#include "graphics/gui.h"
+// #include "graphics/gui.h"
 #include "graphics/textmesh.h"
 
 #include "loaders/resourcemanager.h"
@@ -133,7 +132,7 @@ int main() {
     GameManager *gm = new GameManager();
 
     //! Camera
-    Camera *camera = new Camera(vec3(3, 1, 0), radians(70.0f));
+    Camera *camera = new Camera(glm::vec3(3, 1, 0), glm::radians(70.0f));
     Renderer::addCamera(camera);
 
     std::uniform_real_distribution<float> redclr_generator = std::uniform_real_distribution<float>(0.0f, 1.0f);
@@ -146,7 +145,7 @@ int main() {
             for (int x = 0; x < floorvox->getSize().x; x++) {
                 Voxel *voxel = new Voxel(glm::vec3(x, y, z));
                 float clr = redclr_generator(rng1);
-                voxel->setColor(vec4(clr, clr, clr, 1.0f));
+                voxel->setColor(glm::vec4(clr, clr, clr, 1.0f));
                 floorvox->addVoxel(voxel);
             }
         }
@@ -156,7 +155,7 @@ int main() {
         for (int z1 = 0; z1 < boxvox->getSize().z; z1++) { 
             for (int x1 = 0; x1 < boxvox->getSize().x; x1++) {
                 Voxel *voxel = new Voxel(glm::vec3(x1, y1, z1));
-                voxel->setColor(vec4(0.2, 0.0f, blueclr_generator(rng1), 1.0f));
+                voxel->setColor(glm::vec4(0.2, 0.0f, blueclr_generator(rng1), 1.0f));
                 boxvox->addVoxel(voxel);
             }
         }
@@ -166,7 +165,7 @@ int main() {
         for (int z1 = 0; z1 < lightvox->getSize().z; z1++) { 
             for (int x1 = 0; x1 < lightvox->getSize().x; x1++) {
                 Voxel *voxel = new Voxel(glm::vec3(x1, y1, z1));
-                voxel->setColor(vec4(1.0f, 1.0f, 1.0f, 1.0f));
+                voxel->setColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
                 lightvox->addVoxel(voxel);
             }
         }
@@ -186,17 +185,17 @@ int main() {
     tree->setMaxDepth(4);
 
     // ! GameObjects
-    GameObject *floorobj = new GameObject("floor", vec3(-50, -0.1f, -50));
+    GameObject *floorobj = new GameObject("floor", glm::vec3(-50, -0.1f, -50));
     floorobj->setPhysics(STATIC_PHYSICS);
 
-    GameObject *boxobj = new GameObject("box", vec3(0, 0, 0));
+    GameObject *boxobj = new GameObject("box", glm::vec3(0, 0, 0));
     boxobj->setPhysics(DYNAMIC_PHYSICS);
 
-    GameObject *lightobj = new GameObject("light", vec3(0, 20, -50));
+    GameObject *lightobj = new GameObject("light", glm::vec3(0, 20, -50));
     lightobj->setPhysics(STATIC_PHYSICS);
 
-    GameObject *appleobj = new GameObject("apple", vec3(0, 50, 40));
-    appleobj->attachCamera(camera, vec3(0, 50, 40)); //! Attach camera to appleobj, apple hidden
+    GameObject *appleobj = new GameObject("apple", glm::vec3(0, 50, 40));
+    appleobj->attachCamera(camera, glm::vec3(0, 50, 40)); //! Attach camera to appleobj, apple hidden
     appleobj->setPhysics(DYNAMIC_PHYSICS);
     appleobj->setVisible(true);
 
@@ -209,7 +208,7 @@ int main() {
 
     Logger::eprint("OCTREE", "Node count: " + std::to_string(tree->getRoot()->getNodeCount()), LOGLEVEL::INFO);
 
-    GameObject *appleobj1 = new GameObject("apple", vec3(0, 15, 10));
+    GameObject *appleobj1 = new GameObject("apple", glm::vec3(0, 15, 10));
     appleobj1->setPhysics(DYNAMIC_PHYSICS);
 
     // GameObject *appleobj2 = new GameObject("apple", vec3(20, 30, 20));
@@ -227,19 +226,19 @@ int main() {
     // gm->addGameObject(breadobj);
 
     //! Particles
-    VoxelParticles *effect1 = new VoxelParticles("testgravity", 10000, vec3(4.0f, 500.0f, 1.5f));
+    VoxelParticles *effect1 = new VoxelParticles("testgravity", 10000, glm::vec3(4.0f, 500.0f, 1.5f));
     gm->addVoxelParticles(effect1);
 
-    VoxelParticles *effect2 = new VoxelParticles("what", 10000, vec3(4.0f, 15, -15));
+    VoxelParticles *effect2 = new VoxelParticles("what", 10000, glm::vec3(4.0f, 15, -15));
     gm->addVoxelParticles(effect2);
 
     float deltaTime = 0.0f;
     auto lastTimePoint = std::chrono::system_clock::now();
-    vec2 cam(0.0f, 0.0f);
+    glm::vec2 cam(0.0f, 0.0f);
     float speed = 10.0f;
     float jumpforce = 20.0f;
 
-    GUI gui;
+    // GUI gui;
 
     FT_Face face = ResourceManager::getFont("arial");
     TextMesh* textMesh = new TextMesh(face);
@@ -327,7 +326,7 @@ int main() {
             }
 
             if (Input::jclicked(SDL_BUTTON_MIDDLE)) {
-                appleobj1->getPhysicsObject()->applyForce(vec3(0, jumpforce * 5, -jumpforce * 5));
+                appleobj1->getPhysicsObject()->applyForce(glm::vec3(0, jumpforce * 5, -jumpforce * 5));
             }
             if (Input::jclicked(SDL_BUTTON_RIGHT)) {
                 appleobj->setPosition(glm::vec3(0, 100, 0));

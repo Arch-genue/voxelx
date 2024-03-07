@@ -15,6 +15,22 @@ int Window::height = 0;
 glm::vec3 Window::sky(0);
 
 int Window::init(int width, int height, const char* title) {
+    Window::createWindow(width, height, title);
+    if (Window::createContext() == 1) {
+            std::string err = SDL_GetError();
+            Logger::eprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+            std::exit(1);
+            return 1;
+    }
+
+    // SDL_TTF_INIT();
+
+    _glInit();
+
+    return 0;
+}
+
+int Window::createWindow(int width, int height, const char* title) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -33,30 +49,32 @@ int Window::init(int width, int height, const char* title) {
         std::exit(1);
         return 1;
     }
-    
-    glContext = SDL_GL_CreateContext(window);
 
+    Window::width = width;
+    Window::height = height;
+
+    return 0;
+}
+
+int Window::createContext() {
+    glContext = SDL_GL_CreateContext(window);
     if (glContext == NULL) {
-        std::string err = SDL_GetError();
-        Logger::eprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
-        std::exit(1);
         return 1;
     }
     glewInit();
 
-    if (TTF_Init() != 0) {
-        Logger::eprint("WINDOW", "SDL_TTF could not initialize!",  LOGLEVEL::ERROR);
-        std::exit(1);
-        return 1;
-    }
-
-    Window::width = width;
-    Window::height = height;    
-
-    _glInit();
-
     return 0;
 }
+
+int Window::SDL_TTF_INIT() {
+    // if (TTF_Init() != 0) {
+    //     Logger::eprint("WINDOW", "SDL_TTF could not initialize!",  LOGLEVEL::ERROR);
+    //     std::exit(1);
+    //     return 1;
+    // }
+    return 0;
+}
+
 void Window::_glInit() {
     glViewport(0, 0, width, height);
 
