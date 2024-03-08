@@ -3,24 +3,25 @@
 
 #include <QOpenGLWidget>
 
+#include "window/window.h"
+#include "graphics/textmesh.h"
+
 class VoxOpenGLWidget : public QOpenGLWidget {
+    Q_OBJECT
+private:
+    TextMesh* _textMesh;
+
 public:
     VoxOpenGLWidget(QWidget *parent = nullptr) : QOpenGLWidget(parent) {}
 
 protected:
     void initializeGL() override;
     void paintGL() override;
+    void resizeGL(int w, int h) override;
 
-//private:
-//    void createGLContext()
-//    {
-//        // Ваш код для создания контекста OpenGL
-//        // Например:
-//        // QOpenGLContext *glContext = new QOpenGLContext;
-//        // glContext->setFormat(requestedFormat());
-//        // glContext->create();
-//        // glContext->makeCurrent(this);
-//    }
+signals:
+    void initialized();
+
 };
 
 #endif // VOXOPENGLWIDGET_H

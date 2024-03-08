@@ -19,6 +19,12 @@ FT_Library ResourceManager:: _ft;
 void ResourceManager::init(std::string path) {
     _path = path;
 
+    if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
+        Logger::eprint("RESMGR", "Resources not found", LOGLEVEL::ERROR);
+        std::exit(1);
+        return;
+    }
+
     if (FT_Init_FreeType(&_ft)) {
         Logger::eprint("RESMGR", "Failed to init FreeType Library",  LOGLEVEL::ERROR);
         std::exit(1);
@@ -122,7 +128,7 @@ void ResourceManager::loadVoxelParticles(std::string str) {
 
 void ResourceManager::loadFont(std::string str) {
     FT_Face face;
-    std::string strfull = "../res/fonts/" + str + ".ttf";
+    std::string strfull = _path + "fonts/" + str + ".ttf";
     if (FT_New_Face(_ft, strfull.c_str(), 0, &face)) {
         Logger::eprint("RESMGR", "Failed to load font: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
         std::exit(1);
@@ -152,7 +158,7 @@ void ResourceManager::addModel(VoxelModel* row, std::string name) {
 }
 #include <iostream>
 void ResourceManager::loadShaders() {
-    std::string folder_path = _path + "../res/shaders/";
+    std::string folder_path = _path + "shaders/";
     vtype::fndvector<std::string> files;
     for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
         if (entry.is_regular_file()) {
@@ -167,7 +173,7 @@ void ResourceManager::loadShaders() {
     }
 }
 void ResourceManager::loadTextures() {
-    std::string folder_path = _path + "../res/textures/";
+    std::string folder_path = _path + "textures/";
     for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
         if (entry.is_regular_file()) {
             std::string name = entry.path().filename();
@@ -178,7 +184,7 @@ void ResourceManager::loadTextures() {
     }
 }
 void ResourceManager::loadModels() {
-    std::string folder_path = _path + "../res/models/";
+    std::string folder_path = _path + "models/";
     for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
         if (entry.is_regular_file()) {
             std::string name = entry.path().filename();
@@ -190,7 +196,7 @@ void ResourceManager::loadModels() {
     }
 }
 void ResourceManager::loadParticlesSystems() {
-    std::string folder_path = _path + "../res/particles/";
+    std::string folder_path = _path + "particles/";
     for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
         if (entry.is_regular_file()) {
             std::string name = entry.path().filename();
@@ -201,7 +207,7 @@ void ResourceManager::loadParticlesSystems() {
     }
 }
 void ResourceManager::loadFonts() {
-    std::string folder_path = _path + "../res/fonts/";
+    std::string folder_path = _path + "fonts/";
     for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
         if (entry.is_regular_file()) {
             std::string name = entry.path().filename();
@@ -226,6 +232,11 @@ Texture* ResourceManager::getTexture(std::string name) {
 	return _textures[name];
 }
 VoxelModel* ResourceManager::getModel(std::string name) {
+    if (_rowmodels[name] == nullptr) {
+        Logger::eprint("RESMGR", "Model not found: " + name, LOGLEVEL::ERROR);
+        std::exit(1);
+        return nullptr;
+    }
 	return _rowmodels[name];
 }
 Particles* ResourceManager::getParticles(std::string name) {

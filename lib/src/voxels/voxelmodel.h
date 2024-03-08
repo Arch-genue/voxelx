@@ -30,7 +30,7 @@ private:
     vtype::array3<int32_t, Voxel*> *_voxels;
 
     std::string _renderside;
-    glm::vec3 _size;
+    glm::ivec3 _size;
 
     //* Предзагруженный стандартный меш
     Mesh* _pmesh;

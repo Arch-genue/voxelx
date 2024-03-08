@@ -2,6 +2,8 @@
 
 #include <QMainWindow>
 
+#include "gamesystems/gamemanager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -13,6 +15,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void afterGLInit();
+
 private:
     Ui::MainWindow *ui;
+
+    GameManager* _gm;
 };

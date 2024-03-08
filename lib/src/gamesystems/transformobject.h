@@ -26,7 +26,7 @@ protected:
 
     glm::vec3 _position;
     glm::vec3 _scaling;
-    glm::vec3 _sizes;
+    glm::ivec3 _sizes;
 
     glm::vec3 _rotationAxis;
     float _rotationAngle;

@@ -30,9 +30,6 @@
       </column>
      </widget>
     </item>
-    <item>
-     <widget class="VoxOpenGLWidget" name="glwidget"/>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -46,13 +43,6 @@
    </property>
   </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>VoxOpenGLWidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header>src/voxopenglwidget.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -30,8 +30,8 @@ class GameManager;
  */
 class GameObject : public TransformObject {
     public:
-        GameObject(const char* model);
-        GameObject(const char* model, glm::vec3 position);
+        GameObject(VoxelModel* model);
+        GameObject(VoxelModel* model, glm::vec3 position);
         ~GameObject();
 
         void setID(uint id);

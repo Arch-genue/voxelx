@@ -40,6 +40,8 @@ public:
     static int createWindow(int width, int height, const char* title);
     static int createContext();
 
+    static void resizeContext(int w, int h); 
+
     static int SDL_TTF_INIT();
 
     static void _glInit();

@@ -8,7 +8,7 @@
 #include "../loaders/resourcemanager.h"
 
 
-GameObject::GameObject(const char* model) : TransformObject() {
+GameObject::GameObject(VoxelModel* model) : TransformObject() {
 	_id = 9999999;
 	
 	_campos = glm::vec3(0);
@@ -16,7 +16,7 @@ GameObject::GameObject(const char* model) : TransformObject() {
 
     setVisible(true);
 
-	_voxelmodel = ResourceManager::getModel(model);
+	_voxelmodel = model;
 	_sizes = _voxelmodel->getSize();
 	
 	BoxCollider* collider = new BoxCollider(this, glm::vec3(_position),_voxelmodel->getSize());
@@ -31,14 +31,14 @@ GameObject::GameObject(const char* model) : TransformObject() {
 
 	_mesh = _voxelmodel->getMesh();
 }
-GameObject::GameObject(const char *model, glm::vec3 position) : TransformObject() {
+GameObject::GameObject(VoxelModel* model, glm::vec3 position) : TransformObject() {
 	_id = 9999999;
 	
 	_campos = glm::vec3(0);
 
     setVisible(true);
 
-	_voxelmodel = ResourceManager::getModel(model);
+	_voxelmodel = model;
 	_sizes = _voxelmodel->getSize();
 	
 	BoxCollider* collider = new BoxCollider(this, glm::vec3(position),_voxelmodel->getSize());

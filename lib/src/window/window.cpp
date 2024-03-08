@@ -1,4 +1,6 @@
+#define GLEW_STATIC
 #include <GL/glew.h>
+
 #include "window.h"
 #include "../utilities/logger.h"
 // #include <iostream>
@@ -17,10 +19,10 @@ glm::vec3 Window::sky(0);
 int Window::init(int width, int height, const char* title) {
     Window::createWindow(width, height, title);
     if (Window::createContext() == 1) {
-            std::string err = SDL_GetError();
-            Logger::eprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
-            std::exit(1);
-            return 1;
+        std::string err = SDL_GetError();
+        Logger::eprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+        std::exit(1);
+        return 1;
     }
 
     // SDL_TTF_INIT();
@@ -57,13 +59,18 @@ int Window::createWindow(int width, int height, const char* title) {
 }
 
 int Window::createContext() {
-    glContext = SDL_GL_CreateContext(window);
-    if (glContext == NULL) {
-        return 1;
-    }
+    // glContext = SDL_GL_CreateContext(window);
+    // if (glContext == NULL) {
+    //     return 1;
+    // }
     glewInit();
 
     return 0;
+}
+
+void Window::resizeContext(int w, int h) {
+    width = w;
+    height = h;
 }
 
 int Window::SDL_TTF_INIT() {
