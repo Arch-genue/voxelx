@@ -137,6 +137,9 @@ find_package(GLU REQUIRED)
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
+find_package(Lua REQUIRED)
+include_directories(voxelx PUBLIC ${LUA_INCLUDE_DIR})
+
 # NEW PHYSICS LIBRARY 
 find_package ( ReactPhysics3D REQUIRED )
 
@@ -148,13 +151,23 @@ set (LIBRARIES
 	${GLU_LIBRARY}
 	${PNG_LIBRARY}
 	${FREETYPE_LIBRARY}
+	${LUA_LIBRARIES}
 	ReactPhysics3D::ReactPhysics3D
 )
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/luacpp/Source)
+
 # add_executable(voxelx ${SOURCE})
 add_library(voxelx STATIC ${SOURCE})
-target_link_libraries(voxelx PRIVATE ${LIBRARIES})
-target_compile_options(voxelx PRIVATE -g -fPIC)
+target_link_libraries(voxelx PRIVATE ${LIBRARIES} luacpp_static)
+
+target_include_directories(voxelx
+	PUBLIC vendor/luacpp/Source
+	PUBLIC vendor/lua
+)
+
+target_compile_options(voxelx PRIVATE -g)
 
 install(TARGETS voxelx
     LIBRARY DESTINATION lib

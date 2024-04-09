@@ -16,7 +16,7 @@ out vec3 FragPos;
 out vec3 Normal;
 
 void main() {
-    vec4 s_position = vec4(v_position * 0.1f, 1.0);
+    vec4 s_position = vec4(v_position, 1.0);
     // FragPos = vec3(model * vec4(d_position, 2.0));
     // FragPos = v_position;
     // FragPos = vec3(model * vec4(v_position, 5.0f));

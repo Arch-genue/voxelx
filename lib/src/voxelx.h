@@ -42,3 +42,6 @@
  *
  */
 #define TITLE "VoxelX 0.2"
+
+#include <LuaCpp.hpp>
+using namespace LuaCpp::Registry;

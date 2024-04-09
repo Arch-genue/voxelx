@@ -33,6 +33,23 @@ void pause_mode() {
 }
 
 int main() {
+    LuaCpp::LuaContext lua;
+    // The simplest way is to use
+    // CompileStringAndRun method
+    try {
+ 
+        lua.CompileStringAndRun(
+            "local a = 0;"
+            "print('The fastest way to "
+            "start using lua in "
+            "a project'..a)");
+    }
+ 
+    catch (std::runtime_error& e) {
+        std::cout << e.what()
+                  << '\n';
+    }
+
     vLogger::setLogLevel(LOGLEVEL::ALL);
   
     std::string _version = _VERSION;
@@ -338,7 +355,7 @@ int main() {
                 delete _mesh;
             }
 
-            ResourceManager::getShader("octoline")->uniformVec3("clr", glm::vec3(1.0f, 0.2f, 0.2f));
+            ResourceManager::getShader("octoline")->uniformVec3("clr", glm::vec3(1.0f, 0.2f, 0.0f));
             if (dbgrndr.getNbTriangles() != 0) {
                 float triangles[dbgrndr.getNbTriangles() * 3 * 3];
                 int i = 0;
