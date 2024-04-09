@@ -28,6 +28,7 @@ find_package(Qt6 REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS OpenGL)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Core5Compat)
 find_package(Freetype REQUIRED)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 
@@ -39,11 +40,16 @@ target_sources(voxelx-editor PRIVATE
     src/mainwindow.cpp
 	src/voxopenglwidget.h
 	src/voxopenglwidget.cpp
+	src/settings.h
+	src/settings.cpp
+	src/vsettings.h
+	src/vsettings.cpp
 )
 
 target_link_libraries(voxelx-editor PRIVATE Qt6::Widgets)
 target_link_libraries(voxelx-editor PRIVATE Qt6::OpenGL)
 target_link_libraries(voxelx-editor PRIVATE Qt6::OpenGLWidgets)
+target_link_libraries(voxelx-editor PRIVATE Qt6::Core5Compat)
 
 target_link_libraries(voxelx-editor PRIVATE ${FREETYPE_LIBRARY})
 target_link_libraries(voxelx-editor PRIVATE voxelx)
@@ -51,3 +57,9 @@ target_link_libraries(voxelx-editor PRIVATE voxelx)
 include_directories(${CMAKE_SOURCE_DIR}/lib/src)
 
 install(TARGETS voxelx-editor RUNTIME DESTINATION bin)
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+target_compile_options(voxelx-editor PRIVATE -g)

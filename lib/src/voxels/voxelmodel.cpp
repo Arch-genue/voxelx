@@ -137,7 +137,7 @@ VoxelModel* load_model(std::string filename, const char* type) {
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> duration = end - start;
 
-        Logger::eprint("LOADER", "Loaded model: " + std::string(CYAN_COLOR) + filename + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
+        vLogger::eprint("LOADER", "Loaded model: " + std::string(CYAN_COLOR) + filename + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
         return voxels;
     } else {
         // Logger::eprint("LOADER", "", LOGLEVEL::ERROR)

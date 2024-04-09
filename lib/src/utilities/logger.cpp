@@ -1,12 +1,12 @@
 #include "logger.h"
 
-LOGLEVEL Logger::_loglevel = LOGLEVEL::DEBUG;
+LOGLEVEL vLogger::_loglevel = LOGLEVEL::DEBUG;
 
-void Logger::setLogLevel(LOGLEVEL loglevel) {
+void vLogger::setLogLevel(LOGLEVEL loglevel) {
     _loglevel = loglevel;
 }
 
-void Logger::eprint(std::string subject, std::string msg, LOGLEVEL type) {
+void vLogger::eprint(std::string subject, std::string msg, LOGLEVEL type) {
     if (_loglevel != LOGLEVEL::DEBUG && type != LOGLEVEL::ALL) {
         if (_loglevel == LOGLEVEL::SUCCESS && type != LOGLEVEL::SUCCESS) {
             return;

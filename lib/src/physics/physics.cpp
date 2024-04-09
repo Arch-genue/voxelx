@@ -1,206 +1,81 @@
 #include "physics.h"
+#include "../gamesystems/gameobject.h"
 
-#include "../graphics/mesh.h"
-#include "../voxels/voxel.h"
-#include "../gamesystems/gamemanager.h"
+//! Physics Engine
+#include <reactphysics3d/reactphysics3d.h>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
-class Voxel;
-class Mesh;
-class GameManager;
+class GameObject;
 
 
-PhysicsObject::PhysicsObject(GameObject *gmobj, BoxCollider *boxcollider, float mass)
-    : _gameobject(gmobj), _collider(boxcollider),  _position(glm::vec3(0)), _physics(PHYSICS::NO_PHYSICS) {
-        setVelocity(glm::vec3(0));
-        setAcceleration(glm::vec3(0));
-        setMass(mass);
-}
-PhysicsObject::PhysicsObject(glm::vec3 position, PHYSICS physics, float mass) : _position(position),  _physics(physics), _mass(mass) {
-    _velocity = glm::vec3(0);
-    _acceleration = glm::vec3(0);
-}
+PhysicsObject::PhysicsObject(GameObject *gmobj, rp3d::RigidBody* rigidbody)
+    : _gameobject(gmobj), _rigidbody(rigidbody) {}
 PhysicsObject::~PhysicsObject() {}
-
-void PhysicsObject::setCollider(BoxCollider *collider) {
-    _collider = collider;
-}
-BoxCollider *PhysicsObject::getCollider() {
-    return _collider;
-}
 
 GameObject *PhysicsObject::getGameObject() {
     return _gameobject;
 }
 
-void PhysicsObject::setPosition(glm::vec3 position) {
-    _position = position;
-    // if (_collider->getBoundingbox() != nullptr){
-    _collider->setMin(position);
-    // }
-    
+rp3d::RigidBody* PhysicsObject::getRigidBody() {
+    return _rigidbody;
 }
-glm::vec3 PhysicsObject::getPosition() {
-    return _position;
+
+void PhysicsObject::setType(PHYSICS physics) {
+    switch (physics) {
+        case PHYSICS::STATIC_PHYSICS:
+            _rigidbody->setType(rp3d::BodyType::STATIC);
+            break;
+        case PHYSICS::KINEMATIC_PHYSICS:
+            _rigidbody->setType(rp3d::BodyType::KINEMATIC);
+            break;
+        case PHYSICS::DYNAMIC_PHYSICS:
+            _rigidbody->setType(rp3d::BodyType::DYNAMIC);
+            break;
+        default:
+            _rigidbody->setType(rp3d::BodyType::STATIC);
+            break;
+    }
+}
+
+void PhysicsObject::setPosition(glm::vec3 position) {
+    const rp3d::Quaternion quat = _rigidbody->getTransform().getOrientation();
+    const rp3d::Vector3 vect(position.x, position.y, position.z);
+    rp3d::Transform transform(vect, quat);
+    _rigidbody->setTransform(transform);
 }
 
 void PhysicsObject::setVelocity(glm::vec3 velocity) {
-    _velocity = velocity;
+    _rigidbody->setLinearVelocity(rp3d::Vector3(velocity.x, velocity.y, velocity.z));
 }
-glm::vec3 PhysicsObject::getVelocity() {
-    return _velocity;
-}
-
-void PhysicsObject::setAcceleration(glm::vec3 acceleration) {
-    _acceleration = acceleration;
-}
-glm::vec3 PhysicsObject::getAcceleration() {
-    return _acceleration;
-}
-
-void PhysicsObject::setPhysics(PHYSICS physics) {
-    _physics = physics;
-}
-PHYSICS PhysicsObject::getPhysics() {
-    return _physics;
+void PhysicsObject::applyForce(glm::vec3 force) {
+    _rigidbody->applyLocalForceAtCenterOfMass(rp3d::Vector3(force.x, force.y, force.z));
 }
 
 void PhysicsObject::setMass(float mass) {
-    _mass = mass;
+    _rigidbody->setMass(mass);
 }
-float PhysicsObject::getMass()
-{
-    return _mass;
+float PhysicsObject::getMass() {
+    return _rigidbody->getMass();
 }
 
-void PhysicsObject::applyForce(glm::vec3 force){
-    _acceleration += (force / _mass) * 100.0f;
-}
-void PhysicsObject::stopForce()
-{
-    _acceleration = glm::vec3(0);
-    _velocity = glm::vec3(0);
+
+void PhysicsObject::setIsGround(bool ground) {
+    _ground = ground;
 }
 
 bool PhysicsObject::isGrounded() {
     return _ground;
 }
 
-bool PhysicsObject::checkGround(glm::vec3 &position, glm::vec3 &normal) {
-    if (_position.y <= 0) {
-        position = glm::vec3(_position.x, 0, _position.z);
-        normal = glm::vec3(0, 0, 0);
-        _ground = true;
-        return true;
-    }
-    _ground = false;
-    return false;
-}
-
 void PhysicsObject::update(float deltaTime) {
-    _velocity += _acceleration * deltaTime;
-    _position += _velocity * deltaTime;
-    _acceleration = glm::vec3(0);
-}
-
-std::vector<line> PhysicsObject::getVertices() {
-    BoxCollider *collider = getCollider();
-
-    if (collider == nullptr) {
-        std::cerr << "ERROR: PhysicsObject::getVertices() called with no collider!\n";
-    }
-
-    glm::vec3 min;
-    glm::vec3 max;
-
-    min.x = -0.5f;
-    max.x = collider->getMax().x - 0.5f;
-
-    min.y = -0.5f;
-    max.y = collider->getMax().y - 0.5f;
-
-    // zMin = getPosition().z - 0.5f;
-    max.z = collider->getMax().z - 0.5f;
-
-    std::vector<line> vertices;
-
-    line vert0 = {
-        glm::vec3(min.x, min.y, -0.5f),
-        glm::vec3(min.x, max.y, -0.5f)
-    };
-
-    line vert1 = {
-        glm::vec3(min.x, min.y, -0.5f),
-        glm::vec3(max.x, min.y, -0.5f)
-    };
-
-    line vert2 = {
-        glm::vec3(max.x, min.y, -0.5f),
-        glm::vec3(max.x, min.y, max.z)
-    };
-
-    line vert3 = {
-        glm::vec3(min.x, min.y, -0.5f),
-        glm::vec3(min.x, min.y, max.z)
-    };
-
-    line vert4 = {
-        glm::vec3(min.x, min.y, max.z),
-        glm::vec3(max.x, min.y, max.z)
-    };
-
-    line vert5 = {
-        glm::vec3(min.x, max.y, -0.5f),
-        glm::vec3(max.x, max.y, -0.5f)
-    };
-
-    line vert6 = {
-        glm::vec3(max.x, max.y, -0.5f),
-        glm::vec3(max.x, max.y, max.z)
-    };
-
-    line vert7 = {
-        glm::vec3(min.x, max.y, -0.5f),
-        glm::vec3(min.x, max.y, max.z)
-    };
-
-    line vert8 = {
-        glm::vec3(min.x, max.y, max.z),
-        glm::vec3(max.x, max.y, max.z)
-    };
-
-    line vert9 = {
-        glm::vec3(max.x, max.y, -0.5f),
-        glm::vec3(max.x, min.y, -0.5f)
-    };
-
-    line vert10 = {
-        glm::vec3(min.x, min.y, max.z),
-        glm::vec3(min.x, max.y, max.z)
-    };
-
-    line vert11 = {
-        glm::vec3(max.x, max.y, max.z),
-        glm::vec3(max.x, min.y, max.z)
-    };
+    const rp3d::Vector3& position = _rigidbody->getTransform().getPosition();
     
-    vertices.push_back(vert0);
+    const rp3d::Quaternion& orient = _rigidbody->getTransform().getOrientation();
+    glm::quat glmQuaternion(orient.w, orient.x, orient.y, orient.z);
+    
+    glm::mat4 rotationMatrix = glm::toMat4(glmQuaternion);
 
-    vertices.push_back(vert1);
-    vertices.push_back(vert2);
-
-    vertices.push_back(vert3);
-    vertices.push_back(vert4);
-
-    vertices.push_back(vert5);
-    vertices.push_back(vert6);
-
-    vertices.push_back(vert7);
-    vertices.push_back(vert8);
-
-    vertices.push_back(vert9);
-    vertices.push_back(vert10);
-
-    vertices.push_back(vert11);
-
-    return vertices;
+    getGameObject()->setPosition(glm::vec3(position.x, position.y, position.z));
+    getGameObject()->setRotationMat(rotationMatrix);
 }

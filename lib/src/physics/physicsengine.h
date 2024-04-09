@@ -14,6 +14,9 @@
 #include "physics.h"
 #include "../gamesystems/gameobject.h"
 
+//! Physics Engine
+#include <reactphysics3d/reactphysics3d.h>
+
 /**
  * @brief Физический движок
  * ! УСТАРЕЛО !
@@ -21,33 +24,20 @@
 class PhysicsEngine {
 private:
     std::vector<PhysicsObject*> _objects;
-    glm::vec3 _gravity;
 
-    // Node* _root;
-
+    reactphysics3d::PhysicsCommon _physicsCommon;
+    reactphysics3d::PhysicsWorld* _world;
 public:
     PhysicsEngine();
     ~PhysicsEngine();
 
-    glm::vec3 getGravity();
+    reactphysics3d::PhysicsCommon& getPhysicsCommon();
+    reactphysics3d::PhysicsWorld* getPhysicsWorld();
+
+    PhysicsObject* createRigidBody(GameObject* gmobj, glm::vec3 size);
 
     void addObject(PhysicsObject* object);
     PhysicsObject* getObject(int i);
 
     void update(float deltaTime);
-
-    bool checkCollision(PhysicsObject* object, glm::vec3& surfacePosition, glm::vec3& surfaceNormal);
-
-    void handleCollision(PhysicsObject* object, glm::vec3 surfacePosition, glm::vec3 surfaceNormal);
-
-    bool raycast(GameObject* gameobject, glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend);
-    bool raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, PhysicsObject* physicsobject);
-
-    // Node* rotateLeft(Node* root);
-    // Node* rotateRight(Node* root);
-    // void flipColors(Node* root);
-    // Node* insert(Node* root, BoxCollider* box);
-    // Node* findNearestObject(Node* root, BoxCollider* area);
-
-    // Node* getRootNode();
 };

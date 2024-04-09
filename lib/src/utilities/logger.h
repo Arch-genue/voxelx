@@ -28,7 +28,7 @@ enum class LOGLEVEL {
  * @brief Класс логгирования
  * 
  */
-class Logger {
+class vLogger {
 private:
     static LOGLEVEL _loglevel;
 public:

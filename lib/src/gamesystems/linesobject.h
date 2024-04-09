@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 
 #include "../graphics/renderer.h"
-#include <iostream>
 #include "transformobject.h"
+#include "modelobject.h"
 #include "../loaders/resourcemanager.h"
 #include "../graphics/renderer.h"
 
@@ -13,7 +13,7 @@ class Shader;
 class Renderer;
 class GameManager;
 
-class LinesObject : public TransformObject {
+class LinesObject : public TransformObject, public ModelObject {
 private:
     Mesh* _mesh;
 

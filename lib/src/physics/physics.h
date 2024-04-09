@@ -13,66 +13,45 @@
 
 #include <vector>
 #include <glm/glm.hpp>
-// #include "../gamesystems/gameobject.h"
-#include "boxcollider.h"
 #include "../utilities/utils.h"
 #include "../utilities/logger.h"
 
-// #include <iostream>
+//! Physics Engine
+#include <reactphysics3d/reactphysics3d.h>
 
 class GameObject;
 
 enum PHYSICS {
-    NO_PHYSICS, 
     STATIC_PHYSICS,
+    KINEMATIC_PHYSICS, 
     DYNAMIC_PHYSICS
 };
 
 class PhysicsObject {
+private:
+    GameObject* _gameobject;
+
+    bool _ground;
+
+    rp3d::RigidBody* _rigidbody;
 public:
-    PhysicsObject(GameObject* gmobj, BoxCollider* boxcollider, float mass = 1.0f);
-    PhysicsObject(glm::vec3 position = glm::vec3(0), PHYSICS physics = NO_PHYSICS, float mass = 1.0f);
+    PhysicsObject(GameObject* gmobj, rp3d::RigidBody* rigidbody);
     ~PhysicsObject();
 
-    void setCollider(BoxCollider* collider);
-    BoxCollider* getCollider();
-
     GameObject* getGameObject();
+    rp3d::RigidBody* getRigidBody();
+
+    void setType(PHYSICS physics);
 
     void setPosition(glm::vec3 position);
-    glm::vec3 getPosition();
-
     void setVelocity(glm::vec3 velocity);
-    glm::vec3 getVelocity();
-
-    void setAcceleration(glm::vec3 acceleration);
-    glm::vec3 getAcceleration();
-
-    void setPhysics(PHYSICS type);
-    PHYSICS getPhysics();
+    void applyForce(glm::vec3 force);
 
     void setMass(float mass);
     float getMass();
 
-    void applyForce(glm::vec3 force);
-    void stopForce();
-
+    void setIsGround(bool ground);
     bool isGrounded();
-
-    bool checkGround(glm::vec3& position, glm::vec3& normal);
     
     void update(float deltaTime);
-
-    std::vector<line> getVertices();
-private:
-    GameObject* _gameobject;
-    PHYSICS _physics;
-    BoxCollider* _collider;
-
-    glm::vec3 _position;
-    glm::vec3 _velocity;
-    glm::vec3 _acceleration;
-
-    float _mass;
-    bool _ground;
 };

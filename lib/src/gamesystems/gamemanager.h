@@ -26,34 +26,39 @@ class VoxelParticles;
  * 
  */
 class GameManager {
-    public:
-        GameManager();
-        ~GameManager();
+private:
+    std::vector<GameObject*> _gameobjects;
+    std::vector<VoxelParticles*> _voxelparticles;
+    uint _gameobject_increment;
 
-        void addGameObject(GameObject* gameobject);
-        void addVoxelParticles(VoxelParticles* voxelparticles);
+    PhysicsEngine* _physicsengine;
+public:
+    GameManager();
+    ~GameManager();
 
-        PhysicsEngine* getPhysicsEngine();
+    void addGameObject(GameObject* gameobject);
+    void addVoxelParticles(VoxelParticles* voxelparticles);
 
-        void Update(Light & light);
-        void UpdatePhysics(float deltaTime);
-        void UpdateParticles(float deltaTime);
+    PhysicsEngine* getPhysicsEngine();
 
-        uint32_t getGameObjectsSize() {
-            return _gameobjects.size();
-        }
+    void Update(Light & light);
+    void UpdatePhysics(float deltaTime);
+    void UpdateParticles(float deltaTime);
 
-        uint32_t getVoxelParticlesSize() {
-            return _voxelparticles.size();
-        }
+    std::vector<GameObject*> getGameObjects() {
+        return _gameobjects;
+    }
 
-        void clearParticles();
+    uint32_t getGameObjectsSize() {
+        return _gameobjects.size();
+    }
 
-        uint getNewID();
-    private:
-        std::vector<GameObject*> _gameobjects;
-        std::vector<VoxelParticles*> _voxelparticles;
-        uint _gameobject_increment;
+    uint32_t getVoxelParticlesSize() {
+        return _voxelparticles.size();
+    }
 
-        PhysicsEngine* _physicsengine;
+    void clearParticles();
+
+    uint getNewID();
+    
 };

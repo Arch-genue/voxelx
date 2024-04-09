@@ -38,7 +38,7 @@ int Input::init() {
     _clickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
     _jclickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
 
-    Logger::eprint("INPUT", "Input system initialized, setup input buffers",  LOGLEVEL::INFO);
+    vLogger::eprint("INPUT", "Input system initialized, setup input buffers",  LOGLEVEL::INFO);
     return 0;
 }
 
@@ -144,7 +144,7 @@ void Input::process_keys() {
 }
 
 void Input::cleanup() {
-    Logger::eprint("INPUT", "Clear input buffers",  LOGLEVEL::INFO);
+    vLogger::eprint("INPUT", "Clear input buffers",  LOGLEVEL::INFO);
     delete []_keys;
     delete []_frames;
 }

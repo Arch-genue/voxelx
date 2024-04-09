@@ -20,37 +20,37 @@ void ResourceManager::init(std::string path) {
     _path = path;
 
     if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
-        Logger::eprint("RESMGR", "Resources not found", LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Resources not found", LOGLEVEL::ERROR);
         std::exit(1);
         return;
     }
 
     if (FT_Init_FreeType(&_ft)) {
-        Logger::eprint("RESMGR", "Failed to init FreeType Library",  LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Failed to init FreeType Library",  LOGLEVEL::ERROR);
         std::exit(1);
         return;
     }
-    Logger::eprint("RESMGR", "ResourceManager initialized",  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "ResourceManager initialized",  LOGLEVEL::INFO);
 }
 
 void ResourceManager::cleanup() {
     float time;
 
-    Logger::eprint("RESMGR", "Deleting shaders...",  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Deleting shaders...",  LOGLEVEL::INFO);
     time = measureFunctionTime(deleteShaders);
-    Logger::eprint("RESMGR", "Shaders deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Shaders deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
 
-    Logger::eprint("RESMGR", "Deleting models...",  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Deleting models...",  LOGLEVEL::INFO);
     time = measureFunctionTime(deleteModels);
-    Logger::eprint("RESMGR", "Models deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Models deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
 
-    Logger::eprint("RESMGR", "Deleting textures...",  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Deleting textures...",  LOGLEVEL::INFO);
     time = measureFunctionTime(deleteTextures);
-    Logger::eprint("RESMGR", "Textures deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Textures deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
 
-    Logger::eprint("RESMGR", "Deleting particle systems...",  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Deleting particle systems...",  LOGLEVEL::INFO);
     time = measureFunctionTime(deleteParticles);
-    Logger::eprint("RESMGR", "Particle systems deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
+    vLogger::eprint("RESMGR", "Particle systems deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
 }
 
 void ResourceManager::deleteShaders() {
@@ -84,60 +84,60 @@ void ResourceManager::deleteParticles() {
 void ResourceManager::loadShader(std::string str) {
     Shader* shader = load_shader(_path + "shaders/" + str + ".glslv", _path + "/shaders/" + str + ".glslf");
 	if (shader == nullptr) {
-        Logger::eprint("RESMGR", "Failed to load shader: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Failed to load shader: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
         std::exit(1);
         return;
     }
     addShader(shader, str);
-    Logger::eprint("RESMGR", "Shader loaded:  " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    vLogger::eprint("RESMGR", "Shader loaded:  " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
 }
 void ResourceManager::loadTexture(std::string str) {
 	Texture* texture = load_texture(_path + "textures/" + str + ".png");
 	if (texture == nullptr) {
-        Logger::eprint("RESMGR", "Failed to load texture: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Failed to load texture: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
         std::exit(1);
         return;
     }
     addTexture(texture, str);
-    Logger::eprint("RESMGR", "Texture loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    vLogger::eprint("RESMGR", "Texture loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
 }
 void ResourceManager::loadModel(std::string str, std::string type) {
     VoxelModel* voxels;
     if (type == "voxtxt") {
         voxels = load_model(_path + "models/" + str + ".voxtxt", type.c_str());
         if (voxels == nullptr) {
-            Logger::eprint("RESMGR", "Failed to load model: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
+            vLogger::eprint("RESMGR", "Failed to load model: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
             delete voxels;
             std::exit(1);
             return;
         }
     } else if(type == "null") voxels = genVoxel();
 	addModel(voxels, str);
-    Logger::eprint("RESMGR", "Model loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    vLogger::eprint("RESMGR", "Model loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
 }
 void ResourceManager::loadVoxelParticles(std::string str) {
 	Particles* particles = VoxelParticles::load_voxel_particles(_path + "particles/" + str + ".voxpart");
 	if (particles == nullptr) {
-        Logger::eprint("RESMGR", "Failed to load voxel particles: " + std::string(CYAN_COLOR) + str,  LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Failed to load voxel particles: " + std::string(CYAN_COLOR) + str,  LOGLEVEL::ERROR);
         std::exit(1);
         return;
     }
     addParticles(particles, str);
-    Logger::eprint("RESMGR", "Particles System loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    vLogger::eprint("RESMGR", "Particles System loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
 }
 
 void ResourceManager::loadFont(std::string str) {
     FT_Face face;
     std::string strfull = _path + "fonts/" + str + ".ttf";
     if (FT_New_Face(_ft, strfull.c_str(), 0, &face)) {
-        Logger::eprint("RESMGR", "Failed to load font: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Failed to load font: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
         std::exit(1);
         return;
     }
     FT_Set_Pixel_Sizes(face, 0, 48);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
 
-    Logger::eprint("RESMGR", "Font loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    vLogger::eprint("RESMGR", "Font loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
     _faces[str] = face;
 }
 
@@ -233,7 +233,7 @@ Texture* ResourceManager::getTexture(std::string name) {
 }
 VoxelModel* ResourceManager::getModel(std::string name) {
     if (_rowmodels[name] == nullptr) {
-        Logger::eprint("RESMGR", "Model not found: " + name, LOGLEVEL::ERROR);
+        vLogger::eprint("RESMGR", "Model not found: " + name, LOGLEVEL::ERROR);
         std::exit(1);
         return nullptr;
     }

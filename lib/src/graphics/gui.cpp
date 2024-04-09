@@ -14,8 +14,8 @@ GUI::GUI() {
         0.0f,-0.02f,
         0.0f, 0.02f,
 
-        -0.015f, 0.0f,
-        0.015f,0.0f,
+        -0.02f, 0.0f,
+        0.02f,0.0f,
     };
 	int attrs[] = {
 		2,  0 //null terminator
@@ -27,10 +27,10 @@ GUI::GUI() {
 	uicamera->setPerspective(false);
 	uicamera->setFlipped(true);
 
-	defaultFont = TTF_OpenFont("../res/fonts/arial.ttf", 24);
+	// defaultFont = TTF_OpenFont("../res/fonts/arial.ttf", 24);
 
-	SDL_Color clr = {100, 0, 255, 255};
-	blocks = renderText(clr, "Hello");
+	// SDL_Color clr = {100, 0, 255, 255};
+	// blocks = renderText(clr, "Hello");
 }
 
 GUI::~GUI() {
@@ -126,17 +126,18 @@ void GUI::setFont(TTF_Font* font) {
 }
 
 Texture* GUI::renderText(SDL_Color clr, const char* string) {
-    SDL_Surface* surface = TTF_RenderText_Blended(defaultFont, string, clr); //TTF_RenderText_Solid(defaultFont, string, clr);
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    // SDL_Surface* surface = TTF_RenderText_Blended(defaultFont, string, clr); //TTF_RenderText_Solid(defaultFont, string, clr);
+    // GLuint texture;
+    // glGenTextures(1, &texture);
+    // glBindTexture(GL_TEXTURE_2D, texture);
+	// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_BGRA, GL_UNSIGNED_BYTE, surface->pixels);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // glBindTexture(GL_TEXTURE_2D, 0);
 
-    SDL_FreeSurface(surface);
+    // SDL_FreeSurface(surface);
 	
-    return new Texture(texture, surface->w, surface->h);
+    // return new Texture(texture, surface->w, surface->h);
+	return nullptr;
 }

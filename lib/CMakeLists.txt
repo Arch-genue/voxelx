@@ -19,8 +19,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 set(SOURCE 
-    src/main.cpp 
-
 	src/window/window.cpp 
 	src/window/input.cpp 
 
@@ -33,8 +31,8 @@ set(SOURCE
 	src/graphics/cube.cpp
 	src/graphics/renderer.cpp
 	src/graphics/voxelparticles.cpp
-	# src/graphics/gui.cpp
-
+	
+	src/graphics/gui.cpp
 	src/graphics/uvregion.cpp
 	src/graphics/sprite.cpp
 	src/graphics/batch3d.cpp
@@ -50,10 +48,10 @@ set(SOURCE
 
 	src/physics/physics.cpp
 	src/physics/physicsengine.cpp
-	src/physics/boxcollider.cpp
 	
 	src/gamesystems/camera.cpp
 	src/gamesystems/transformobject.cpp
+	src/gamesystems/modelobject.cpp
 	src/gamesystems/gameobject.cpp
 	src/gamesystems/linesobject.cpp
 	src/gamesystems/gamemanager.cpp
@@ -66,6 +64,8 @@ set(SOURCE
 )
 
 set(HEADER
+	src/voxelx.h
+
     src/window/window.h
 	src/window/input.h 
 
@@ -79,7 +79,7 @@ set(HEADER
 	src/graphics/cube.h
 	src/graphics/renderer.h
 	src/graphics/voxelparticles.h
-	# src/graphics/gui.h
+	src/graphics/gui.h
 
 	src/graphics/uvregion.h
 	src/graphics/sprite.h
@@ -95,10 +95,10 @@ set(HEADER
 
 	src/physics/physics.h
 	src/physics/physicsengine.h
-	src/physics/boxcollider.h
 
 	src/gamesystems/camera.h
 	src/gamesystems/transformobject.h
+	src/gamesystems/modelobject.h
 	src/gamesystems/gameobject.h
 	src/gamesystems/linesobject.h
 	src/gamesystems/gamemanager.h
@@ -137,6 +137,9 @@ find_package(GLU REQUIRED)
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
+# NEW PHYSICS LIBRARY 
+find_package ( ReactPhysics3D REQUIRED )
+
 set (LIBRARIES 
 	${SDL2_LIBRARIES}
 	${SDL2_TTF_LIBRARIES}
@@ -145,15 +148,13 @@ set (LIBRARIES
 	${GLU_LIBRARY}
 	${PNG_LIBRARY}
 	${FREETYPE_LIBRARY}
-
-	# ${Boost_LIBRARIES}
-	# ${Python3_LIBRARY}
+	ReactPhysics3D::ReactPhysics3D
 )
 
 # add_executable(voxelx ${SOURCE})
-add_library(voxelx SHARED ${SOURCE})
+add_library(voxelx STATIC ${SOURCE})
 target_link_libraries(voxelx PRIVATE ${LIBRARIES})
-target_compile_options(voxelx PRIVATE -g)
+target_compile_options(voxelx PRIVATE -g -fPIC)
 
 install(TARGETS voxelx
     LIBRARY DESTINATION lib

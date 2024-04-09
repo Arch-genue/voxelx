@@ -2,7 +2,7 @@
 
 int attrs[2] = { 3,  0 };
 
-LinesObject::LinesObject(float* vertices, uint count) : TransformObject() {
+LinesObject::LinesObject(float* vertices, uint count) : TransformObject(), ModelObject(nullptr) {
     _mesh = new Mesh(vertices, count, attrs);
 }
 

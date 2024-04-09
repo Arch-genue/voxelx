@@ -4,191 +4,131 @@
 class GameObject;
 class VoxelModel;
 
-PhysicsEngine::PhysicsEngine() {
-    _gravity = glm::vec3(0, -9.81f, 0);
-	// _root = nullptr;
+class MyCallbackClass : public rp3d::RaycastCallback { 
+private:
+    GameObject* _gameobj;
+public: 
+    void setCurrentObject(GameObject *obj) {
+        _gameobj = obj;
+    }
+    virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) { 
+        GameObject* userData = static_cast<GameObject*>(info.collider->getUserData());
 
-    Logger::eprint("PHYSENG", "PhysicsEngine initialized",  LOGLEVEL::INFO);
+        if (userData != nullptr) {
+            if (_gameobj != nullptr) {
+                _gameobj->getPhysicsObject()->setIsGround(true);
+            }
+        }
+        return rp3d::decimal(1.0); 
+    } 
+};
+
+// Your event listener class 
+class YourEventListener : public rp3d::EventListener { 
+    // Override the onContact() method 
+    virtual void onContact(const rp3d::CollisionCallback::CallbackData& callbackData) override { 
+        // For each contact pair 
+        for (uint p = 0; p < callbackData.getNbContactPairs(); p++) { 
+            // Get the contact pair 
+            rp3d::CollisionCallback::ContactPair contactPair = callbackData.getContactPair(p); 
+        
+            // For each contact point of the contact pair 
+            for (uint c = 0; c < contactPair.getNbContactPoints(); c++) { 
+        
+                // Get the contact point 
+                rp3d::CollisionCallback::ContactPoint contactPoint = contactPair.getContactPoint(c); 
+        
+                // Get the contact point on the first collider and convert it in world-space 
+                rp3d::Vector3 worldPoint = contactPair.getCollider1()->getLocalToWorldTransform() * contactPoint.getLocalPointOnCollider1(); 
+				// void* test = contactPair.getCollider1()->get
+				// std::cout << "worldPoint: " << test->getID() << std::endl;
+            } 
+        }
+    } 
+}; 
+
+PhysicsEngine::PhysicsEngine() {    
+    rp3d::PhysicsWorld::WorldSettings settings; 
+    settings.defaultVelocitySolverNbIterations = 20; 
+    settings.isSleepingEnabled = false; 
+    settings.gravity = rp3d::Vector3(0, -9.81, 0);
+ 
+    _world = _physicsCommon.createPhysicsWorld(settings);
+    _world->setIsDebugRenderingEnabled(true);
+
+    rp3d::DebugRenderer& debugRenderer = _world->getDebugRenderer(); 
+    
+    debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_POINT, true); 
+    debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
+    debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
+
+    vLogger::eprint("PHYSICS", "PhysicsEngine initialized",  LOGLEVEL::INFO);
 }
 PhysicsEngine::~PhysicsEngine() {}
 
-glm::vec3 PhysicsEngine::getGravity() {
-    return _gravity;
+rp3d::PhysicsCommon &PhysicsEngine::getPhysicsCommon() {
+    return _physicsCommon;
+}
+
+rp3d::PhysicsWorld *PhysicsEngine::getPhysicsWorld() {
+    return _world;
+}
+
+PhysicsObject *PhysicsEngine::createRigidBody(GameObject *gmobj, glm::vec3 size) {
+    rp3d::Vector3 position(gmobj->getPosition().x, gmobj->getPosition().y, gmobj->getPosition().z);
+	rp3d::RigidBody* rigidbody = _world->createRigidBody(rp3d::Transform(position, rp3d::Quaternion::identity()));
+    rigidbody->setMass(1.0f);
+    
+    glm::vec3 cnt(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
+	
+	const rp3d::Vector3 halfExtents (cnt.x, cnt.y, cnt.z);  
+	rp3d::BoxShape* shape = _physicsCommon.createBoxShape(halfExtents);
+
+	rp3d::Collider* collider = rigidbody->addCollider(shape, rp3d::Transform::identity());
+
+    rp3d::Transform transform;
+    transform.identity(); // Установка трансформации в единичную матрицу
+    transform.setPosition(rp3d::Vector3(cnt.x-0.5f, cnt.y-0.5f, cnt.z-0.5f)); // Установка позиции в центр куба
+    collider->setLocalToBodyTransform(transform); // Установка трансформации для коллайдера
+
+    collider->setUserData(gmobj); // Присваиваем коллайдеру GameObject
+	rigidbody->setType(rp3d::BodyType::STATIC); // По умолчанию Статический
+
+    //! TEMPORARY
+    rigidbody->setIsDebugEnabled(true);
+
+	rp3d::Material& mat = collider->getMaterial();      
+	mat.setBounciness (0); 
+	mat.setFrictionCoefficient (20);
+	mat.setMassDensity(0);
+    
+	PhysicsObject* obj = new PhysicsObject(gmobj, rigidbody);
+	return obj;
 }
 
 void PhysicsEngine::addObject(PhysicsObject* object) {
+	// PhysicsObject* obj = createRigidBody(object, object->getCollider(), 1.0f);
     _objects.push_back(object);
-	// _root = insert(_root, object->getCollider());
 }
 PhysicsObject* PhysicsEngine::getObject(int i) {
     return _objects[i];
 }
 
 void PhysicsEngine::update(float deltaTime) {
+	_world->update(1.0f / 60.0f);
+    MyCallbackClass obj;
+
     for (auto& object : _objects) {
         object->update(deltaTime);
+        // Получите нижнюю точку вашего объекта (например, его позицию или центр массы)
+        glm::vec3 curPos = object->getGameObject()->getPosition();
+        // Start and end points of the ray 
+        rp3d::Vector3 startPoint = rp3d::Vector3(curPos.x, curPos.y, curPos.z);
+        rp3d::Vector3 endPoint = rp3d::Vector3(curPos.x, curPos.y - 1.0f, curPos.z);
+        obj.setCurrentObject(object->getGameObject());
+        
+        rp3d::Ray ray(startPoint, endPoint);
+        object->setIsGround(false);
+        _world->raycast(ray, &obj);
     }
-}
-
-bool PhysicsEngine::checkCollision(PhysicsObject* object, glm::vec3& surfacePosition, glm::vec3& surfaceNormal) {
-    // Проверяем столкновение между объектом и поверхностью
-    // В этом примере мы считаем, что поверхность находится на высоте 0
-    if (object->getPhysics() == STATIC_PHYSICS or object->getPhysics() == NO_PHYSICS) return false;
-
-    return object->checkGround(surfacePosition, surfaceNormal);
-    
-    // return false;
-}
-void PhysicsEngine::handleCollision(PhysicsObject* object, glm::vec3 surfacePosition, glm::vec3 surfaceNormal) {
-     // Применяем реакцию на столкновение
-    glm::vec3 velocity = object->getVelocity();
-    glm::vec3 acceleration = object->getAcceleration();
-
-    // // Изменяем скорость объекта в направлении, перпендикулярном поверхности
-    // glm::vec3 normalVelocity = glm::dot(velocity, surfaceNormal) * surfaceNormal;
-    // glm::vec3 tangentVelocity = velocity - normalVelocity;
-    velocity = glm::vec3(0.0f); //tangentVelocity - 0.8f * normalVelocity;
-
-    // // Изменяем ускорение объекта в направлении, перпендикулярном поверхности
-    // glm::vec3 normalAcceleration = glm::dot(acceleration, surfaceNormal) * surfaceNormal;
-    // glm::vec3 tangentAcceleration = acceleration - normalAcceleration;
-    acceleration = glm::vec3(0.0f);// tangentAcceleration - 0.8f * normalAcceleration;
-
-    // Обновляем скорость и ускорение объекта
-    object->setVelocity(velocity);
-    object->setAcceleration(acceleration);
-    
-    GameObject* gmobj = object->getGameObject(); 
-    gmobj->setPosition(surfacePosition + surfaceNormal * 0.0f);    
-}
-
-// Функция для проверки столкновения луча с BoundingBox
-bool PhysicsEngine::raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDirection, PhysicsObject* physicsobject) {
-    BoxCollider* box = physicsobject->getCollider();
-    // Параметры для проверки пересечения с BoundingBox
-    float tMin = (box->getMin().x - rayOrigin.x) / rayDirection.x;
-    float tMax = (box->getMax().x - rayOrigin.x) / rayDirection.x;
-
-    float tYMin = (box->getMin().y - rayOrigin.y) / rayDirection.y;
-    float tYMax = (box->getMax().y - rayOrigin.y) / rayDirection.y;
-
-    if (tMin > tMax) std::swap(tMin, tMax);
-    if (tYMin > tYMax) std::swap(tYMin, tYMax);
-
-    if ((tMin > tYMax) || (tYMin > tMax)) {
-        return false; // Нет пересечения с BoundingBox по оси X
-    }
-
-    if (tYMin > tMin) {
-        tMin = tYMin;
-    }
-
-    if (tYMax < tMax) {
-        tMax = tYMax;
-    }
-
-    float tZMin = (box->getMin().z - rayOrigin.z) / rayDirection.z;
-    float tZMax = (box->getMax().z - rayOrigin.z) / rayDirection.z;
-
-    if (tZMin > tZMax) std::swap(tZMin, tZMax);
-
-    if ((tMin > tZMax) || (tZMin > tMax)) {
-        return false; // Нет пересечения с BoundingBox по оси Y
-    }
-
-    return true; // Произошло пересечение с BoundingBox
-}
-
-bool PhysicsEngine::raycast(GameObject* gameobject, glm::vec3 pos, glm::vec3 dir, float maxDist, glm::vec3& end, glm::vec3& norm, glm::vec3& iend) {
-    
-    
-    // float px = pos.x;
-	// float py = pos.y;
-	// float pz = pos.z;
-
-	// float dx = dir.x;
-	// float dy = dir.y;
-	// float dz = dir.z;
-
-	// float t = 0.0f;
-	// int ix = floor(px);
-	// int iy = floor(py);
-	// int iz = floor(pz);
-
-	// float stepx = (dx > 0.0f) ? 1.0f : -1.0f;
-	// float stepy = (dy > 0.0f) ? 1.0f : -1.0f;
-	// float stepz = (dz > 0.0f) ? 1.0f : -1.0f;
-
-	// float infinity = std::numeric_limits<float>::infinity();
-
-	// float txDelta = (dx == 0.0f) ? infinity : abs(1.0f / dx);
-	// float tyDelta = (dy == 0.0f) ? infinity : abs(1.0f / dy);
-	// float tzDelta = (dz == 0.0f) ? infinity : abs(1.0f / dz);
-
-	// float xdist = (stepx > 0) ? (ix + 1 - px) : (px - ix);
-	// float ydist = (stepy > 0) ? (iy + 1 - py) : (py - iy);
-	// float zdist = (stepz > 0) ? (iz + 1 - pz) : (pz - iz);
-
-	// float txMax = (txDelta < infinity) ? txDelta * xdist : infinity;
-	// float tyMax = (tyDelta < infinity) ? tyDelta * ydist : infinity;
-	// float tzMax = (tzDelta < infinity) ? tzDelta * zdist : infinity;
-
-	// int steppedIndex = -1;
-
-	// while (t <= maxDist) {
-	// 	// Voxel* voxel = get(ix, iy, iz);
-	// 	// if (voxel == nullptr || voxel->id) return;
-    //     Voxel* voxel = gameobject->getVoxelModel()->getVoxel(glm::vec3(ix, iy, iz));
-    //     // VoxelModel* getVoxel(glm::vec3(ix, iy, iz));
-    //     if (voxel) {
-	// 		end.x = px + t * dx;
-	// 		end.y = py + t * dy;
-	// 		end.z = pz + t * dz;
-
-	// 		iend.x = ix;
-	// 		iend.y = iy;
-	// 		iend.z = iz;
-
-	// 		norm.x = norm.y = norm.z = 0.0f;
-	// 		if (steppedIndex == 0) norm.x = -stepx;
-	// 		if (steppedIndex == 1) norm.y = -stepy;
-	// 		if (steppedIndex == 2) norm.z = -stepz;
-
-    //         return true;
-	// 	}
-	// 	if (txMax < tyMax) {
-	// 		if (txMax < tzMax) {
-	// 			ix += stepx;
-	// 			t = txMax;
-	// 			txMax += txDelta;
-	// 			steppedIndex = 0;
-	// 		} else {
-	// 			iz += stepz;
-	// 			t = tzMax;
-	// 			tzMax += tzDelta;
-	// 			steppedIndex = 2;
-	// 		}
-	// 	} else {
-	// 		if (tyMax < tzMax) {
-	// 			iy += stepy;
-	// 			t = tyMax;
-	// 			tyMax += tyDelta;
-	// 			steppedIndex = 1;
-	// 		} else {
-	// 			iz += stepz;
-	// 			t = tzMax;
-	// 			tzMax += tzDelta;
-	// 			steppedIndex = 2;
-	// 		}
-	// 	}
-	// }
-	// iend.x = ix;
-	// iend.y = iy;
-	// iend.z = iz;
-
-	// end.x = px + t * dx;
-	// end.y = py + t * dy;
-	// end.z = pz + t * dz;
-	// norm.x = norm.y = norm.z = 0.0f;
-	return false;
 }

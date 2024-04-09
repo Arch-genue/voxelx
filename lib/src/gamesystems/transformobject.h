@@ -25,17 +25,10 @@ protected:
     glm::mat4 _modelmatrix;
 
     glm::vec3 _position;
-    glm::vec3 _scaling;
-    glm::ivec3 _sizes;
 
-    glm::vec3 _rotationAxis;
-    float _rotationAngle;
-
-    //* TEMPORARY
-    bool _visible;
+    glm::mat4 _rotationMatrix;
 
 private:
-    glm::mat4 _scalematrix;
     glm::mat4 _positionmatrix;
     glm::mat4 _rotatematrix;
 
@@ -44,7 +37,7 @@ public:
     ~TransformObject();
 
     void update();
-    virtual void draw();
+    virtual void onTransformed();
 
     /**
      * @brief Перемещение объекта
@@ -81,7 +74,7 @@ public:
      */
     glm::vec3 getPosition();
 
-    void setRotationAroundPoint(float angle, glm::vec3 rotation, glm::vec3 point);
+    void setRotationMat(glm::mat4 rotation);
 
     /**
      * @brief Задать вращение объекта
@@ -97,20 +90,6 @@ public:
      * @param rotation Ссылка на переменную вектора вращения
      */
     void getRotation(float &angle, glm::vec3 &rotation);
-
-    void setScaling(glm::vec3 scaling);
-    glm::vec3 getScaling();
-
-    void setSize(glm::vec3 size);
-    glm::vec3 getSize();
-
-    /**
-     * @brief Задать видимость объекта
-     * 
-     * @param visible Видимость объекта
-     */
-    void setVisible(bool visible);
-    bool isVisible();
 
     /**
      * @brief Получить матрицу модели объекта

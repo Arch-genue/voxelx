@@ -30,8 +30,8 @@ void Renderer::init(size_t capacity) {
 	buffer = new float[capacity * VERTEX_SIZE * 6];
 	Renderer::capacity = capacity;
 
-	Logger::eprint("RENDERER", "Renderer initialized",  LOGLEVEL::INFO);
-	Logger::eprint("RENDERER", "Max render size: " + std::string(BLUE_COLOR) + std::to_string(Renderer::capacity) + std::string(RESET_COLOR),  LOGLEVEL::INFO);
+	vLogger::eprint("RENDERER", "Renderer initialized",  LOGLEVEL::INFO);
+	vLogger::eprint("RENDERER", "Max render size: " + std::string(BLUE_COLOR) + std::to_string(Renderer::capacity) + std::string(RESET_COLOR),  LOGLEVEL::INFO);
 }
 
 void Renderer::free() {
@@ -72,7 +72,7 @@ Mesh* Renderer::render(VoxelModel* voxels) {
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> duration = end - start;
 
-	Logger::eprint("RENDERER", "GENERATED MESH: " + std::string(CYAN_COLOR) + voxels->getName() + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
+	vLogger::eprint("RENDERER", "GENERATED MESH: " + std::string(CYAN_COLOR) + voxels->getName() + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
 	return new Mesh(voxels, buffer, _index / VERTEX_SIZE, chunk_attrs);
 }
 void Renderer::computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string renderside) {
@@ -122,7 +122,7 @@ void Renderer::vertex(float x, float y, float z, float vert_x, float vert_y, flo
 	buffer[_index+4] = normal.y;
 	buffer[_index+5] = normal.z;
 
-	buffer[_index+6] =  clr.x;
+	buffer[_index+6] = clr.x;
 	buffer[_index+7] = clr.y;
 	buffer[_index+8] = clr.z;
 	buffer[_index+9] = clr.w;

@@ -5,22 +5,23 @@
 
 #define MOUSE_SPEED 1.0f
 
+
 GameManager::GameManager() {
     _physicsengine = new PhysicsEngine();
     _gameobject_increment = 0;
 
-    Logger::eprint("GAMEMGR", "GameManager initialized",  LOGLEVEL::INFO);
+    vLogger::eprint("GAMEMGR", "GameManager initialized",  LOGLEVEL::INFO);
 }
 GameManager::~GameManager() {
     _gameobjects.clear();
     _voxelparticles.clear();
-    Logger::eprint("GAMEMGR", "GameObjects deleted",  LOGLEVEL::INFO);
-    Logger::eprint("GAMEMGR", "VoxelParticles deleted",  LOGLEVEL::INFO);
+    vLogger::eprint("GAMEMGR", "GameObjects deleted",  LOGLEVEL::INFO);
+    vLogger::eprint("GAMEMGR", "VoxelParticles deleted",  LOGLEVEL::INFO);
 }
 
 void GameManager::addGameObject(GameObject* gameobject) {
-    gameobject->setID(getNewID());
-    gameobject->setGameManager(this);
+    // gameobject->setID(getNewID());
+    // gameobject->setGameManager(this);
     
     _gameobjects.push_back(gameobject);
     _physicsengine->addObject(gameobject->getPhysicsObject());
@@ -60,25 +61,7 @@ void GameManager::UpdatePhysics(float deltaTime) {
         if (_gameobjects[i]->getPhysicsObject() == nullptr) continue;
 
         PhysicsObject* phs = _gameobjects[i]->getPhysicsObject();
-
-        if (_gameobjects[i]->getPhysicsObject()->getPhysics() == DYNAMIC_PHYSICS) { 
-            phs->applyForce(_physicsengine->getGravity());
-        }
-
-        glm::vec3 surfacePosition, surfaceNormal;
-        if (_physicsengine->checkCollision(phs, surfacePosition, surfaceNormal)) {
-            _physicsengine->handleCollision(phs, surfacePosition, surfaceNormal);
-        }
-
-        // glm::vec3 end;
-        // glm::vec3 norm;
-        // glm::vec3 iend;
-
-        // if (i + 1 < _gameobjects.size()) {
-        // if (_physicsengine->raycast(_gameobjects[i], _gameobjects[i+1]->getPosition(), , 20.0f, end, norm, iend)) {
-        // }
-
-        _gameobjects[i]->setPosition(phs->getPosition());
+        // _gameobjects[i]->setPosition(phs->getPosition());
     }
 }
 

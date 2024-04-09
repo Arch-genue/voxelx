@@ -5,7 +5,7 @@
             "label": "build",
             "type": "shell",
             "command": "cmake",
-            "args": ["--build", "${workspaceFolder}/build", "-j", "10"],
+            "args": ["--build", "${workspaceFolder}/lib/build", "-j", "10"],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -15,7 +15,7 @@
             "label": "Valgrind",
             "type": "shell",
             "command": "valgrind",
-            "args": ["--tool=memcheck", "${workspaceFolder}/build/voxel3d"],
+            "args": ["--tool=memcheck", "${workspaceFolder}/lib/build/"],
             "group": {
                 "kind": "build",
                 "isDefault": true
