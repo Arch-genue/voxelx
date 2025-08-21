@@ -14,16 +14,17 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include <memory>
 
 #include <GL/glew.h>
 
 #include "../gamesystems/camera.h"
+#include "../voxels/voxelmodel.h"
 
 class Mesh;
 class Camera;
 
 class VoxelModel;
-class ParticlesModel;
 class Voxel;
 
 struct Vertex {
@@ -33,6 +34,7 @@ struct Vertex {
 };
 
 class Renderer {
+private:
 	static float* buffer;
 	static size_t capacity;
 
@@ -54,10 +56,10 @@ public:
 
     static void addCamera(Camera* cam);
 
-	static Mesh* render(VoxelModel* voxels=nullptr);
-	static Mesh* render(ParticlesModel* voxels=nullptr);
+    void __ensureBufferCapacity(size_t required);
+	static std::unique_ptr<Mesh> render(VoxelModel* voxels=nullptr);
 
-	static void computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string renderside);
+    static void computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string renderside);
 
     static Camera* getCamera();
 };

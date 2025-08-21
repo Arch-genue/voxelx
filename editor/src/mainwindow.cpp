@@ -79,8 +79,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     itemGameobjects->setText(0, "GameObjects");
     itemGameobjects->font(0).setPixelSize(15);
 
-    QTreeWidgetItem *itemParticles = new QTreeWidgetItem(ui->treeWidget);
-    itemParticles->setText(0, "Particle systems");
+    // QTreeWidgetItem *itemParticles = new QTreeWidgetItem(ui->treeWidget);
+    // itemParticles->setText(0, "Particle systems");
 
     ui->glwidget->gm = _gm;
 };

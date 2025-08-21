@@ -77,7 +77,14 @@
         "regex": "cpp",
         "*.ipp": "cpp",
         "qopenglwidget": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "any": "cpp",
+        "forward_list": "cpp",
+        "unordered_set": "cpp",
+        "source_location": "cpp",
+        "ranges": "cpp",
+        "shared_mutex": "cpp",
+        "stdfloat": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

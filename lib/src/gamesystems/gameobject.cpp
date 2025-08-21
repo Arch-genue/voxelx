@@ -7,7 +7,8 @@
 #include "../voxels/voxel.h"
 #include "../loaders/resourcemanager.h"
 
-GameObject::GameObject(GameManager* gm, std::string name, VoxelModel* model, glm::vec3 position) : TransformObject(), ModelObject(model) {
+GameObject::GameObject(GameManager* gm, std::string name, VoxelModel* original_model, glm::vec3 position)
+: TransformObject(), ModelObject(original_model) {
 	_gm = gm;
 	_id = _gm->getNewID();
 	// gm->addGameObject(this);
@@ -18,7 +19,6 @@ GameObject::GameObject(GameManager* gm, std::string name, VoxelModel* model, glm
 		setName(name);
 	}
 	
-
 	_physicsobject = _gm->getPhysicsEngine()->createRigidBody(this, getVoxelModel()->getSize());
 
 	_campos = glm::vec3(0);
@@ -56,5 +56,4 @@ void GameObject::onTransformed() {
 	if (_camera != nullptr) {
 		_camera->setPosition(getPosition() + _campos);
 	}
-	
 };

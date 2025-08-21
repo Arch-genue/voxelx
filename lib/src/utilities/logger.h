@@ -16,7 +16,7 @@
 #include <iostream>
 
 enum class LOGLEVEL {
-    ALL,
+    VERBOSE,
     DEBUG,
     ERROR,
     WARNING,

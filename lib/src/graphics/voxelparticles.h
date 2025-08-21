@@ -43,7 +43,7 @@ enum _effects {
 
 class VoxelParticles {
     //? Objects
-    Mesh* _mesh;
+    std::unique_ptr<Mesh> _mesh;
     ParticlesModel* _particlesarray;
     Particles* _particles;
     

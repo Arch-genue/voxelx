@@ -7,17 +7,17 @@ void vLogger::setLogLevel(LOGLEVEL loglevel) {
 }
 
 void vLogger::eprint(std::string subject, std::string msg, LOGLEVEL type) {
-    if (_loglevel != LOGLEVEL::DEBUG && type != LOGLEVEL::ALL) {
-        if (_loglevel == LOGLEVEL::SUCCESS && type != LOGLEVEL::SUCCESS) {
-            return;
-        } else if (_loglevel == LOGLEVEL::INFO && (type != LOGLEVEL::INFO && type != LOGLEVEL::SUCCESS)) {
-            return;
-        } else if (_loglevel == LOGLEVEL::WARNING && (type != LOGLEVEL::WARNING && type != LOGLEVEL::ERROR)) {
-            return;
-        } else if (_loglevel == LOGLEVEL::ERROR && type != LOGLEVEL::ERROR) {
-            return;
-        }
-    }
+    // if (_loglevel != LOGLEVEL::DEBUG && type != LOGLEVEL::VERBOSE) {
+    //     if (_loglevel == LOGLEVEL::SUCCESS && type != LOGLEVEL::SUCCESS) {
+    //         return;
+    //     } else if (_loglevel == LOGLEVEL::INFO && (type != LOGLEVEL::INFO && type != LOGLEVEL::SUCCESS)) {
+    //         return;
+    //     } else if (_loglevel == LOGLEVEL::WARNING && (type != LOGLEVEL::WARNING && type != LOGLEVEL::ERROR)) {
+    //         return;
+    //     } else if (_loglevel == LOGLEVEL::ERROR && type != LOGLEVEL::ERROR) {
+    //         return;
+    //     }
+    // }
 
     std::string msgtype;
     std::string clr;
@@ -44,7 +44,7 @@ void vLogger::eprint(std::string subject, std::string msg, LOGLEVEL type) {
             clr = BRIGHT_GREEN_COLOR;
             break;
         case LOGLEVEL::DEBUG:
-        case LOGLEVEL::ALL:
+        case LOGLEVEL::VERBOSE:
             msgtype = "DEBUG";
             spacer = "  ";
             clr = BRIGHT_WHITE_COLOR;

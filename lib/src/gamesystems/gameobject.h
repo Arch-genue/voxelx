@@ -55,7 +55,7 @@ private:
     PhysicsObject* _physicsobject;
     
 public:
-    GameObject(GameManager* gm, std::string name, VoxelModel* model, glm::vec3 position);
+    GameObject(GameManager* gm, std::string name, VoxelModel* original_model, glm::vec3 position);
     ~GameObject();
 
     void setID(uint id);

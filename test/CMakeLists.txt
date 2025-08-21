@@ -21,7 +21,7 @@ set(HEADER
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
 include_directories(${CMAKE_SOURCE_DIR}/lib/src)
 

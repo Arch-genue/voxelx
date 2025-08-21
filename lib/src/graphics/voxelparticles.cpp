@@ -89,7 +89,7 @@ void VoxelParticles::update(float deltaTime) {
 
     _mesh = Renderer::render(_particlesarray);
     _mesh->draw(GL_TRIANGLES);
-    delete _mesh;
+    // delete _mesh;
 }
 
 void VoxelParticles::calculateAnimation(Voxel* voxel) {

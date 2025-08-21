@@ -1,36 +1,33 @@
 #include "modelobject.h"
+#include "../utilities/logger.h"
 
-ModelObject::ModelObject(VoxelModel* model) {
-    if (model == nullptr) {
+#include "../utilities/vtype.h"
+
+ModelObject::ModelObject(VoxelModel* original_model) {
+    if (original_model == nullptr) {
         return;
     }
-
-    _voxelModel = model;
+    _voxelModel = original_model; // ->clone();
     _sizes = _voxelModel->getSize();
+    
+    // float test2 = original_model->getVoxels()->get(0, 0, 1)->getColor().r;
+    // float test1 = _voxelModel->getVoxels()->get(0, 0, 1)->getColor().r;
 
-	_mesh = _voxelModel->getMesh();
+    // std::cout << test1 << " " << test2 << "\n";
+    // std::cout << _voxelModel->getName() << " " << original_model->getName() << "\n";
+    // std::cout << "sdfsd " << _sizes.x << " " << _sizes.y << " " << _sizes.z << "\n";
 }
 
 ModelObject::~ModelObject() {}
 
 void ModelObject::draw(glm::mat4 matrix, Shader* shader) {
     if (isVisible()) {
-        if (_mesh != nullptr) {
-		    _mesh->draw(GL_TRIANGLES, matrix, shader);
-        }
+        _voxelModel->getMeshPtr()->draw(GL_TRIANGLES, matrix, shader);
 	}
 }
 
-void ModelObject::setMesh(Mesh *mesh) {
-    _mesh = mesh;
-}
-
-Mesh *ModelObject::getMesh() {
-    return _mesh;
-}
-
-VoxelModel* ModelObject::getVoxelModel() {
-    return _voxelModel;
+VoxelModel* ModelObject::getVoxelModel() const {
+    return _voxelModel; //.get();
 }
 
 void ModelObject::setVisible(bool visible) {

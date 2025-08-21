@@ -16,27 +16,18 @@
 
 class ModelObject {
 private:
-    Mesh* _mesh;
+    // std::unique_ptr<VoxelModel> _voxelModel;
     VoxelModel* _voxelModel;
     glm::ivec3 _sizes;
 
     bool _visible;
 public:
-    ModelObject(VoxelModel* model);
+    ModelObject(VoxelModel* original_model);
     ~ModelObject();
 
+    VoxelModel* getVoxelModel() const;
+
     virtual void draw(glm::mat4 matrix, Shader* shader);
-
-    void setMesh(Mesh* mesh);
-
-    /**
-     * @brief Получить указатель на объект Mesh
-     * 
-     * @return Mesh* Указатель на объект Mesh или nullptr
-     */
-    Mesh* getMesh();
-
-    VoxelModel *getVoxelModel();
 
     void setVisible(bool visible);
     bool isVisible();

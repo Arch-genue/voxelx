@@ -14,9 +14,7 @@ GameManager::GameManager() {
 }
 GameManager::~GameManager() {
     _gameobjects.clear();
-    _voxelparticles.clear();
     vLogger::eprint("GAMEMGR", "GameObjects deleted",  LOGLEVEL::INFO);
-    vLogger::eprint("GAMEMGR", "VoxelParticles deleted",  LOGLEVEL::INFO);
 }
 
 void GameManager::addGameObject(GameObject* gameobject) {
@@ -26,9 +24,6 @@ void GameManager::addGameObject(GameObject* gameobject) {
     _gameobjects.push_back(gameobject);
     _physicsengine->addObject(gameobject->getPhysicsObject());
 }
-void GameManager::addVoxelParticles(VoxelParticles* voxparticles) {
-    _voxelparticles.push_back(voxparticles);
-}
 
 PhysicsEngine* GameManager::getPhysicsEngine() {
     return _physicsengine;
@@ -36,6 +31,8 @@ PhysicsEngine* GameManager::getPhysicsEngine() {
 
 void GameManager::Update(Light &light) {
     for(uint16_t i = 0; i < _gameobjects.size(); i++) {
+        // std::cout << "FSD - " << i << " " << _gameobjects.size() << "\n";
+        // std::cout << "GM UPD: " << _gameobjects[i]->getName() << "\n";
         Material material;
         material.ambient = glm::vec3(0.1f);
         material.diffuse = glm::vec3(0.8f);
@@ -63,19 +60,6 @@ void GameManager::UpdatePhysics(float deltaTime) {
         PhysicsObject* phs = _gameobjects[i]->getPhysicsObject();
         // _gameobjects[i]->setPosition(phs->getPosition());
     }
-}
-
-void GameManager::UpdateParticles(float deltaTime) {
-    for (uint16_t i = 0; i < _voxelparticles.size(); i++) {
-        _voxelparticles[i]->update(deltaTime);
-    }
-}
-
-void GameManager::clearParticles() {
-    for (uint64_t i = 0; i < _voxelparticles.size(); i++) {
-        delete &_voxelparticles[i];
-    }
-    _voxelparticles.clear();    
 }
 
 uint GameManager::getNewID() {

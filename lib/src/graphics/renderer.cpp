@@ -1,7 +1,6 @@
 #include "renderer.h"
 #include "mesh.h"
 #include "textmesh.h"
-#include "../voxels/particlesmodel.h"
 #include <glm/glm.hpp>
 
 #include <iostream>
@@ -11,7 +10,7 @@
 
 #define IS_IN(voxels, X,Y,Z) ((X) >= 0 && (X) < voxels->getSize().x && (Y) >= 0 && (Y) < voxels->getSize().y && (Z) >= 0 && (Z) < voxels->getSize().z)
 
-#define IS_BLOCKED(voxels, X,Y,Z) (IS_IN(voxels, X, Y, Z) && voxels->getVoxel(glm::vec3(X,Y,Z)))
+#define IS_BLOCKED(voxels, X,Y,Z) (IS_IN(voxels, X, Y, Z) && voxels->getVoxel(glm::ivec3(X,Y,Z)))
 
 #define VERTEX_SIZE (3 + 3 + 4)
 
@@ -42,48 +41,69 @@ void Renderer::addCamera(Camera* cam) {
 	camera = cam;
 }
 
-Mesh* Renderer::render(ParticlesModel* voxels) {
+std::unique_ptr<Mesh> Renderer::render(VoxelModel* voxels) {
 	_index = 0;
-	
-	std::string renderside = voxels->getRenderSide();
-
-	for (size_t i = 0; i < voxels->getVoxelsCount(); i++) {
-		Voxel* voxel = voxels->getVoxel(i);
-
-		computeVoxelRender(voxels, voxel, renderside);
-	}
-	return new Mesh(voxels, buffer, _index / VERTEX_SIZE, chunk_attrs);
-}
-
-Mesh* Renderer::render(VoxelModel* voxels) {
-	_index = 0;
-	
-	std::string renderside = voxels->getRenderSide();
 
 	auto start = std::chrono::high_resolution_clock::now();
-	for (size_t x = 0; x < voxels->getSize().x; x++) {
-		for (size_t y = 0; y < voxels->getSize().y; y++) {
-			for (size_t z = 0; z < voxels->getSize().z; z++) {
-				Voxel* voxel = voxels->getVoxel(glm::ivec3(x, y, z));
-				computeVoxelRender(voxels, voxel, renderside);
-			}
-		}
-	}
+
+	// for (auto& [chunkPos, chunk] : voxels->get_chunks()) {
+	// 	for (auto& [voxelPos, voxel] : chunk.voxels) {
+	// 		computeVoxelRender(voxels, &voxel, "");
+	// 	}
+	// }
+	size_t ikkto = 0;
+	voxels->forEachVoxel([&](Voxel* voxel){
+		computeVoxelRender(voxels, voxel, "");
+		ikkto++;
+	});
+
+	std::cout << "BIGOLO: " << ikkto << "\n";
+
+	// for (auto& [pos, voxel] : voxelsMap) {
+	// 	computeVoxelRender(voxels, &voxel, "");
+	// }
+	
+	// for (int x = voxels->getMinSize().x; x < voxels->getSize().x; x++) {
+	// 	for (int y = voxels->getMinSize().y; y < voxels->getSize().y; y++) {
+	// 		for (int z = voxels->getMinSize().z; z < voxels->getSize().z; z++) {
+	// 			Voxel* voxel = voxels->getVoxel(x, y, z);
+	// 			if (voxel) {
+	// 				computeVoxelRender(voxels, voxel, "");
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// Выделяем отдельный буфер для этого меша
+    float* meshBuffer = new float[_index];
+    std::memcpy(meshBuffer, buffer, _index * sizeof(float));
+
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> duration = end - start;
-
-	vLogger::eprint("RENDERER", "GENERATED MESH: " + std::string(CYAN_COLOR) + voxels->getName() + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
-	return new Mesh(voxels, buffer, _index / VERTEX_SIZE, chunk_attrs);
+	vLogger::eprint("RENDERER", "GENERATED MESH: " + std::string(CYAN_COLOR) + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
+	return std::make_unique<Mesh>(meshBuffer, _index / VERTEX_SIZE, chunk_attrs);
 }
+
+void Renderer::__ensureBufferCapacity(size_t required) {
+    if (required > Renderer::capacity) {
+        size_t newCapacity = std::max(required, capacity * 2);
+        float* newBuffer = new float[newCapacity * VERTEX_SIZE * 6];
+        std::memcpy(newBuffer, buffer, _index * sizeof(float));
+        delete[] buffer;
+        buffer = newBuffer;
+        Renderer::capacity = newCapacity;
+    }
+}
+
 void Renderer::computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string renderside) {
 	if (voxel == nullptr) return;
-	if (!voxel->isVisible()) return;
+	if (!voxel->visible) return;
 
-	float x = voxel->getPosition().x;
-	float y = voxel->getPosition().y;
-	float z = voxel->getPosition().z;
+	int x = voxel->position.x;
+	int y = voxel->position.y;
+	int z = voxel->position.z;
 	
-	glm::vec4 clr = voxel->getColor();
+	glm::vec4 clr = voxel->color;
 	
 	// if (!voxels->getVoxel(glm::vec3(x, y+1, z)))
 		// std::cout << "ERROR:" << std::endl;
@@ -151,7 +171,7 @@ void Renderer::bottom(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
 }
 void Renderer::left(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(1.0f, 0.0f, 0.0f);
+	glm::vec3 normal(-1.0f, 0.0f, 0.0f);
 
 	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
 	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
@@ -162,11 +182,12 @@ void Renderer::left(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
 }
 void Renderer::right(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(-1.0f, 0.0f, 0.0f);
+	glm::vec3 normal(1.0f, 0.0f, 0.0f);
 
 	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
 	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
 	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
+
 	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
 	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
 	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
@@ -175,11 +196,12 @@ void Renderer::front(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(0.0f, 0.0f, 1.0f);
 
 	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
 	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
 	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
+	
+	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
+	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
+	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
 }
 void Renderer::back(size_t &index, float x, float y, float z, glm::vec4 clr) {
 	glm::vec3 normal(0.0f, 0.0f, -1.0f);

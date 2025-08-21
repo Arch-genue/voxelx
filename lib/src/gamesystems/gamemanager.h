@@ -14,12 +14,10 @@
 #include <stdlib.h>
 
 #include "../physics/physicsengine.h"
-#include "../graphics/voxelparticles.h"
 #include "gameobject.h"
 #include "linesobject.h"
 
 class PhysicsEngine;
-class VoxelParticles;
 
 /**
  * @brief Класс для обработки игровых объектов, сущностей, систем частиц и т.д.
@@ -28,7 +26,6 @@ class VoxelParticles;
 class GameManager {
 private:
     std::vector<GameObject*> _gameobjects;
-    std::vector<VoxelParticles*> _voxelparticles;
     uint _gameobject_increment;
 
     PhysicsEngine* _physicsengine;
@@ -37,13 +34,11 @@ public:
     ~GameManager();
 
     void addGameObject(GameObject* gameobject);
-    void addVoxelParticles(VoxelParticles* voxelparticles);
 
     PhysicsEngine* getPhysicsEngine();
 
     void Update(Light & light);
     void UpdatePhysics(float deltaTime);
-    void UpdateParticles(float deltaTime);
 
     std::vector<GameObject*> getGameObjects() {
         return _gameobjects;
@@ -52,12 +47,6 @@ public:
     uint32_t getGameObjectsSize() {
         return _gameobjects.size();
     }
-
-    uint32_t getVoxelParticlesSize() {
-        return _voxelparticles.size();
-    }
-
-    void clearParticles();
 
     uint getNewID();
     

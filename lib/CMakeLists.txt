@@ -30,7 +30,6 @@ set(SOURCE
 	src/graphics/textmesh.cpp
 	src/graphics/cube.cpp
 	src/graphics/renderer.cpp
-	src/graphics/voxelparticles.cpp
 	
 	src/graphics/gui.cpp
 	src/graphics/uvregion.cpp
@@ -38,10 +37,8 @@ set(SOURCE
 	src/graphics/batch3d.cpp
 	src/graphics/batch2d.cpp
 
-	src/voxels/voxel.cpp
+	# src/voxels/voxel.cpp
 	src/voxels/voxelmodel.cpp
-	# src/voxels/particle.cpp
-	src/voxels/particlesmodel.cpp
 
 	src/loaders/resourcemanager.cpp
 	src/loaders/png_loading.cpp
@@ -78,7 +75,6 @@ set(HEADER
 	src/graphics/textmesh.h
 	src/graphics/cube.h
 	src/graphics/renderer.h
-	src/graphics/voxelparticles.h
 	src/graphics/gui.h
 
 	src/graphics/uvregion.h
@@ -88,7 +84,6 @@ set(HEADER
 
 	src/voxels/voxel.h
 	src/voxels/voxelmodel.h
-	src/voxels/particlesmodel.h
 
 	src/loaders/resourcemanager.h
 	src/loaders/png_loading.h
@@ -112,7 +107,7 @@ set(HEADER
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
 # Videoadapter, not software render
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -137,10 +132,10 @@ find_package(GLU REQUIRED)
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
-find_package(Lua REQUIRED)
-include_directories(voxelx PUBLIC ${LUA_INCLUDE_DIR})
+# find_package(Lua REQUIRED)
+# include_directories(voxelx PUBLIC ${LUA_INCLUDE_DIR})
 
-# NEW PHYSICS LIBRARY 
+# NEW PHYSICS LIBRARY
 find_package ( ReactPhysics3D REQUIRED )
 
 set (LIBRARIES 
@@ -151,24 +146,24 @@ set (LIBRARIES
 	${GLU_LIBRARY}
 	${PNG_LIBRARY}
 	${FREETYPE_LIBRARY}
-	${LUA_LIBRARIES}
+	# ${LUA_LIBRARIES}
 	ReactPhysics3D::ReactPhysics3D
 )
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/luacpp/Source)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/luacpp/Source)
 
 # add_executable(voxelx ${SOURCE})
 add_library(voxelx STATIC ${SOURCE})
-target_link_libraries(voxelx PRIVATE ${LIBRARIES} luacpp_static)
+target_link_libraries(voxelx PRIVATE ${LIBRARIES})
 
-target_include_directories(voxelx
-	PUBLIC vendor/luacpp/Source
-	PUBLIC vendor/lua
-)
+# target_include_directories(voxelx
+# 	PUBLIC vendor/luacpp/Source
+# 	PUBLIC vendor/lua
+# )
 
 target_compile_options(voxelx PRIVATE -g)
 
-install(TARGETS voxelx
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+# install(TARGETS voxelx
+#     LIBRARY DESTINATION lib
+#     ARCHIVE DESTINATION lib)
