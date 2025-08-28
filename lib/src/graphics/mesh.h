@@ -1,45 +1,81 @@
-/**
- * @file mesh.h
- * @author Vlad Kartsaev
- * @brief Mesh class implementation
- * @version 0.5
- * @date 2023-04-06
- * 
- * @copyright Copyright (c) 2024
- * 
- */
-
 #pragma once
 
-#include <stdlib.h>
-#include <memory>
-
 #include "shader.h"
+#include <GL/glew.h>
 
-/**
- * @brief Класс для создания меша в с использованием OpenGL
- * 
- */
 class Mesh {
-    unsigned int _vao;
-    unsigned int _vbo;
-    
+public:
     int* _meshAttributes;
-    float* _meshBuffer;
-    
     size_t _vertices;
     size_t _vertexSize;
-public:
-    Mesh(float* buffer, size_t vertices, int* attrs);
-    ~Mesh();
-    std::unique_ptr<Mesh> clone() const;
-    void destroy();
 
-    void create_mesh_buff();
+    Mesh(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer): 
+        _posBuffer(posBuffer), _normalBuffer(normalBuffer), _colorBuffer(colorBuffer) {
+        glGenVertexArrays(1, &_vao);
+        glGenBuffers(1, &_vboPos);
+        glGenBuffers(1, &_vboNormal);
+        glGenBuffers(1, &_vboColor);
+    }
+    // Mesh(std::vector<float>& buffer, size_t vertices, int* attrs): _meshBuffer(buffer), _vertices(vertices), _meshAttributes(attrs) {
+    //     glGenVertexArrays(1, &_vao);
+    //     glGenBuffers(1, &_vbo);
 
-    void update();
-    void reload(float* buffer, size_t vertices);
-    void draw(unsigned int primitive);
-    void draw(unsigned int primitive, glm::mat4 _modelmatrix, Shader *shader);
-    void clear();
+    //     _vertexSize = 0;
+    //     for (int i = 0; _meshAttributes[i]; i++) {
+    //         _vertexSize += _meshAttributes[i];
+    //     }
+
+    //     glBindVertexArray(_vao);
+    //     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+    //     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _vertexSize * _vertices, this->_meshBuffer.data(), GL_STATIC_DRAW);
+
+    //     int offset = 0;
+    //     for (int i = 0; _meshAttributes[i]; i++) {
+    //         glVertexAttribPointer(i, _meshAttributes[i], GL_FLOAT, GL_FALSE, _vertexSize * sizeof(float), (GLvoid*)(offset * sizeof(float)));
+    //         glEnableVertexAttribArray(i);
+    //         offset += _meshAttributes[i];
+    //     }
+
+    //     glBindVertexArray(0);
+    // }
+    ~Mesh() {
+        if (_vao) glDeleteVertexArrays(1, &_vao);
+        if (_vboPos) {
+            glDeleteBuffers(1, &_vboPos);
+            glDeleteBuffers(1, &_vboNormal);
+            glDeleteBuffers(1, &_vboColor);
+        }
+        _vao = 0;
+        _vboPos = 0;
+        _vboNormal = 0;
+        _vboColor = 0;
+    }
+
+    void draw(unsigned int primitive, glm::mat4 _modelmatrix, Shader* shader) {
+        glBindVertexArray(_vao);
+        shader->uniformMatrix("model", _modelmatrix);
+        glDrawArrays(primitive, 0, _vertices);
+        glBindVertexArray(0);
+    }
+    void draw(unsigned int primitive) {
+        glBindVertexArray(_vao);
+        glDrawArrays(primitive, 0, _vertices);
+        glBindVertexArray(0);
+    }
+
+    unsigned int _getvao() const { return _vao; }
+    unsigned int _get_pos_vbo() const { return _vboPos; }
+    unsigned int _get_normal_vbo() const { return _vboNormal; }
+    unsigned int _get_color_vbo() const { return _vboColor; }
+
+private:
+    GLuint _vao; // Vertex Array Object
+    GLuint _vboPos;
+    GLuint _vboNormal;
+    GLuint _vboColor;
+
+    std::vector<float> _posBuffer;
+    std::vector<int8_t> _normalBuffer;
+    std::vector<uint8_t> _colorBuffer;
 };

@@ -10,16 +10,29 @@
  */
 
 #pragma once
-
-#include "physics.h"
-#include "../gamesystems/gameobject.h"
-
 //! Physics Engine
 #include <reactphysics3d/reactphysics3d.h>
 
+#include "physicsobject.h"
+
+class PhysicsObject;
+class GameObject;
+
+struct RaycastHit {
+    glm::vec3 point;
+    glm::vec3 normal;
+    GameObject* hitObject = nullptr; // объект, на который попал луч
+
+    RaycastHit& operator=(const RaycastHit& info) {
+        point = info.point; 
+        normal = info.normal;
+        hitObject = info.hitObject;
+        return *this;
+    }
+};
+
 /**
  * @brief Физический движок
- * ! УСТАРЕЛО !
  */
 class PhysicsEngine {
 private:
@@ -29,15 +42,19 @@ private:
     reactphysics3d::PhysicsWorld* _world;
 public:
     PhysicsEngine();
-    ~PhysicsEngine();
+    ~PhysicsEngine() = default;
 
     reactphysics3d::PhysicsCommon& getPhysicsCommon();
     reactphysics3d::PhysicsWorld* getPhysicsWorld();
 
-    PhysicsObject* createRigidBody(GameObject* gmobj, glm::vec3 size);
+    void test();
 
-    void addObject(PhysicsObject* object);
-    PhysicsObject* getObject(int i);
+    RaycastHit raycast(const glm::vec3 &origin, const glm::vec3 &dir);
+
+    rp3d::RigidBody *createRigidBody(glm::vec3 position);
+
+    void addObject(PhysicsObject* object) { _objects.push_back(object); }
+    PhysicsObject* getObject(int i) { return _objects[i]; }
 
     void update(float deltaTime);
 };

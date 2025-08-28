@@ -15,12 +15,12 @@
 #include <glm/glm.hpp>
 
 #include "../graphics/renderer.h"
-#include "../physics/physics.h"
+#include "../physics/physicsobject.h"
 #include "transformobject.h"
 #include "modelobject.h"
 #include "../gamesystems/gamemanager.h"
 
-class Mesh;
+class MeshModel;
 class Shader;
 class Renderer;
 class PhysicsObject;
@@ -55,7 +55,7 @@ private:
     PhysicsObject* _physicsobject;
     
 public:
-    GameObject(GameManager* gm, std::string name, VoxelModel* original_model, glm::vec3 position);
+    GameObject(GameManager* gm, std::string name, MeshModel* mesh_model, glm::vec3 position);
     ~GameObject();
 
     void setID(uint id);
@@ -101,4 +101,5 @@ public:
      */
     void attachCamera(Camera* camera, glm::vec3 stdpos = glm::vec3(0));
     void detachCamera();
+    Camera *getCamera() const;
 };

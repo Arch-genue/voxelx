@@ -61,7 +61,7 @@ const std::string MAGENTA_COLOR_STR = MAGENTA_COLOR;
  * @param str Исходная строка
  * @param separator Разделитель
  */
-extern void split(std::string* bufstr, std::string str, char separator);
+extern std::vector<std::string> split(const std::string& str, char separator);
 
 /**
  * @brief Разделяет строку с переменной VoxParticles 

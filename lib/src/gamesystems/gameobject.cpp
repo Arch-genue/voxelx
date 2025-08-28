@@ -2,31 +2,32 @@
 
 #include <GL/glew.h>
 #include <glm/ext.hpp>
-#include "../graphics/mesh.h"
+#include "../graphics/meshmodel.h"
 #include "../graphics/shader.h"
 #include "../voxels/voxel.h"
 #include "../loaders/resourcemanager.h"
 
-GameObject::GameObject(GameManager* gm, std::string name, VoxelModel* original_model, glm::vec3 position)
-: TransformObject(), ModelObject(original_model) {
-	_gm = gm;
-	_id = _gm->getNewID();
-	// gm->addGameObject(this);
+GameObject::GameObject(GameManager* gm, std::string name, MeshModel* mesh_model, glm::vec3 position)
+: TransformObject(), ModelObject(mesh_model) {
+	this->_gm = gm;
+	this->_id = _gm->getNewID();
 
 	if (name == "") {
-		_name = "GameObject #" + std::to_string(_id);
+		this->_name = "GameObject #" + std::to_string(_id);
 	} else {
-		setName(name);
+		this->setName(name);
 	}
-	
-	_physicsobject = _gm->getPhysicsEngine()->createRigidBody(this, getVoxelModel()->getSize());
 
-	_campos = glm::vec3(0);
+	this->_physicsobject = new PhysicsObject(this);
+
+	this->_campos = glm::vec3(0);
 	
-    setVisible(true);
-	setPosition(position);
+    this->setVisible(true);
+	this->setPosition(position);
+
+	this->_camera = nullptr;
 }
-GameObject::~GameObject() {}
+GameObject::~GameObject() { delete this->_physicsobject; }
 
 void GameObject::attachCamera(Camera* cam, glm::vec3 stdpos) {
 	_camera = cam;
@@ -38,6 +39,10 @@ void GameObject::attachCamera(Camera* cam, glm::vec3 stdpos) {
 
 void GameObject::detachCamera() {
 	_camera = nullptr;
+}
+
+Camera* GameObject::getCamera() const {
+	return _camera;
 }
 
 PhysicsObject* GameObject::getPhysicsObject() {
@@ -54,6 +59,7 @@ void GameObject::onTransformed() {
 	ModelObject::draw(_modelmatrix, ResourceManager::getShader("voxel"));
 
 	if (_camera != nullptr) {
-		_camera->setPosition(getPosition() + _campos);
+		// std::cout << this->getName() << "\n";
+		// _camera->setPosition(getPosition() + _campos);
 	}
 };

@@ -1,26 +1,103 @@
 #include "physicsengine.h"
 #include "../voxels/voxel.h"
 
-class GameObject;
 class VoxelModel;
 
-class MyCallbackClass : public rp3d::RaycastCallback { 
-private:
-    GameObject* _gameobj;
-public: 
-    void setCurrentObject(GameObject *obj) {
-        _gameobj = obj;
-    }
-    virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) { 
+// class MyCallbackClass : public rp3d::RaycastCallback { 
+// private:
+//     // GameObject* _gameobj;
+// public: 
+//     void setCurrentObject(GameObject *obj) {
+//         _gameobj = obj;
+//     }
+//     virtual rp3d::decimal notifyRaycastHit(const rp3d::RaycastInfo& info) { 
+//         // GameObject* userData = static_cast<GameObject*>(info.collider->getUserData());
+
+//         if (userData != nullptr) {
+//             // if (_gameobj != nullptr) {
+//             //     _gameobj->getPhysicsObject()->setIsGround(true);
+//             // }
+//         }
+//         return rp3d::decimal(1.0); 
+//     } 
+// };
+static bool test = false;
+#include <chrono>
+
+struct PhysicsRaycastCallback : public rp3d::RaycastCallback {
+public:
+    RaycastHit result;
+    bool hit = false;
+    // Указатель на первый столкнувшийся объект
+    const rp3d::RaycastInfo* hitInfo = nullptr;
+
+    float notifyRaycastHit(const rp3d::RaycastInfo& info) override {
+        if (!hitInfo) hitInfo = &info;
         GameObject* userData = static_cast<GameObject*>(info.collider->getUserData());
 
         if (userData != nullptr) {
-            if (_gameobj != nullptr) {
-                _gameobj->getPhysicsObject()->setIsGround(true);
-            }
+            result.point = glm::vec3(info.worldPoint.x, info.worldPoint.y, info.worldPoint.z);
+            result.normal = glm::vec3(info.worldNormal.x, info.worldNormal.y, info.worldNormal.z);
+            result.hitObject = userData;
+
+            // raycastInfo.body.
+            hit = true;
+            return info.hitFraction; // останавливаем на первом попадании
         }
-        return rp3d::decimal(1.0); 
-    } 
+    }
+};
+
+class SpecialCallback : public rp3d::RaycastCallback {
+public:
+    // Указатель на первый столкнувшийся объект
+    const rp3d::RaycastInfo* hitInfo = nullptr;
+
+    // Этот метод вызывается для каждого пересечения
+    float notifyRaycastHit(const rp3d::RaycastInfo& info) override {
+        // // Сохраняем данные первого столкновения
+        // if (!hitInfo) hitInfo = &info;
+        // GameObject* userData = static_cast<GameObject*>(info.collider->getUserData());
+        // rp3d::Vector3 hitPoint = info.worldPoint;
+
+        // // if (test) {
+        // //     return 0.0f;
+        // // }
+
+        // if (userData != nullptr) {
+        //     int vx = static_cast<int>(std::floor(hitPoint.x));
+        //     int vy = static_cast<int>(std::floor(hitPoint.y));
+        //     int vz = static_cast<int>(std::floor(hitPoint.z));
+            
+        //     int radius = 10;
+            
+        //     auto start = std::chrono::high_resolution_clock::now();
+        //     VoxelModel* voxmodel = userData->getMeshModel()->getVoxelModel();
+        //     for (int x = vx - radius; x <= vx + radius; ++x) {
+        //         for (int y = vy - radius; y <= vy + radius; ++y) {
+        //             for (int z = vz - radius; z <= vz + radius; ++z) {
+        //                 int dx = x - vx;
+        //                 int dy = y - vy;
+        //                 int dz = z - vz;
+        //                 if (dx*dx + dy*dy + dz*dz <= radius*radius) {
+        //                     Voxel& voxel = voxmodel->voxel(x, y-50, z);
+        //                     voxel.color = glm::vec4(1.0f, 0.0f, 0.0f, 0.7f);
+        //                     voxel.visible = true;
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     auto end = std::chrono::high_resolution_clock::now();
+        //     // разница в микросекундах
+        //     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+        //     std::cout << "Time elapsed: " << duration << " ms\n";
+
+        //     std::cout << "Explode!" << "\n";
+        //     test = true;
+        // }
+
+        // return 0.0f;
+    }
 };
 
 // Your event listener class 
@@ -64,7 +141,6 @@ PhysicsEngine::PhysicsEngine() {
 
     vLogger::eprint("PHYSICS", "PhysicsEngine initialized",  LOGLEVEL::INFO);
 }
-PhysicsEngine::~PhysicsEngine() {}
 
 rp3d::PhysicsCommon &PhysicsEngine::getPhysicsCommon() {
     return _physicsCommon;
@@ -74,61 +150,79 @@ rp3d::PhysicsWorld *PhysicsEngine::getPhysicsWorld() {
     return _world;
 }
 
-PhysicsObject *PhysicsEngine::createRigidBody(GameObject *gmobj, glm::vec3 size) {
-    rp3d::Vector3 position(gmobj->getPosition().x, gmobj->getPosition().y, gmobj->getPosition().z);
-	rp3d::RigidBody* rigidbody = _world->createRigidBody(rp3d::Transform(position, rp3d::Quaternion::identity()));
-    rigidbody->setMass(1.0f);
-    
-    glm::vec3 cnt(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
+void PhysicsEngine::test() {
+    std::cout << "Govno \n";
+}
+
+RaycastHit PhysicsEngine::raycast(const glm::vec3& origin, const glm::vec3& dir) {
+    reactphysics3d::Ray ray(
+        reactphysics3d::Vector3(origin.x, origin.y, origin.z),
+        reactphysics3d::Vector3(dir.x, dir.y, dir.z).getUnit() // нормализуем
+    );
+
+    // std::cout << "Raycasted: " << origin.y << " " << dir.y << "\n";
+
+    PhysicsRaycastCallback callback;
+
+    _world->raycast(ray, &callback);
+
+    RaycastHit result{};
+    if (callback.hit) {
+        result = callback.result;
+    }
+    return result;
+}
+
+
+rp3d::RigidBody* PhysicsEngine::createRigidBody(glm::vec3 position) {
+    return _world->createRigidBody(rp3d::Transform(rp3d::Vector3(position.x, position.y, position.z), rp3d::Quaternion::identity()));
+    // rigidbody->setMass(1.0f);
+
+    // glm::vec3 halfSize(
+    //     (size.x - minsize.x) / 2.0f,
+    //     (size.y - minsize.y) / 2.0f,
+    //     (size.z - minsize.z) / 2.0f
+    // );
+    // const rp3d::Vector3 halfExtents(halfSize.x, halfSize.y, halfSize.z);
 	
-	const rp3d::Vector3 halfExtents (cnt.x, cnt.y, cnt.z);  
-	rp3d::BoxShape* shape = _physicsCommon.createBoxShape(halfExtents);
+	// rp3d::BoxShape* shape = _physicsCommon.createBoxShape(halfExtents);
 
-	rp3d::Collider* collider = rigidbody->addCollider(shape, rp3d::Transform::identity());
+	// rp3d::Collider* collider = rigidbody->addCollider(shape, rp3d::Transform::identity());
 
-    rp3d::Transform transform;
-    transform.identity(); // Установка трансформации в единичную матрицу
-    transform.setPosition(rp3d::Vector3(cnt.x-0.5f, cnt.y-0.5f, cnt.z-0.5f)); // Установка позиции в центр куба
-    collider->setLocalToBodyTransform(transform); // Установка трансформации для коллайдера
+    // collider->setUserData(gmobj); // Присваиваем коллайдеру GameObject
+	// rigidbody->setType(rp3d::BodyType::STATIC); // По умолчанию Статический
 
-    collider->setUserData(gmobj); // Присваиваем коллайдеру GameObject
-	rigidbody->setType(rp3d::BodyType::STATIC); // По умолчанию Статический
+    // //! TEMPORARY
+    // rigidbody->setIsDebugEnabled(true);
 
-    //! TEMPORARY
-    rigidbody->setIsDebugEnabled(true);
-
-	rp3d::Material& mat = collider->getMaterial();      
-	mat.setBounciness (0); 
-	mat.setFrictionCoefficient (20);
-	mat.setMassDensity(0);
+	// rp3d::Material& mat = collider->getMaterial();      
+	// mat.setBounciness (0); 
+	// mat.setFrictionCoefficient (20);
+	// mat.setMassDensity(1000);
     
-	PhysicsObject* obj = new PhysicsObject(gmobj, rigidbody);
-	return obj;
-}
-
-void PhysicsEngine::addObject(PhysicsObject* object) {
-	// PhysicsObject* obj = createRigidBody(object, object->getCollider(), 1.0f);
-    _objects.push_back(object);
-}
-PhysicsObject* PhysicsEngine::getObject(int i) {
-    return _objects[i];
+	// PhysicsObject* obj = new PhysicsObject(gmobj, rigidbody);
+	// return obj;
 }
 
 void PhysicsEngine::update(float deltaTime) {
-	_world->update(1.0f / 60.0f);
-    MyCallbackClass obj;
+	_world->update(deltaTime);
+    // MyCallbackClass obj;
+    SpecialCallback spc;
 
     for (auto& object : _objects) {
         object->update(deltaTime);
         // Получите нижнюю точку вашего объекта (например, его позицию или центр массы)
-        glm::vec3 curPos = object->getGameObject()->getPosition();
-        // Start and end points of the ray 
-        rp3d::Vector3 startPoint = rp3d::Vector3(curPos.x, curPos.y, curPos.z);
-        rp3d::Vector3 endPoint = rp3d::Vector3(curPos.x, curPos.y - 1.0f, curPos.z);
-        obj.setCurrentObject(object->getGameObject());
+        // glm::vec3 curPos = object->getGameObject()->getPosition();
+        // // Start and end points of the ray 
+        // rp3d::Vector3 startPoint = rp3d::Vector3(curPos.x, curPos.y-1.0f, curPos.z);
+        // rp3d::Vector3 endPoint = rp3d::Vector3(curPos.x, curPos.y - 5.0f, curPos.z);
+        // obj.setCurrentObject(object->getGameObject());
         
-        rp3d::Ray ray(startPoint, endPoint);
-        object->setIsGround(false);
-        _world->raycast(ray, &obj);
+        // rp3d::Ray ray(startPoint, endPoint);
+        // object->setIsGround(false);
+
+        // _world->raycast(ray, &spc);
+        
+        // _world->raycast(ray, &obj);
     }
 }

@@ -3,7 +3,10 @@
 
 #include "window.h"
 #include "../utilities/logger.h"
-// #include <iostream>
+
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_opengl3.h"
 
 SDL_Window* Window::window;
 SDL_Renderer* Window::guirenderer;
@@ -25,7 +28,17 @@ int Window::init(int width, int height, const char* title) {
         return 1;
     }
 
-    SDL_TTF_INIT();
+    // Инициализация Dear ImGui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    // Стили
+    ImGui::StyleColorsDark();
+
+    // Инициализация бэкендов SDL + OpenGL
+    ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+    ImGui_ImplOpenGL3_Init("#version 330"); // версия OpenGL, которая у тебя
 
     _glInit();
 
@@ -109,11 +122,16 @@ SDL_bool Window::getCursorMode() {
     return SDL_GetRelativeMouseMode();
 }
 
-void Window::setPause(bool pause) {
-    _pause = pause;
+void Window::startFrame() {
+    // Начало нового кадра ImGui
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
 }
-bool Window::getPause() {
-    return _pause;
+
+void Window::renderGUI() {
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 void Window::toggleFullscreen() {
@@ -126,6 +144,9 @@ void Window::exit() {
     SDL_DestroyRenderer(guirenderer);
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
     SDL_Quit();
 }
 bool Window::isShouldClose(SDL_Event event) {

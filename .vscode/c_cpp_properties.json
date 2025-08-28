@@ -7,7 +7,9 @@
                 "/home/user/dev/voxelx/editor/src/**",
                 "/usr/include/freetype2/**",
                 "/usr/include/freetype2",
-                "/home/user/dev/voxelx/lib/vendor/luacpp/Source/**"
+                "/home/user/dev/voxelx/lib/vendor/luacpp/Source/**",
+                "/home/user/dev/voxelx/vendor/imgui/**",
+                "/home/user/dev/voxelx/vendor/imgui/backends/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

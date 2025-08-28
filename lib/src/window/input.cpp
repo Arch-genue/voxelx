@@ -1,6 +1,7 @@
 #include "input.h"
 
 #include "../utilities/logger.h"
+#include "imgui_impl_sdl2.h"
 
 SDL_Event Input::_sdlevent;
 
@@ -210,6 +211,8 @@ void Input::toggleCursor() {
 
 void Input::processEvents(bool &quit) {
     while (SDL_PollEvent(&_sdlevent) != 0) {
+        ImGui_ImplSDL2_ProcessEvent(&_sdlevent);
+
         Uint8 b = _sdlevent.button.button;
         int x1;int y1; SDL_GetMouseState(&x1, &y1);
         if (_sdlevent.type == SDL_QUIT) quit = true;

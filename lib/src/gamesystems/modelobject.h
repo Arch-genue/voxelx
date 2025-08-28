@@ -10,25 +10,23 @@
  */
 #pragma once
 
-#include "GL/glew.h"
-#include "../graphics/mesh.h"
-#include "../voxels/voxelmodel.h"
+#include "../graphics/meshmodel.h"
 
 class ModelObject {
 private:
-    // std::unique_ptr<VoxelModel> _voxelModel;
-    VoxelModel* _voxelModel;
-    glm::ivec3 _sizes;
+    MeshModel* _meshmodel;
 
     bool _visible;
 public:
-    ModelObject(VoxelModel* original_model);
-    ~ModelObject();
-
-    VoxelModel* getVoxelModel() const;
+    ModelObject(MeshModel* original_model);
+    ~ModelObject() {
+        delete _meshmodel;
+    }
 
     virtual void draw(glm::mat4 matrix, Shader* shader);
 
-    void setVisible(bool visible);
-    bool isVisible();
+    MeshModel* getMeshModel() const { return _meshmodel; }
+
+    void setVisible(bool visible) { _visible = visible; }
+    bool isVisible() const { return _visible; }
 };

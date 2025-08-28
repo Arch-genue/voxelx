@@ -1,219 +1,226 @@
 #include "renderer.h"
-#include "mesh.h"
-#include "textmesh.h"
+#include "meshmodel.h"
 #include <glm/glm.hpp>
+#include <GL/glew.h>
 
 #include <iostream>
 #include "../utilities/logger.h"
 
-//TODO Пошаговый рендеринг мешей
-
-#define IS_IN(voxels, X,Y,Z) ((X) >= 0 && (X) < voxels->getSize().x && (Y) >= 0 && (Y) < voxels->getSize().y && (Z) >= 0 && (Z) < voxels->getSize().z)
-
-#define IS_BLOCKED(voxels, X,Y,Z) (IS_IN(voxels, X, Y, Z) && voxels->getVoxel(glm::ivec3(X,Y,Z)))
-
-#define VERTEX_SIZE (3 + 3 + 4)
-
-int chunk_attrs[] = {3,3,4, 0};
-
-float* Renderer::buffer;
-size_t Renderer::capacity;
-
 Camera* Renderer::camera;
+constexpr float asize = 0.5f;
 
-size_t Renderer::_index;
+void Renderer::addCamera(Camera* cam) { camera = cam; }
+Camera* Renderer::getCamera() { return camera; }
 
-float asize = 0.5f;
+struct Vertex {
+    glm::vec3 pos;
+    glm::ivec3 normal;
+    Color& color;
 
-void Renderer::init(size_t capacity) {
-	buffer = new float[capacity * VERTEX_SIZE * 6];
-	Renderer::capacity = capacity;
+    bool operator==(const Vertex& other) const {
+        return pos == other.pos && normal == other.normal &&
+			color.r==other.color.r && 
+			color.g==other.color.g &&
+			color.b==other.color.b && 
+			color.a==other.color.a;
+    }
+};
 
-	vLogger::eprint("RENDERER", "Renderer initialized",  LOGLEVEL::INFO);
-	vLogger::eprint("RENDERER", "Max render size: " + std::string(BLUE_COLOR) + std::to_string(Renderer::capacity) + std::string(RESET_COLOR),  LOGLEVEL::INFO);
-}
-
-void Renderer::free() {
-	delete[] buffer;
-
-}
-void Renderer::addCamera(Camera* cam) {
-	camera = cam;
-}
-
-std::unique_ptr<Mesh> Renderer::render(VoxelModel* voxels) {
-	_index = 0;
-
-	auto start = std::chrono::high_resolution_clock::now();
-
-	// for (auto& [chunkPos, chunk] : voxels->get_chunks()) {
-	// 	for (auto& [voxelPos, voxel] : chunk.voxels) {
-	// 		computeVoxelRender(voxels, &voxel, "");
-	// 	}
-	// }
-	size_t ikkto = 0;
-	voxels->forEachVoxel([&](Voxel* voxel){
-		computeVoxelRender(voxels, voxel, "");
-		ikkto++;
+MeshModel* Renderer::generateMeshModel(VoxelModel *voxelmodel) {
+	MeshModel* meshmodel = new MeshModel(voxelmodel);
+	voxelmodel->forEachChunk([&] (VoxelModel::ChunkType &chunk, ChunkCoord chunkpos) {
+		meshmodel->set(&chunk, generateMesh(voxelmodel, chunk));
 	});
 
-	std::cout << "BIGOLO: " << ikkto << "\n";
+	return meshmodel;
+}
 
-	// for (auto& [pos, voxel] : voxelsMap) {
-	// 	computeVoxelRender(voxels, &voxel, "");
-	// }
+Mesh* Renderer::generateMesh(VoxelModel* voxelmodel, VoxelModel::ChunkType& chunk) {
+	std::vector <float> posBuffer;
+	std::vector <int8_t> normalBuffer;
+	std::vector <uint8_t> colorBuffer;
+
+	constexpr size_t stride = sizeof(float) * 3 + sizeof(int8_t) * 3 + sizeof(uint8_t) * 4;
+
+	posBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 3);
+	normalBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 3);
+	colorBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 4);
 	
-	// for (int x = voxels->getMinSize().x; x < voxels->getSize().x; x++) {
-	// 	for (int y = voxels->getMinSize().y; y < voxels->getSize().y; y++) {
-	// 		for (int z = voxels->getMinSize().z; z < voxels->getSize().z; z++) {
-	// 			Voxel* voxel = voxels->getVoxel(x, y, z);
-	// 			if (voxel) {
-	// 				computeVoxelRender(voxels, voxel, "");
-	// 			}
-	// 		}
-	// 	}
-	// }
+	// auto start = std::chrono::high_resolution_clock::now();
+	// voxelmodel->forEachVisibleVoxelInChunk(chunk, [&] (Voxel &voxel, int x, int y, int z) {
+	// 	Color& clr = voxel.getColor();
+	// 	if (!voxelmodel->getVoxel(x, y+1, z).visible) top(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+	// 	if (!voxelmodel->getVoxel(x, y-1, z).visible) bottom(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
 
-	// Выделяем отдельный буфер для этого меша
-    float* meshBuffer = new float[_index];
-    std::memcpy(meshBuffer, buffer, _index * sizeof(float));
+	// 	if (!voxelmodel->getVoxel(x+1, y, z).visible) left(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+	// 	if (!voxelmodel->getVoxel(x-1, y, z).visible) right(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
 
-	auto end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<float> duration = end - start;
-	vLogger::eprint("RENDERER", "GENERATED MESH: " + std::string(CYAN_COLOR) + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
-	return std::make_unique<Mesh>(meshBuffer, _index / VERTEX_SIZE, chunk_attrs);
-}
+	// 	if (!voxelmodel->getVoxel(x, y, z+1).visible) front(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+	// 	if (!voxelmodel->getVoxel(x, y, z-1).visible) back(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+	// });
 
-void Renderer::__ensureBufferCapacity(size_t required) {
-    if (required > Renderer::capacity) {
-        size_t newCapacity = std::max(required, capacity * 2);
-        float* newBuffer = new float[newCapacity * VERTEX_SIZE * 6];
-        std::memcpy(newBuffer, buffer, _index * sizeof(float));
-        delete[] buffer;
-        buffer = newBuffer;
-        Renderer::capacity = newCapacity;
-    }
-}
+	// auto end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<float> duration = end - start;
+	// std::cout << "Legacy variant: " << duration.count() << "s \n";
 
-void Renderer::computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string renderside) {
-	if (voxel == nullptr) return;
-	if (!voxel->visible) return;
+	// start = std::chrono::high_resolution_clock::now();
+	voxelmodel->forEachVisibleVoxelInChunk(chunk, [&] (Voxel &voxel, int x, int y, int z) {
+		Color& clr = voxel.getColor();
+		// chunk.getVoxel().visible;
 
-	int x = voxel->position.x;
-	int y = voxel->position.y;
-	int z = voxel->position.z;
+		if (!chunk.getVoxel(x, y+1, z).visible) top(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+		if (!chunk.getVoxel(x, y-1, z).visible) bottom(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+
+		if (!chunk.getVoxel(x+1, y, z).visible) left(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+		if (!chunk.getVoxel(x-1, y, z).visible) right(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+
+		if (!chunk.getVoxel(x, y, z+1).visible) front(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+		if (!chunk.getVoxel(x, y, z-1).visible) back(posBuffer, normalBuffer, colorBuffer, x, y, z, clr);
+	});
+	// end = std::chrono::high_resolution_clock::now();
+    // duration = end - start;
+	// std::cout << "New variant: " << duration.count() << "s \n";
+	// std::exit(1);
+
+	Mesh* mesh = new Mesh(posBuffer, normalBuffer, colorBuffer);
+	mesh->_vertices = posBuffer.size() / 3; // по количеству float в позиции
+
+	glBindVertexArray(mesh->_getvao());
+
+	// Позиции
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->_get_pos_vbo());
+	glBufferData(GL_ARRAY_BUFFER, posBuffer.size() * sizeof(float), posBuffer.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// Нормали
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->_get_normal_vbo());
+	glBufferData(GL_ARRAY_BUFFER, normalBuffer.size() * sizeof(int8_t), normalBuffer.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_BYTE, GL_TRUE, 0, (void*)0);
+	glEnableVertexAttribArray(1);
+
+	// Цвет
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->_get_color_vbo());
+	glBufferData(GL_ARRAY_BUFFER, colorBuffer.size() * sizeof(uint8_t), colorBuffer.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+	glEnableVertexAttribArray(2);
+
+    glBindVertexArray(0);
 	
-	glm::vec4 clr = voxel->color;
+	return mesh;
+}
+
+void Renderer::vertex(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer,
+	float x, float y, float z, 
+	const glm::ivec3 &normal, 
+	Color& clr
+) {
 	
-	// if (!voxels->getVoxel(glm::vec3(x, y+1, z)))
-		// std::cout << "ERROR:" << std::endl;
+	posBuffer.push_back(x);
+	posBuffer.push_back(y);
+	posBuffer.push_back(z);
 
-	//? Y
-	if (!IS_BLOCKED(voxels, x,y+1,z)) {
-		top(_index, x, y, z, clr);
-	} 
-	if (!IS_BLOCKED(voxels, x,y-1,z)) {
-		bottom(_index, x, y, z, clr);
-	}
+	normalBuffer.push_back(normal.x);
+	normalBuffer.push_back(normal.y);
+	normalBuffer.push_back(normal.z);
 
-	//? X
-	if (!IS_BLOCKED(voxels, x+1,y,z)) {
-		left(_index, x, y, z, clr);
-	}
-	if (!IS_BLOCKED(voxels, x-1,y,z)) {
-		right(_index, x, y, z, clr);
-	}
-
-	//? Z
-	if (!IS_BLOCKED(voxels, x,y,z+1)) {
-		front(_index, x, y, z, clr);
-	}
-	if (!IS_BLOCKED(voxels, x,y,z-1)) {
-		back(_index, x, y, z, clr);
-	}
+	colorBuffer.push_back(clr.r);
+	colorBuffer.push_back(clr.g);
+	colorBuffer.push_back(clr.b);
+	colorBuffer.push_back(clr.a);
 }
 
-void Renderer::vertex(float x, float y, float z, float vert_x, float vert_y, float vert_z, glm::vec3 &normal, glm::vec4 clr) {
-	buffer[_index]   = x + vert_x;
-	buffer[_index+1] = y + vert_y;
-	buffer[_index+2] = z + vert_z;
+void Renderer::top(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer, 
+	float x, float y, float z, Color& clr
+) {
+	const glm::ivec3 normal(0.0f, 1.0f, 0.0f);
 	
-	buffer[_index+3] = normal.x;
-	buffer[_index+4] = normal.y;
-	buffer[_index+5] = normal.z;
-
-	buffer[_index+6] = clr.x;
-	buffer[_index+7] = clr.y;
-	buffer[_index+8] = clr.z;
-	buffer[_index+9] = clr.w;
-
-	_index += VERTEX_SIZE;
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z-asize, normal, clr);
 }
 
-void Renderer::top(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(0.0f, 1.0f, 0.0f);
-	
-	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
+void Renderer::bottom(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer, 
+	float x, float y, float z, Color& clr
+) {
+	const glm::ivec3 normal(0.0f, -1.0f, 0.0f);
+
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z+asize, normal, clr);
 }
-void Renderer::bottom(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(0.0f, -1.0f, 0.0f);
+void Renderer::left(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer, 
+	float x, float y, float z, Color& clr
+) {
+	const glm::ivec3 normal(1.0f, 0.0f, 0.0f);
 
-	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z+asize, normal, clr);
 }
-void Renderer::left(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(-1.0f, 0.0f, 0.0f);
+void Renderer::right(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer, 
+	float x, float y, float z, Color& clr
+) {	
+	const glm::ivec3 normal(-1.0f, 0.0f, 0.0f);
 
-	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-
-	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z+asize, normal, clr);
 }
-void Renderer::right(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(1.0f, 0.0f, 0.0f);
+void Renderer::front(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer, 
+	float x, float y, float z, Color& clr
+) {	
+	const glm::ivec3 normal(0.0f, 0.0f, 1.0f);
 
-	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
-
-	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z+asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z+asize, normal, clr);
 }
-void Renderer::front(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(0.0f, 0.0f, 1.0f);
+void Renderer::back(
+	std::vector<float>& posBuffer,
+	std::vector<int8_t>& normalBuffer,
+	std::vector<uint8_t>& colorBuffer, 
+	float x, float y, float z, Color& clr
+) {
+		const glm::ivec3 normal(0.0f, 0.0f, -1.0f);
 
-	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-	
-	vertex(x,y,z, -asize, -asize, +asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, +asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, +asize, normal, clr);
-}
-void Renderer::back(size_t &index, float x, float y, float z, glm::vec4 clr) {
-	glm::vec3 normal(0.0f, 0.0f, -1.0f);
-
-	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, -asize, +asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
-	vertex(x,y,z, -asize, -asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, +asize, -asize, normal, clr);
-	vertex(x,y,z, +asize, -asize, -asize, normal, clr);
-}
-
-Camera* Renderer::getCamera() {
-	return camera;
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x-asize, y-asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y+asize, z-asize, normal, clr);
+	vertex(posBuffer, normalBuffer, colorBuffer, x+asize, y-asize, z-asize, normal, clr);
 }

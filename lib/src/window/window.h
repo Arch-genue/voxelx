@@ -51,8 +51,11 @@ public:
     static void setCursorMode(SDL_bool mode);
     static SDL_bool getCursorMode();
 
-    static void setPause(bool pa);
-    static bool getPause();
+    static void startFrame();
+    static void renderGUI();
+
+    static void setPause(bool pause) { _pause = pause; }
+    static bool getPause() { return _pause;}
 
     static void toggleFullscreen();
     static bool isShouldClose(SDL_Event event);

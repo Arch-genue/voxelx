@@ -2,16 +2,12 @@
 
 #include "../graphics/renderer.h"
 #include "../graphics/shader.h"
-#include "../graphics/texture.h"
-
-#include <freetype2/ft2build.h>
-#include FT_FREETYPE_H
 
 #include <string>
 #include <map>
 
 class Shader;
-class Mesh;
+class MeshModel;
 
 /**
  * @brief Менеджер ресурсов
@@ -21,41 +17,32 @@ class ResourceManager {
     static std::string _path;
 
     static std::map<std::string, Shader*> _shaders;
-    static std::map<std::string, VoxelModel*> _rowmodels;
-    static std::map<std::string, Texture*> _textures;
-    static std::map<std::string, FT_Face> _faces;
+    static std::map<std::string, VoxelModel*> _voxelmodels;
+    static std::map<std::string, MeshModel*> _meshmodels;
 
-    static FT_Library _ft;
 public:
     static void init(std::string str);
     static void cleanup();
 
     static void deleteShaders();
     static void deleteModels();
-    static void deleteTextures();
 
     static void loadShaders();
-    static void loadTextures();
     static void loadModels();
-    static void loadFonts();
 
-    static void loadShader(std::string str);
-    static void loadTexture(std::string str);
-    static void loadModel(std::string str, std::string type);
-    static void loadFont(std::string str);
-
-    static VoxelModel* load_model(std::string filename, const char *type);
-    static VoxelModel* genVoxel();
+    static void loadShader(const std::string& str);
+    static void loadModel(const std::string& str, const std::string& type);
 
     static void prepareModel(const std::string& str);
 
-    static void addShader(Shader* shader, std::string name);
-    static void addTexture(Texture* texture, std::string name);
-	static void addModel(VoxelModel* row, std::string name);
-	static void addMesh(Mesh* mesh);
+    static void addShader(Shader* shader, const std::string& name);
+	static void addModel(VoxelModel* row, const std::string& name);
+	static void addMesh(MeshModel* mesh);
 
-    static Shader* getShader(std::string name);
-    static Texture* getTexture(std::string name);
-    static VoxelModel* getModel(std::string name);
-    static FT_Face getFont(std::string name);
+    static Shader* getShader(const std::string& name);
+    static VoxelModel* getModel(const std::string& name);
+    static MeshModel* getMeshFromModel(const std::string& name);
+
+    static VoxelModel* load_model(const std::string& filename, const char *type);
+    static VoxelModel* genVoxel();
 };

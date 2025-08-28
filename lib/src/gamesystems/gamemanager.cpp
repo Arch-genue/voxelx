@@ -2,9 +2,9 @@
 
 #include <glm/glm.hpp>
 #include "../window/input.h"
+#include "../loaders/resourcemanager.h"
 
 #define MOUSE_SPEED 1.0f
-
 
 GameManager::GameManager() {
     _physicsengine = new PhysicsEngine();
@@ -31,8 +31,6 @@ PhysicsEngine* GameManager::getPhysicsEngine() {
 
 void GameManager::Update(Light &light) {
     for(uint16_t i = 0; i < _gameobjects.size(); i++) {
-        // std::cout << "FSD - " << i << " " << _gameobjects.size() << "\n";
-        // std::cout << "GM UPD: " << _gameobjects[i]->getName() << "\n";
         Material material;
         material.ambient = glm::vec3(0.1f);
         material.diffuse = glm::vec3(0.8f);
@@ -40,25 +38,48 @@ void GameManager::Update(Light &light) {
         material.shininess = 32.0f;
         ResourceManager::getShader("voxel")->uniformLight("light", light);
         ResourceManager::getShader("voxel")->uniformMaterial("material", material);
-        ResourceManager::getShader("voxel")->uniformVec3("aPos", _gameobjects[i]->getPosition());
-    
+        
+        int remeshed = 0;
+        MeshModel* meshmodel = _gameobjects[i]->getMeshModel();
+        VoxelModel* voxelmodel = meshmodel->getVoxelModel();
+        voxelmodel->forEachChunk([&] (VoxelModel::ChunkType& chunk, const ChunkCoord &chunkPos) {
+            if (!chunk._remesh) { return; }
+            remeshed++;
+
+            Mesh* newmesh = Renderer::generateMesh(voxelmodel, chunk);
+            meshmodel->set(&chunk, newmesh);
+            chunk._remesh = false;
+        });
+        if (remeshed > 0) {
+            std::cout << "=Remeshed: " << remeshed << "\n";
+        }
+
         _gameobjects[i]->update();
     }
 }
 
 void GameManager::UpdatePhysics(float deltaTime) {
-    _physicsengine->update(deltaTime);
+    static double accumulator = 0.0;
+    constexpr double physicsStep = 1.0 / 120.0; // фиксированный шаг = 60 Гц
 
-    for(uint16_t i = 0; i < _gameobjects.size(); i++) {
-        if (_gameobjects[i] == nullptr) {
-            std::cerr << "Null gameobject in GameManager \n";
-            continue;
+    accumulator += deltaTime;
+    
+    while (accumulator >= physicsStep) {
+        _physicsengine->update(deltaTime);
+
+        for(uint16_t i = 0; i < _gameobjects.size(); i++) {
+            if (_gameobjects[i] == nullptr) {
+                std::cerr << "Null gameobject in GameManager \n";
+                continue;
+            }
+
+            if (_gameobjects[i]->getPhysicsObject() == nullptr) continue;
+
+            PhysicsObject* phs = _gameobjects[i]->getPhysicsObject();
+            _gameobjects[i]->setPosition(phs->getPosition());
         }
-
-        if (_gameobjects[i]->getPhysicsObject() == nullptr) continue;
-
-        PhysicsObject* phs = _gameobjects[i]->getPhysicsObject();
-        // _gameobjects[i]->setPosition(phs->getPosition());
+        
+        accumulator -= physicsStep;
     }
 }
 

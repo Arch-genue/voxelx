@@ -15,8 +15,8 @@
 
 #include "../physics/physicsengine.h"
 #include "gameobject.h"
-#include "linesobject.h"
 
+class GameObject;
 class PhysicsEngine;
 
 /**
@@ -40,13 +40,8 @@ public:
     void Update(Light & light);
     void UpdatePhysics(float deltaTime);
 
-    std::vector<GameObject*> getGameObjects() {
-        return _gameobjects;
-    }
-
-    uint32_t getGameObjectsSize() {
-        return _gameobjects.size();
-    }
+    std::vector<GameObject*>& getGameObjects() { return _gameobjects; }
+    uint32_t getGameObjectsSize() { return _gameobjects.size(); }
 
     uint getNewID();
     

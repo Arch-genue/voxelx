@@ -11,55 +11,32 @@
 
 #pragma once
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <string>
-#include <memory>
-
-#include <GL/glew.h>
-
 #include "../gamesystems/camera.h"
-#include "../voxels/voxelmodel.h"
+#include "meshmodel.h"
 
-class Mesh;
+class MeshModel;
 class Camera;
-
-class VoxelModel;
-class Voxel;
-
-struct Vertex {
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec4 color;
-};
 
 class Renderer {
 private:
-	static float* buffer;
-	static size_t capacity;
-
 	static Camera* camera;
 
-	static size_t _index;
+	static void vertex(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, const glm::ivec3 &normal, Color& clr);
 
-	static void vertex(float x, float y, float z, float vert_x, float vert_y, float vert_z, glm::vec3 &normal, glm::vec4 clr);
+	static void top(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
+	static void bottom(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
+	static void left(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
+	static void right(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
+	static void front(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
+	static void back(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
 
-	static void top(size_t &index, float x, float y, float z, glm::vec4 clr);
-	static void bottom(size_t &index, float x, float y, float z, glm::vec4 clr);
-	static void left(size_t &index, float x, float y, float z, glm::vec4 clr);
-	static void right(size_t &index, float x, float y, float z, glm::vec4 clr);
-	static void front(size_t &index, float x, float y, float z, glm::vec4 clr);
-	static void back(size_t &index, float x, float y, float z, glm::vec4 clr);
 public:
-	static void init(size_t capacity);
-    static void free();
+	static void init();
 
     static void addCamera(Camera* cam);
 
-    void __ensureBufferCapacity(size_t required);
-	static std::unique_ptr<Mesh> render(VoxelModel* voxels=nullptr);
-
-    static void computeVoxelRender(VoxelModel* voxels, Voxel* voxel, std::string renderside);
+	static MeshModel* generateMeshModel(VoxelModel* voxelmodel);
+    static Mesh* generateMesh(VoxelModel* voxels, VoxelModel::ChunkType& chunk);
 
     static Camera* getCamera();
 };

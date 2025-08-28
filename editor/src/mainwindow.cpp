@@ -12,8 +12,6 @@
 #include "voxels/voxelmodel.h"
 #include "gamesystems/camera.h"
 
-#include "graphics/types/octotree.h"
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 
@@ -62,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //! Setup opengl background
     Window::sky = glm::vec3(0.5f, 0.5f, 0.5f);
 
-    Renderer::init(4096 * 4096);
+    Renderer::init();
 
     ResourceManager::init("../res/");
     

@@ -10,7 +10,9 @@
  */
 
 #include <signal.h>
+#include <random>
 #include "voxelx.h"
+#include "gamesystems/mapgenerator.h"
 
 int WIDTH = 1024;
 int HEIGHT = 768;
@@ -32,9 +34,6 @@ void pause_mode() {
     Window::setPause(!Window::getPause());
     Input::toggleCursor();
 }
-
-#include <random>
-#include "test.h"
 
 void posix_death_signal(int signum) {
     signal(signum, SIG_DFL); // перепосылка сигнала
@@ -183,19 +182,6 @@ int main() {
                     appleobj->setPosition(appleobj->getPosition() + vel);
                 }
             }
-
-            // if (Input::pressed(SDLK_u)) {
-            //     boxobj->setPosition(boxobj->getPosition() + glm::vec3(0, 0, -1) * deltaTime * walkspeed);
-            // }
-            // if (Input::pressed(SDLK_h)) {
-            //     boxobj->setPosition(boxobj->getPosition() + glm::vec3(-1, 0, 0) * deltaTime * walkspeed);
-            // }
-            // if (Input::pressed(SDLK_k)) {
-            //     boxobj->setPosition(boxobj->getPosition() + glm::vec3(1, 0, 0) * deltaTime * walkspeed);
-            // }
-            // if (Input::pressed(SDLK_j)) {
-            //     boxobj->setPosition(boxobj->getPosition() + glm::vec3(0, 0, 1) * deltaTime * walkspeed);
-            // }
 
             if (appleobj->getPhysicsObject()->isGrounded()) {
                 if (Input::jpressed(SDLK_SPACE)) {

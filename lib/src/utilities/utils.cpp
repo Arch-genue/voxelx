@@ -1,18 +1,18 @@
 #include "utils.h"
 
-void split(std::string* bufstr, std::string str, char separator) {
-    uint len = strlen(str.data());
-    uint d = 0;
+std::vector<std::string> split(const std::string& str, char separator) {
+    std::vector<std::string> parts;
     std::string s;
-    for (uint i = 0; i < len; i++) {
-        if (str.data()[i] != separator) s += str.data()[i];
-        else {
-            bufstr[d] = s;
+    for (char c : str) {
+        if (c != separator) {
+            s += c;
+        } else {
+            if (!s.empty()) parts.push_back(s);
             s.clear();
-            d++;
         }
     }
-    bufstr[d] = s;
+    if (!s.empty()) parts.push_back(s);
+    return parts;
 }
 
 void splitvalue(std::string* bufstr, std::string str) {

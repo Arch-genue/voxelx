@@ -23,9 +23,6 @@ struct Light {
     float quadratic;
 };
 
-uniform Light light;
-uniform vec3 viewPos;
-
 // Материал объекта
 struct Material {
     vec3 ambient;       // Окружающая составляющая освещения
@@ -34,58 +31,31 @@ struct Material {
     float shininess;    // Коэффициент блеска
 };
 
+uniform Light light;
+uniform vec3 viewPos;
 uniform Material material;  // Параметры материала объекта
 
+
+
 void main() {
-    // ambient
-    // vec3 ambient = light.ambient * material.ambient;
-    
-    // diffuse 
+    f_color = a_color;
     // vec3 norm = normalize(Normal);
     // vec3 lightDir = normalize(light.position - FragPos);
+
+    // // ambient
+    // vec3 ambient = light.ambient * material.ambient;
+
+    // // diffuse
     // float diff = max(dot(norm, lightDir), 0.0);
-    // vec3 diffuse = light.diffuse * diff * material.diffuse;  
-    
-    // specular
+    // vec3 diffuse = light.diffuse * diff * material.diffuse;
+
+    // // specular
     // vec3 viewDir = normalize(viewPos - FragPos);
     // vec3 reflectDir = reflect(-lightDir, norm);  
     // float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     // vec3 specular = light.specular * spec * material.specular;
-    
-    // spotlight (soft edges)
-    // float theta = dot(lightDir, normalize(-light.direction)); 
-    // float epsilon = (light.cutOff - light.outerCutOff);
-    // float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-    // diffuse  *= intensity;
-    // specular *= intensity;
-    
-    // attenuation
-    // float distance    = length(light.position - FragPos);
-    // float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
-    // ambient  *= attenuation; 
-    // diffuse   *= attenuation;
-    // specular *= attenuation;   
-        
-    // vec3 result = (ambient + diffuse + specular) * a_color.rgb;
-    // f_color = vec4(result, 1.0);
 
-     // Расчет направления света
-    // vec3 lightDir = normalize(light.position - FragPos);
-    // vec3 norm = normalize(Normal);
-    // vec3 dir = reflect(-lightDir, norm);
-    
-    // Расчет интенсивности диффузного освещения
-    // float diff = max(dot(norm, lightDir), 0.0);
-    
-    // Учет цвета света и диффузной составляющей
-    // vec3 result = vec3(1.0f) * diff * a_color.rgb;
-    
-    // Установка цвета фрагмента с учетом освещенности
-    // vec3 norm = normalize(Normal);
-    // vec3 lightDir = normalize(light.position - FragPos);
-    // lightDir *= 0.1f;
-    // float diff = max(dot(norm, lightDir), 0.0);
-    // vec3 diffuse = diff * vec3(2.0f);
-    // vec3 result = (diffuse) * a_color.rgb;
-    f_color = a_color; //vec4(1.0f, 1.0f, 1.0f ,1.0f);
+    // // итог
+    // vec3 result = (ambient + diffuse + specular) * a_color.rgb;
+    // f_color = a_color; //vec4(result, 0.3);
 }

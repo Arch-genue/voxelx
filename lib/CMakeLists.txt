@@ -18,92 +18,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-set(SOURCE 
-	src/window/window.cpp 
-	src/window/input.cpp 
-
-	src/graphics/types/material.cpp
-	src/graphics/types/octotree.cpp
-	src/graphics/shader.cpp
-	src/graphics/texture.cpp
-	src/graphics/mesh.cpp
-	src/graphics/textmesh.cpp
-	src/graphics/cube.cpp
-	src/graphics/renderer.cpp
-	
-	src/graphics/gui.cpp
-	src/graphics/uvregion.cpp
-	src/graphics/sprite.cpp
-	src/graphics/batch3d.cpp
-	src/graphics/batch2d.cpp
-
-	# src/voxels/voxel.cpp
-	src/voxels/voxelmodel.cpp
-
-	src/loaders/resourcemanager.cpp
-	src/loaders/png_loading.cpp
-
-	src/physics/physics.cpp
-	src/physics/physicsengine.cpp
-	
-	src/gamesystems/camera.cpp
-	src/gamesystems/transformobject.cpp
-	src/gamesystems/modelobject.cpp
-	src/gamesystems/gameobject.cpp
-	src/gamesystems/linesobject.cpp
-	src/gamesystems/gamemanager.cpp
-
-	src/system/taskscheduler.cpp
-
-	src/utilities/utils.cpp
-	src/utilities/vtype.cpp
-	src/utilities/logger.cpp
+# === Dear ImGui ===
+set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/vendor/imgui)
+set(IMGUI_SOURCES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_sdl2.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
-set(HEADER
-	src/voxelx.h
+# === FetchContent sol2 ===
+include(FetchContent)
 
-    src/window/window.h
-	src/window/input.h 
-
-	src/graphics/types/material.h
-	src/graphics/types/octotree.h
-
-	src/graphics/shader.h 
-	src/graphics/texture.h 
-	src/graphics/mesh.h
-	src/graphics/textmesh.h
-	src/graphics/cube.h
-	src/graphics/renderer.h
-	src/graphics/gui.h
-
-	src/graphics/uvregion.h
-	src/graphics/sprite.h
-	src/graphics/batch3d.h
-	src/graphics/batch2d.h
-
-	src/voxels/voxel.h
-	src/voxels/voxelmodel.h
-
-	src/loaders/resourcemanager.h
-	src/loaders/png_loading.h
-
-	src/physics/physics.h
-	src/physics/physicsengine.h
-
-	src/gamesystems/camera.h
-	src/gamesystems/transformobject.h
-	src/gamesystems/modelobject.h
-	src/gamesystems/gameobject.h
-	src/gamesystems/linesobject.h
-	src/gamesystems/gamemanager.h
-
-	src/system/taskscheduler.h
-
-	src/utilities/utils.h
-	src/utilities/vtype.h
-	src/utilities/logger.h
+FetchContent_Declare(
+    sol2
+    GIT_REPOSITORY https://github.com/ThePhD/sol2.git
+    GIT_TAG main # или master, если хочешь
 )
+FetchContent_MakeAvailable(sol2)
+
+file(GLOB_RECURSE HEADER ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+file(GLOB_RECURSE SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
@@ -132,6 +72,11 @@ find_package(GLU REQUIRED)
 find_package(PNG REQUIRED)
 include_directories(${PNG_INCLUDE_DIR})
 
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+
+find_package(Lua REQUIRED)
+include_directories(${LUA_INCLUDE_DIR})
+
 # find_package(Lua REQUIRED)
 # include_directories(voxelx PUBLIC ${LUA_INCLUDE_DIR})
 
@@ -146,17 +91,22 @@ set (LIBRARIES
 	${GLU_LIBRARY}
 	${PNG_LIBRARY}
 	${FREETYPE_LIBRARY}
-	# ${LUA_LIBRARIES}
 	ReactPhysics3D::ReactPhysics3D
+	${LUA_LIBRARIES}
+	sol2
 )
 
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/lua)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 # add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/luacpp/Source)
 
-# add_executable(voxelx ${SOURCE})
-add_library(voxelx STATIC ${SOURCE})
+add_executable(voxelx 
+	${SOURCE}
+	${IMGUI_SOURCES}
+)
+# add_library(voxelx STATIC ${SOURCE})
 target_link_libraries(voxelx PRIVATE ${LIBRARIES})
 
+# add_library(imgui STATIC ${IMGUI_SOURCES})
 # target_include_directories(voxelx
 # 	PUBLIC vendor/luacpp/Source
 # 	PUBLIC vendor/lua

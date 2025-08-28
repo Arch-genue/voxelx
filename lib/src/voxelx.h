@@ -17,8 +17,6 @@
 #include "window/input.h"
 
 #include "graphics/renderer.h"
-#include "graphics/gui.h"
-#include "graphics/textmesh.h"
 
 #include "loaders/resourcemanager.h"
 #include "gamesystems/gamemanager.h"
@@ -42,6 +40,3 @@
  *
  */
 #define TITLE "VoxelX 0.2"
-
-// #include <LuaCpp.hpp>
-// using namespace LuaCpp::Registry;

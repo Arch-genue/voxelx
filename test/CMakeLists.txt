@@ -19,8 +19,8 @@ set(HEADER
     src/main.h
 )
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -w")
-set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
 include_directories(${CMAKE_SOURCE_DIR}/lib/src)
