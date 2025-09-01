@@ -10,3 +10,9 @@ CTestTestfile.cmake
 DartConfiguration.tcl
 engine
 Makefile
+.ninja_deps
+.ninja_log
+.qt/
+_deps/
+build.ninja
+editor/voxelx-editor_autogen/

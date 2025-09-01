@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../graphics/renderer.h"
-#include "../graphics/shader.h"
+#include "graphics/renderer.h"
+#include "graphics/shader.h"
+#include "scripting/scriptsystem.hpp"
 
 #include <string>
 #include <map>
@@ -19,6 +20,7 @@ class ResourceManager {
     static std::map<std::string, Shader*> _shaders;
     static std::map<std::string, VoxelModel*> _voxelmodels;
     static std::map<std::string, MeshModel*> _meshmodels;
+    static vtype::fndvector<std::string> _scripts;
 
 public:
     static void init(std::string str);
@@ -29,6 +31,7 @@ public:
 
     static void loadShaders();
     static void loadModels();
+    static void loadScripts();
 
     static void loadShader(const std::string& str);
     static void loadModel(const std::string& str, const std::string& type);

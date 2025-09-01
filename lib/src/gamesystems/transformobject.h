@@ -14,8 +14,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#define DEFAULT_SCALE 0.1f
-
 /**
  * @brief Абстрактный класс описывающий пространственный объект и его свойства
  * 
@@ -23,14 +21,11 @@
 class TransformObject {
 protected:
     glm::mat4 _modelmatrix;
-
     glm::vec3 _position;
-
     glm::mat4 _rotationMatrix;
 
 private:
     glm::mat4 _positionmatrix;
-    glm::mat4 _rotatematrix;
 
 public:
     TransformObject(/* args */);
@@ -45,36 +40,36 @@ public:
      * @param val Значение перемещения
      * @param vector Вектор направления
      */
-    void translate(float val, glm::vec3 vector);
+    void translate(float val, const glm::vec3& vector);
     /**
      * @brief Вращение объекта
      * 
      * @param val Значение вращения
      * @param vector Вектор вращения
      */
-    void rotate(float val, glm::vec3 vector);
+    void rotate(float val, const glm::vec3& vector);
     /**
      * @brief Масштабирование объекта
      * 
      * @param val Значение масштабирования
      * @param vector вектор масштабирования 
      */
-    void scale(float val, glm::vec3 vector);
+    void scale(float val, const glm::vec3& vector);
 
     /**
      * @brief Задать позицию объекта
      * 
      * @param position Вектор позиции объекта
      */
-    virtual void setPosition(glm::vec3 position);
+    virtual void setPosition(const glm::vec3& position) { _position = position; }
     /**
      * @brief Получить вектор позиции объекта
      * 
      * @return glm::vec3 Позиция объекта
      */
-    glm::vec3 getPosition();
+    const glm::vec3& getPosition() const { return _position; }
 
-    void setRotationMat(glm::mat4 rotation);
+    void setRotationMat(const glm::mat4& rotation);
 
     /**
      * @brief Задать вращение объекта
@@ -82,14 +77,14 @@ public:
      * @param angle Угол вращения
      * @param rotation Вектор вращения
      */
-    void setRotation(float angle, glm::vec3 rotation);
+    void setRotation(float angle, const glm::vec3& rotation);
     /**
      * @brief Получить значение вращения объекта
      * 
      * @param angle Ссылка на переменную угла вращения
      * @param rotation Ссылка на переменную вектора вращения
      */
-    void getRotation(float &angle, glm::vec3 &rotation);
+    void getRotation(float &angle, const glm::vec3 &rotation);
 
     /**
      * @brief Получить матрицу модели объекта

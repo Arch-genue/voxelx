@@ -1,6 +1,6 @@
 #include "input.h"
 
-#include "../utilities/logger.h"
+#include "../utilities/logger.hpp"
 #include "imgui_impl_sdl2.h"
 
 SDL_Event Input::_sdlevent;
@@ -39,7 +39,7 @@ int Input::init() {
     _clickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
     _jclickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
 
-    vLogger::eprint("INPUT", "Input system initialized, setup input buffers",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "INPUT", "Input system initialized");
     return 0;
 }
 
@@ -145,7 +145,7 @@ void Input::process_keys() {
 }
 
 void Input::cleanup() {
-    vLogger::eprint("INPUT", "Clear input buffers",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "INPUT", "Clear input buffers");
     delete []_keys;
     delete []_frames;
 }

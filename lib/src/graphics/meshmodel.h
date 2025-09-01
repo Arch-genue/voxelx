@@ -11,10 +11,8 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
 #include <unordered_map>
-#include "../voxels/voxelmodel.h"
+#include "voxels/voxelmodel.hpp"
 #include "mesh.h"
 
 /**
@@ -23,15 +21,8 @@
  */
 class MeshModel {
 public:
-    MeshModel(VoxelModel* voxelmodel) {
-        _voxelmodel = voxelmodel;
-
-        // this->generate(chunk);
-    };
-
-    VoxelModel* getVoxelModel() {
-        return _voxelmodel;
-    }
+    MeshModel(VoxelModel* voxelmodel): _voxelmodel(voxelmodel) {};
+    VoxelModel* getVoxelModel() { return _voxelmodel; }
 
     void draw(unsigned int primitive, glm::mat4 modelmatrix, Shader* shader) {
         this->forEachMesh([&](VoxelModel::ChunkType& chunk, Mesh* mesh) {
@@ -46,18 +37,22 @@ public:
         }
     }
 
-    void set(Chunk<CHUNK_SIZE>* chunk, Mesh* mesh) {
+    void set(VoxelModel::ChunkTypePtr chunk, Mesh* mesh) {
         _map[chunk] = mesh;
     }
 
-    Mesh* get(Chunk<CHUNK_SIZE>* chunk) const {
+    Mesh* get(VoxelModel::ChunkTypePtr chunk) const {
         auto it = _map.find(chunk);
         return (it != _map.end()) ? it->second : nullptr;
     }
 
-    // void remove(Chunk<CHUNK_SIZE> chunk) {
-    //     _map.erase(chunk);
-    // }
+    void remove(VoxelModel::ChunkTypePtr chunk) {
+        auto it = _map.find(chunk);
+        if (it != _map.end()) {
+            delete it->second;   // если _map владеет Mesh
+            _map.erase(it);
+        }
+    }
 
 private:
     std::unordered_map<VoxelModel::ChunkTypePtr, Mesh*> _map;

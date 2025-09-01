@@ -139,7 +139,7 @@ PhysicsEngine::PhysicsEngine() {
     debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::CONTACT_NORMAL, true);
     debugRenderer.setIsDebugItemDisplayed(rp3d::DebugRenderer::DebugItem::COLLISION_SHAPE, true);
 
-    vLogger::eprint("PHYSICS", "PhysicsEngine initialized",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "PHYSICS", "PhysicsEngine initialized");
 }
 
 rp3d::PhysicsCommon &PhysicsEngine::getPhysicsCommon() {
@@ -150,14 +150,10 @@ rp3d::PhysicsWorld *PhysicsEngine::getPhysicsWorld() {
     return _world;
 }
 
-void PhysicsEngine::test() {
-    std::cout << "Govno \n";
-}
-
 RaycastHit PhysicsEngine::raycast(const glm::vec3& origin, const glm::vec3& dir) {
     reactphysics3d::Ray ray(
         reactphysics3d::Vector3(origin.x, origin.y, origin.z),
-        reactphysics3d::Vector3(dir.x, dir.y, dir.z).getUnit() // нормализуем
+        reactphysics3d::Vector3(dir.x, dir.y, dir.z) // нормализуем
     );
 
     // std::cout << "Raycasted: " << origin.y << " " << dir.y << "\n";
@@ -168,61 +164,23 @@ RaycastHit PhysicsEngine::raycast(const glm::vec3& origin, const glm::vec3& dir)
 
     RaycastHit result{};
     if (callback.hit) {
+        result.hit = true;
         result = callback.result;
+    } else {
+        result.hit = false;
+        result.hitObject = nullptr;
     }
     return result;
 }
 
-
 rp3d::RigidBody* PhysicsEngine::createRigidBody(glm::vec3 position) {
     return _world->createRigidBody(rp3d::Transform(rp3d::Vector3(position.x, position.y, position.z), rp3d::Quaternion::identity()));
-    // rigidbody->setMass(1.0f);
-
-    // glm::vec3 halfSize(
-    //     (size.x - minsize.x) / 2.0f,
-    //     (size.y - minsize.y) / 2.0f,
-    //     (size.z - minsize.z) / 2.0f
-    // );
-    // const rp3d::Vector3 halfExtents(halfSize.x, halfSize.y, halfSize.z);
-	
-	// rp3d::BoxShape* shape = _physicsCommon.createBoxShape(halfExtents);
-
-	// rp3d::Collider* collider = rigidbody->addCollider(shape, rp3d::Transform::identity());
-
-    // collider->setUserData(gmobj); // Присваиваем коллайдеру GameObject
-	// rigidbody->setType(rp3d::BodyType::STATIC); // По умолчанию Статический
-
-    // //! TEMPORARY
-    // rigidbody->setIsDebugEnabled(true);
-
-	// rp3d::Material& mat = collider->getMaterial();      
-	// mat.setBounciness (0); 
-	// mat.setFrictionCoefficient (20);
-	// mat.setMassDensity(1000);
-    
-	// PhysicsObject* obj = new PhysicsObject(gmobj, rigidbody);
-	// return obj;
 }
 
 void PhysicsEngine::update(float deltaTime) {
 	_world->update(deltaTime);
-    // MyCallbackClass obj;
-    SpecialCallback spc;
 
     for (auto& object : _objects) {
         object->update(deltaTime);
-        // Получите нижнюю точку вашего объекта (например, его позицию или центр массы)
-        // glm::vec3 curPos = object->getGameObject()->getPosition();
-        // // Start and end points of the ray 
-        // rp3d::Vector3 startPoint = rp3d::Vector3(curPos.x, curPos.y-1.0f, curPos.z);
-        // rp3d::Vector3 endPoint = rp3d::Vector3(curPos.x, curPos.y - 5.0f, curPos.z);
-        // obj.setCurrentObject(object->getGameObject());
-        
-        // rp3d::Ray ray(startPoint, endPoint);
-        // object->setIsGround(false);
-
-        // _world->raycast(ray, &spc);
-        
-        // _world->raycast(ray, &obj);
     }
 }

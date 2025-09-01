@@ -7,10 +7,9 @@
 #include "../voxels/voxel.h"
 #include "../loaders/resourcemanager.h"
 
-GameObject::GameObject(GameManager* gm, std::string name, MeshModel* mesh_model, glm::vec3 position)
+GameObject::GameObject(const std::string& name, MeshModel* mesh_model, const glm::vec3& position)
 : TransformObject(), ModelObject(mesh_model) {
-	this->_gm = gm;
-	this->_id = _gm->getNewID();
+	this->_id = GameManager::instance().getNewID();
 
 	if (name == "") {
 		this->_name = "GameObject #" + std::to_string(_id);
@@ -18,7 +17,7 @@ GameObject::GameObject(GameManager* gm, std::string name, MeshModel* mesh_model,
 		this->setName(name);
 	}
 
-	this->_physicsobject = new PhysicsObject(this);
+	this->_physicsobject = std::make_unique<PhysicsObject>(this);
 
 	this->_campos = glm::vec3(0);
 	
@@ -27,9 +26,8 @@ GameObject::GameObject(GameManager* gm, std::string name, MeshModel* mesh_model,
 
 	this->_camera = nullptr;
 }
-GameObject::~GameObject() { delete this->_physicsobject; }
 
-void GameObject::attachCamera(Camera* cam, glm::vec3 stdpos) {
+void GameObject::attachCamera(Camera* cam, const glm::vec3& stdpos) {
 	_camera = cam;
 	if (_campos == glm::vec3(0)) {
 		_campos = stdpos;
@@ -37,19 +35,7 @@ void GameObject::attachCamera(Camera* cam, glm::vec3 stdpos) {
 	_camera->setPosition(getPosition() + _campos);
 }
 
-void GameObject::detachCamera() {
-	_camera = nullptr;
-}
-
-Camera* GameObject::getCamera() const {
-	return _camera;
-}
-
-PhysicsObject* GameObject::getPhysicsObject() {
-	return _physicsobject;
-}
-
-void GameObject::setPosition(glm::vec3 position) {
+void GameObject::setPosition(const glm::vec3& position) {
 	TransformObject::setPosition(position);
 
 	_physicsobject->setPosition(position);
@@ -59,7 +45,10 @@ void GameObject::onTransformed() {
 	ModelObject::draw(_modelmatrix, ResourceManager::getShader("voxel"));
 
 	if (_camera != nullptr) {
-		// std::cout << this->getName() << "\n";
-		// _camera->setPosition(getPosition() + _campos);
+		_camera->setPosition(getPosition() + _campos);
 	}
+}
+void GameObject::attachScript(const std::string &name) {
+	this->_scripts.push_back(name);
+	ScriptSystem::instance().startScript(name, this);
 };

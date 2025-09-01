@@ -4,37 +4,38 @@
 #include <fstream>
 #include <iostream>
 
-#include "../utilities/vtype.h"
-#include "../utilities/logger.h"
+#include "../utilities/vtype.hpp"
+#include "../utilities/logger.hpp"
 
 std::string ResourceManager::_path = "";
 
 std::map<std::string, Shader*> ResourceManager::_shaders;
 std::map<std::string, VoxelModel*> ResourceManager::_voxelmodels;
 std::map<std::string, MeshModel*> ResourceManager::_meshmodels;
+vtype::fndvector<std::string> ResourceManager::_scripts;
 
 void ResourceManager::init(std::string path) {
     _path = path;
 
     if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
-        vLogger::eprint("RESMGR", "Resources not found", LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "RESMGR", "Resources not found");
         std::exit(1);
         return;
     }
 
-    vLogger::eprint("RESMGR", "ResourceManager initialized",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "RESMGR", "ResourceManager initialized");
 }
 
 void ResourceManager::cleanup() {
     float time;
 
-    vLogger::eprint("RESMGR", "Deleting shaders...",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "RESMGR", "Deleting shaders...");
     time = measureFunctionTime(deleteShaders);
-    vLogger::eprint("RESMGR", "Shaders deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "RESMGR", "Shaders deleted. Time: brmagenta<", std::to_string(time), "s>");
 
-    vLogger::eprint("RESMGR", "Deleting models...",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "RESMGR", "Deleting models...");
     time = measureFunctionTime(deleteModels);
-    vLogger::eprint("RESMGR", "Models deleted. Time: " + BLUE_COLOR_STR + std::to_string(time) + "s" + RESET_COLOR_STR,  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "RESMGR", "Models deleted. Time: brmagenta<", std::to_string(time), "s>");
 }
 
 void ResourceManager::deleteShaders() {
@@ -54,20 +55,21 @@ void ResourceManager::deleteModels() {
 void ResourceManager::loadShader(const std::string& str) {
     Shader* shader = load_shader(_path + "shaders/" + str + ".glslv", _path + "/shaders/" + str + ".glslf");
 	if (shader == nullptr) {
-        vLogger::eprint("RESMGR", "Failed to load shader: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "RESMGR", "Failed to load shader brcyan<", str, ">");
         std::exit(1);
         return;
     }
     addShader(shader, str);
-    vLogger::eprint("RESMGR", "Shader loaded:  " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    Logger::instance().log(LogLevel::SUCCESS, "RESMGR", "Shader loaded brcyan<", str, ">");
 }
 
 void ResourceManager::loadModel(const std::string& str, const std::string& type) {
+    auto start = std::chrono::high_resolution_clock::now();
     VoxelModel* voxels;
     if (type == "voxtxt") {
         voxels = load_model(_path + "models/" + str + ".voxtxt", type.c_str());
         if (voxels == nullptr) {
-            vLogger::eprint("RESMGR", "Failed to load model: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::ERROR);
+            Logger::instance().log(LogLevel::ERROR, "RESMGR", "Failed to load model brcyan<", str, ">");
             std::exit(1);
             return;
         }
@@ -75,11 +77,15 @@ void ResourceManager::loadModel(const std::string& str, const std::string& type)
         voxels = genVoxel();
     }
 	addModel(voxels, str);
-    vLogger::eprint("RESMGR", "Model loaded: " + std::string(CYAN_COLOR) + str + std::string(RESET_COLOR),  LOGLEVEL::SUCCESS);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> duration = end - start;
+    Logger::instance().log(LogLevel::SUCCESS, "RESMGR", "Model loaded  brcyan<", str, ">   brmagenta<", std::to_string(duration.count()), "s>");
+
+    // Logger::instance().log(LogLevel::SUCCESS, "RESMGR", "Model loaded brcyan<", str, ">");
 }
 
 VoxelModel* ResourceManager::load_model(const std::string& filename, const char* type) {
-    auto start = std::chrono::high_resolution_clock::now();
+    // auto start = std::chrono::high_resolution_clock::now();
 
     std::ifstream in(filename);
     if (in.is_open()) {
@@ -91,8 +97,7 @@ VoxelModel* ResourceManager::load_model(const std::string& filename, const char*
         
         size_t vi = 0;
         while (getline(in, line)) {
-            vi++;
-            if ( vi < 5 ) continue;
+            if ( ++vi < 5 ) continue;
             auto parts = split(line, ' '); // x y z clr
             if (parts.size() < 4) continue;
 
@@ -113,9 +118,8 @@ VoxelModel* ResourceManager::load_model(const std::string& filename, const char*
         }
 
         in.close();
-        auto end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<float> duration = end - start;
-        vLogger::eprint("LOADER", "Loaded model: " + std::string(CYAN_COLOR) + filename + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR),  LOGLEVEL::INFO);
+        // auto end = std::chrono::high_resolution_clock::now();
+        // std::chrono::duration<float> duration = end - start;
         return voxmodel;
     } else {
         return nullptr;
@@ -141,7 +145,7 @@ void ResourceManager::prepareModel(const std::string& str) {
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> duration = end - start;
 
-    vLogger::eprint("RESMGR", "Model prepared: " + std::string(CYAN_COLOR) + str + "	" + std::string(BLUE_COLOR) + std::to_string(duration.count()) + "s" + std::string(RESET_COLOR), LOGLEVEL::SUCCESS);
+    Logger::instance().log(LogLevel::SUCCESS, "RESMGR", "Model prepared: brcyan<", str, ">   brmagenta<", std::to_string(duration.count()), "s>");
 }
 
 void ResourceManager::addShader(Shader* shader, const std::string& name) {
@@ -181,6 +185,22 @@ void ResourceManager::loadModels() {
     }
 }
 
+void ResourceManager::loadScripts() {
+    std::string folder_path = "../scripts/";
+    for (const auto& entry : std::filesystem::directory_iterator(folder_path)) {
+        if (entry.is_regular_file()) {
+            std::string name = entry.path().filename();
+            name = split(name, '.')[0];
+            bool t = ScriptSystem::instance().loadScript(entry.path());
+            if (t) {
+                _scripts.push_back(name);
+            } else {
+                Logger::instance().log(LogLevel::ERROR, "ResManager", "Failed to load script brcyan<", name, ">");
+            }
+        }
+    }
+}
+
 Shader* ResourceManager::getShader(const std::string& name) {
 	return _shaders[name];
 }
@@ -188,7 +208,7 @@ Shader* ResourceManager::getShader(const std::string& name) {
 VoxelModel* ResourceManager::getModel(const std::string& name) {
     auto it = _voxelmodels.find(name);
     if (it == _voxelmodels.end() || it->second == nullptr) {
-        vLogger::eprint("RESMGR", "Model not found: " + name, LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "RESMGR", "Model not found: brcyan<", name, ">");
         std::exit(1);
     }
 

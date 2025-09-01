@@ -17,19 +17,7 @@
 
 class PhysicsObject;
 class GameObject;
-
-struct RaycastHit {
-    glm::vec3 point;
-    glm::vec3 normal;
-    GameObject* hitObject = nullptr; // объект, на который попал луч
-
-    RaycastHit& operator=(const RaycastHit& info) {
-        point = info.point; 
-        normal = info.normal;
-        hitObject = info.hitObject;
-        return *this;
-    }
-};
+struct RaycastHit;
 
 /**
  * @brief Физический движок
@@ -46,8 +34,6 @@ public:
 
     reactphysics3d::PhysicsCommon& getPhysicsCommon();
     reactphysics3d::PhysicsWorld* getPhysicsWorld();
-
-    void test();
 
     RaycastHit raycast(const glm::vec3 &origin, const glm::vec3 &dir);
 

@@ -13,7 +13,7 @@
 
 #include <stdlib.h>
 
-#include "../physics/physicsengine.h"
+#include "physics/physicsengine.h"
 #include "gameobject.h"
 
 class GameObject;
@@ -29,9 +29,15 @@ private:
     uint _gameobject_increment;
 
     PhysicsEngine* _physicsengine;
-public:
+
     GameManager();
-    ~GameManager();
+    ~GameManager() = default;
+public: 
+    // Singleton
+    static GameManager& instance() {
+        static GameManager inst;
+        return inst;
+    }
 
     void addGameObject(GameObject* gameobject);
 

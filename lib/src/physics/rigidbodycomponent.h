@@ -10,6 +10,9 @@ public:
 
     void updateMassProperties() { body->updateMassPropertiesFromColliders(); }
 
+    void setMass(float mass) { body->setMass(rp3d::decimal(mass)); }
+    rp3d::decimal getMass() const { return body->getMass(); }
+
     void setPhysicsType(rp3d::BodyType type) { body->setType(type); };
 
     void setAngularLockAxisFactor(glm::ivec3 pos) { body->setAngularLockAxisFactor(rp3d::Vector3(pos.x, pos.y, pos.z)); }

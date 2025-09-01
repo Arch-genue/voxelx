@@ -2,7 +2,7 @@
 #include "gamesystems/mapgenerator.h"
 #include "loaders/resourcemanager.h"
 #include "physics/physicsengine.h"
-#include "scripting/scriptsystem.h"
+#include "scripting/scriptsystem.hpp"
 
 #include "imgui.h"
 
@@ -13,24 +13,26 @@ void exit_game() {
 }
 
 int main() {
-    vLogger::setLogLevel(LOGLEVEL::VERBOSE);
+    Logger::instance().setLogLevel(LogLevel::VERBOSE);
   
     Window::init(1024, 768, "VoxelX Demo");
     Input::init();
 
     ResourceManager::init("../res/");
-
     ResourceManager::loadShaders();
     ResourceManager::loadModels();
 
-    GameManager *gm = new GameManager();
+    ResourceManager::loadScripts();
+
+    GameManager& gm = GameManager::instance();
 
     //! Camera
-    Camera *camera = new Camera(glm::vec3(3, 0, 0), glm::radians(70.0f));
+    Camera *camera = new Camera(glm::vec3(3, 20, 0), glm::radians(70.0f));
     Renderer::addCamera(camera);
     
     Input::add_event_handler(JPRESSED, SDLK_ESCAPE, exit_game);
     Input::add_event_handler(JPRESSED, SDLK_TAB, Input::toggleCursor);
+    Input::add_event_handler(JPRESSED, SDLK_F11, Window::toggleFullscreen);
     Window::setPause(false);
 
     Window::sky.x = 0.1f;
@@ -47,7 +49,7 @@ int main() {
     std::cout << "Chunk size: " << sizeof(chunk) << "\n";
 
     //* 
-    MapGenerator map(glm::ivec3(300, 200, 300));
+    MapGenerator map(glm::ivec3(1000, 200, 1000));
     VoxelModel* voxelmodel = map.generateMap();
 
     ResourceManager::addModel(voxelmodel, "map");
@@ -59,10 +61,10 @@ int main() {
     float MOUSE_SPEED = 1.3f;
 
     //! GameObjects
-    GameObject *mapobj = new GameObject(gm, "mapobj", ResourceManager::getMeshFromModel("map"), glm::vec3(0, 0, 0));
-    mapobj->getPhysicsObject()->setRigidBody(std::make_unique<RigidBodyComponent>(gm->getPhysicsEngine()->createRigidBody(mapobj->getPosition())));
+    GameObject *mapobj = new GameObject("mapobj", ResourceManager::getMeshFromModel("map"), glm::vec3(0, 0, 0));
+    mapobj->getPhysicsObject()->setRigidBody(std::make_unique<RigidBodyComponent>(gm.getPhysicsEngine()->createRigidBody(mapobj->getPosition())));
     mapobj->getPhysicsObject()->setPhysicsType(STATIC_PHYSICS);
-    mapobj->getPhysicsObject()->setCollider(std::make_unique<ColliderComponent>(gm->getPhysicsEngine()->getPhysicsCommon().createBoxShape(rp3d::Vector3(300, 200, 300))));
+    mapobj->getPhysicsObject()->setCollider(std::make_unique<ColliderComponent>(gm.getPhysicsEngine()->getPhysicsCommon().createBoxShape(rp3d::Vector3(300, 200, 300))));
 
     int minX = -250;
     int maxX = 250;
@@ -74,7 +76,7 @@ int main() {
 
     // std::vector<rp3d::Message> messages;
 
-    // rp3d::HeightField* heightField = gm->getPhysicsEngine()->getPhysicsCommon().createHeightField(
+    // rp3d::HeightField* heightField = gm.getPhysicsEngine()->getPhysicsCommon().createHeightField(
     //     width, length, map._heightarray.data(),
     //     rp3d::HeightField::HeightDataType::HEIGHT_INT_TYPE,
     //     messages,
@@ -105,25 +107,22 @@ int main() {
     // }
 
     // rp3d::Vector3 scaling(1.0f, 1.0f, 1.0f); // масштабирование по XYZ
-    // rp3d::HeightFieldShape* heightShape = gm->getPhysicsEngine()->getPhysicsCommon().createHeightFieldShape(heightField);
+    // rp3d::HeightFieldShape* heightShape = gm.getPhysicsEngine()->getPhysicsCommon().createHeightFieldShape(heightField);
 
     // mapobj->getPhysicsObject()->setCollider(std::make_unique<ColliderComponent>(heightShape));
 
-    GameObject *appleobj = new GameObject(gm, "appleobj", ResourceManager::getMeshFromModel("apple"), glm::vec3(0, 500, 0));
-    appleobj->getPhysicsObject()->setRigidBody(std::make_unique<RigidBodyComponent>(gm->getPhysicsEngine()->createRigidBody(appleobj->getPosition())));
+    GameObject *appleobj = new GameObject("appleobj", ResourceManager::getMeshFromModel("apple"), glm::vec3(0, 500, 0));
+    appleobj->getPhysicsObject()->setRigidBody(std::make_unique<RigidBodyComponent>(gm.getPhysicsEngine()->createRigidBody(appleobj->getPosition())));
     appleobj->getPhysicsObject()->setPhysicsType(DYNAMIC_PHYSICS);
-    appleobj->getPhysicsObject()->setCollider(std::make_unique<ColliderComponent>(gm->getPhysicsEngine()->getPhysicsCommon().createSphereShape(10)));
+    appleobj->getPhysicsObject()->setCollider(std::make_unique<ColliderComponent>(gm.getPhysicsEngine()->getPhysicsCommon().createSphereShape(10)));
+    appleobj->attachScript("test");
     // appleobj->getPhysicsObject()->getRigidBody()->setAngularLockAxisFactor(glm::ivec3(1, 1, 1));
     // appleobj->attachCamera(camera);
 
-    gm->addGameObject(mapobj);
-    gm->addGameObject(appleobj);
+    gm.addGameObject(mapobj);
+    gm.addGameObject(appleobj);
 
     float jumpforce = 500.0f;
-
-    ScriptSystem scripts(gm);
-    scripts.bindGameAPI();
-    scripts.loadScript("AppleTest", "../scripts/test.lua");
 
     float currentTime = 0.0f;
     float deltaTime = 0.0f;
@@ -217,13 +216,13 @@ int main() {
         ResourceManager::getShader("voxel")->uniformMatrix("view", Renderer::getCamera()->getView());
         ResourceManager::getShader("voxel")->uniformVec3("viewPos", Renderer::getCamera()->getPosition());
 
-        gm->UpdatePhysics(deltaTime);
-        gm->Update(light);
-        scripts.updateScript("AppleTest", appleobj, deltaTime);
+        gm.UpdatePhysics(deltaTime);
+        gm.Update(light);
+        // ScriptSystem::instance().updateScript("AppleTest", appleobj, deltaTime);
 
         // ResourceManager::getShader("octoline")->use();
         // ResourceManager::getShader("octoline")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::mat4(1.0f));
-        // rp3d::DebugRenderer& dbgrndr = gm->getPhysicsEngine()->getPhysicsWorld()->getDebugRenderer();
+        // rp3d::DebugRenderer& dbgrndr = gm.getPhysicsEngine()->getPhysicsWorld()->getDebugRenderer();
 
         // ResourceManager::getShader("octoline")->uniformVec3("clr", glm::vec3(0.2f, 1.0f, 0.2f));
         // int attrs[2] = { 3,  0 };

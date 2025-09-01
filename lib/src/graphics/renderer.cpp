@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 
 #include <iostream>
-#include "../utilities/logger.h"
+#include "../utilities/logger.hpp"
 
 Camera* Renderer::camera;
 constexpr float asize = 0.5f;

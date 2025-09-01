@@ -9,10 +9,9 @@
 
 #include <GL/glew.h>
 
-#include "../utilities/logger.h"
+#include "utilities/logger.hpp"
 
 Shader::Shader(unsigned int id) : id(id) {}
-
 Shader::~Shader() {
     glDeleteProgram(id);
 }
@@ -21,69 +20,84 @@ void Shader::use() {
     glUseProgram(id);
 }
 
-void Shader::uniformMatrix(std::string name, glm::mat4 matrix) {
-    GLuint transformLoc = glGetUniformLocation(id, name.c_str());
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrix));
-}
-void Shader::uniformFloat(std::string name, float val) {
-    GLuint transformLoc = glGetUniformLocation(id, name.c_str());
-    glUniform1f(transformLoc, val);
-}
-
-void Shader::uniformVec3(std::string name, glm::vec3 var) {
-    GLuint transformLoc = glGetUniformLocation(id, name.c_str());
-    glUniform3f(transformLoc, var.x, var.y, var.z);
+static GLint getLoc(GLuint prog, const std::string& name) {
+    GLint loc = glGetUniformLocation(prog, name.c_str());
+    if (loc == -1) {
+        // Logger::instance().log("SHADER", "Uniform not found: " + name, LogLevel::WARNING);
+    }
+    return loc;
 }
 
-void Shader::uniformLight(std::string name, Light &light) {
-    uniformVec3("light.position", light.position);
-    uniformVec3("light.direction", light.direction);
-    uniformFloat("light.cutOff", light.cutOff);
-    uniformFloat("light.outerCutOff", light.outerCutOff);
+void Shader::uniformMatrix(const std::string &name, const glm::mat4& matrix) {
+    GLint loc = getLoc(id, name);
+    if (loc != -1) glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+void Shader::uniformFloat(const std::string &name, float val) {
+    GLint loc = getLoc(id, name);
+    if (loc != -1) glUniform1f(loc, val);
+}
+
+void Shader::uniformVec3(const std::string &name, const glm::vec3& var) {
+    GLint loc = getLoc(id, name);
+    if (loc != -1) glUniform3f(loc, var.x, var.y, var.z);
+}
+
+void Shader::uniformLight(const std::string &name, Light &light) {
+    uniformVec3(name + ".position", light.position);
+    uniformVec3(name + ".direction", light.direction);
+    uniformFloat(name + ".cutOff", light.cutOff);
+    uniformFloat(name + ".outerCutOff", light.outerCutOff);
 
     // light properties
-    uniformVec3("light.ambient", light.ambient);
-    // we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
-    // each environment and lighting type requires some tweaking to get the best out of your environment.
-    uniformVec3("light.diffuse", light.diffuse);
-    uniformVec3("light.specular", light.specular);
-    uniformFloat("light.constant", light.constant);
-    uniformFloat("light.linear", light.linear);
-    uniformFloat("light.quadratic", light.quadratic);
+    uniformVec3(name + ".ambient", light.ambient);
+    uniformVec3(name + ".diffuse", light.diffuse);
+    uniformVec3(name + ".specular", light.specular);
+    uniformFloat(name + ".constant", light.constant);
+    uniformFloat(name + ".linear", light.linear);
+    uniformFloat(name + ".quadratic", light.quadratic);
 }
 
-void Shader::uniformMaterial(std::string name, Material &material) {
+void Shader::uniformMaterial(const std::string& name, Material &material) {
     uniformVec3(name + ".ambient", material.ambient);
     uniformVec3(name + ".diffuse", material.diffuse);
     uniformVec3(name + ".specular", material.specular);
     uniformFloat(name + ".shininess", material.shininess);
 }
 
-Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
+Shader * load_shader(const std::string& vertexFile, const std::string& fragmentFile) {
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;
     std::ifstream fShaderFile;
 
-    vShaderFile.exceptions(std::ifstream::badbit);
-    fShaderFile.exceptions(std::ifstream::badbit);
+    vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+    fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try {
         vShaderFile.open(vertexFile);
-        fShaderFile.open(fragmentFile);
-        std::stringstream vShaderStream, fShaderStream;
+        std::stringstream vShaderStream;
 
         vShaderStream << vShaderFile.rdbuf();
-        fShaderStream << fShaderFile.rdbuf();
-
         vShaderFile.close();
-        fShaderFile.close();
 
         vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
-        vLogger::eprint("SHADER", "FILE_NOT_SUCCESSFULLY_READ",  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "SHADER", "Could not read fragment vertex file brcyan<", vertexFile ,">");
         return nullptr;
     }
+    try {        
+        fShaderFile.open(fragmentFile);
+        std::stringstream fShaderStream;
+
+        fShaderStream << fShaderFile.rdbuf();
+
+        fShaderFile.close();
+
+        fragmentCode = fShaderStream.str();
+    } catch (std::ifstream::failure& e) {
+        Logger::instance().log(LogLevel::ERROR, "SHADER", "Could not read fragment shader file brcyan<", fragmentFile ,">");
+        return nullptr;
+    }
+
     const GLchar* vShaderCode = vertexCode.c_str();
     const GLchar* fShaderCode = fragmentCode.c_str();
 
@@ -99,7 +113,8 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     if (!success) {
         glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
         std::string log = infoLog;
-        vLogger::eprint("SHADER", "VERTEX SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "SHADER", "VERTEX SHADER COMPILATION FAILED: brred<", log, ">");
+        glDeleteShader(vertex);
         return nullptr;
     }
 
@@ -111,7 +126,8 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     if (!success) {
         glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
         std::string log = infoLog;
-        vLogger::eprint("SHADER", "FRAGMENT SHADER COMPILATION FAILED: " + RED_COLOR_STR + log + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "SHADER", "FRAGMENT SHADER COMPILATION FAILED: brred<", log, ">");
+        glDeleteShader(vertex);
         return nullptr;
     }
 
@@ -124,8 +140,7 @@ Shader * load_shader(std::string vertexFile, std::string fragmentFile) {
     glGetProgramiv(id, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(id, 512, nullptr, infoLog);
-        std::cerr << "ERROR::SHADER::LINKING_FAILED\n";
-        std::cerr << infoLog << std::endl;
+        Logger::instance().log(LogLevel::ERROR, "SHADER", "LINKING_FAILED: brred<", infoLog, ">");
 
         glDeleteShader(vertex);
         glDeleteShader(fragment);

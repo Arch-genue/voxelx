@@ -14,17 +14,18 @@
 // #include <iostream>
 #include <glm/glm.hpp>
 
-#include "../graphics/renderer.h"
-#include "../physics/physicsobject.h"
+#include "physics/physicsobject.h"
 #include "transformobject.h"
 #include "modelobject.h"
-#include "../gamesystems/gamemanager.h"
+#include "gamesystems/gamemanager.h"
+
+#include "utilities/vtype.hpp"
 
 class MeshModel;
 class Shader;
-class Renderer;
 class PhysicsObject;
 class GameManager;
+class Camera;
 
 /**
  * @brief Класс описывающий игровой объект с физической моделью и графическим отображением
@@ -35,63 +36,43 @@ private:
     //? OBJECTS
     Camera* _camera;
 
-    /**
-     * @brief Unique ID
-     * 
-     */
     uint _id;
-    /**
-     * @brief Unique name
-     * 
-     */
     std::string _name;
-    
-    //? GameManager global object
-    GameManager* _gm;
     
     glm::vec3 _campos;
 
     //! Voxel Physics
-    PhysicsObject* _physicsobject;
+    std::unique_ptr<PhysicsObject> _physicsobject;
+
+    vtype::fndvector<std::string> _scripts;
     
 public:
-    GameObject(GameManager* gm, std::string name, MeshModel* mesh_model, glm::vec3 position);
-    ~GameObject();
+    GameObject(const std::string& name, MeshModel* mesh_model, const glm::vec3& position);
+    ~GameObject() = default;
 
     void setID(uint id);
     uint getID() const { return _id; };
 
-    void setName(std::string name) { _name = name; };
-    std::string getName() const { return _name; };
+    void setName(const std::string& name) { _name = name; };
+    const std::string& getName() const { return _name; };
 
     void onTransformed() override;
 
-    /**
-     * @brief Задать указатель на объект GameManager
-     * 
-     * @param gamemanager Указатель на объект GameManager
-     */
-    void setGameManager(GameManager* gamemanager);
-    /**
-     * @brief Получить указатель на объект GameManager
-     * 
-     * @return Shader* Указатель на объект GameManager или nullptr
-     */
-    GameManager* getGameManager();
+    void attachScript(const std::string& name);
 
     /**
      * @brief Получить указатель на PhysicsObject
      * 
      * @return PhysicsObject* Указатель на PhysicsObject
      */
-    PhysicsObject* getPhysicsObject();
+    PhysicsObject* getPhysicsObject() { return _physicsobject.get(); }
 
     /**
      * @brief Задать позицию TransformObject и PhysicsObject
      * 
      * @param position Вектор новой позиции объекта
      */
-    void setPosition(glm::vec3 position) override;
+    void setPosition(const glm::vec3& position) override;
 
     /**
      * @brief Назначить объект Camera игровому объекту
@@ -99,7 +80,9 @@ public:
      * @param camera Объект Camera
      * @param stdpos Стандартное положение камеры
      */
-    void attachCamera(Camera* camera, glm::vec3 stdpos = glm::vec3(0));
-    void detachCamera();
-    Camera *getCamera() const;
+    void attachCamera(Camera* camera, const glm::vec3& stdpos = glm::vec3(0));
+    void detachCamera() { _camera = nullptr; }
+    Camera *getCamera() const { return _camera; }
+
+    const vtype::fndvector<std::string>& get_scripts() { return _scripts; }
 };

@@ -12,8 +12,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "../utilities/utils.h"
-#include "../utilities/logger.h"
+#include "utilities/utils.h"
+#include "utilities/logger.hpp"
 
 //! Physics Engine
 #include <reactphysics3d/reactphysics3d.h>
@@ -27,6 +27,20 @@ enum PHYSICS {
     STATIC_PHYSICS,
     KINEMATIC_PHYSICS, 
     DYNAMIC_PHYSICS
+};
+
+struct RaycastHit {
+    glm::vec3 point;
+    glm::vec3 normal;
+    GameObject* hitObject = nullptr; // объект, на который попал луч
+    bool hit = false;
+
+    RaycastHit& operator=(const RaycastHit& info) {
+        point = info.point; 
+        normal = info.normal;
+        hitObject = info.hitObject;
+        return *this;
+    }
 };
 
 class PhysicsObject {
@@ -44,7 +58,7 @@ public:
         mat.setFrictionCoefficient (1.0);
         mat.setMassDensity(10);
         // _rigidbody->updateMassProperties(); // обновляем массу
-        std::cout << "MGNG: " << collider << " " << this->_gameobject << "\n";
+        // std::cout << "MGNG: " << collider << " " << this->_gameobject << "\n";
         collider->setUserData(this->_gameobject);
         _collider->setCollider(collider);
     }
@@ -56,6 +70,7 @@ public:
 
     void setPosition(glm::vec3 position) {
         if (_rigidbody) {
+            // std::cout << position.y << "\n";
             rp3d::Transform t = _rigidbody->getTransform();
             t.setPosition(rp3d::Vector3(position.x, position.y, position.z));
             _rigidbody->setTransform(t);
@@ -88,6 +103,8 @@ public:
             _rigidbody->applyForce(rp3d::Vector3(force.x, force.y, force.z));
         }
     }
+
+    RaycastHit raycast(const glm::vec3& origin, const glm::vec3& dir);
 
     void update(float deltaTime);
 

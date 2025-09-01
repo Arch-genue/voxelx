@@ -21,7 +21,7 @@
 #include "loaders/resourcemanager.h"
 #include "gamesystems/gamemanager.h"
 
-#include "voxels/voxelmodel.h"
+#include "voxels/voxelmodel.hpp"
 #include "gamesystems/camera.h"
 
 /**

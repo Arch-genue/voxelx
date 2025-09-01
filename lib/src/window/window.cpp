@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 
 #include "window.h"
-#include "../utilities/logger.h"
+#include "../utilities/logger.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
@@ -23,7 +23,7 @@ int Window::init(int width, int height, const char* title) {
     Window::createWindow(width, height, title);
     if (Window::createContext() == 1) {
         std::string err = SDL_GetError();
-        vLogger::eprint("WINDOW", "OpenGL context could not be created! SDL Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "WINDOW", "OpenGL context could not be created! SDL Error: brred<", err, ">");
         std::exit(1);
         return 1;
     }
@@ -52,7 +52,7 @@ int Window::createWindow(int width, int height, const char* title) {
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::string err = SDL_GetError();
-        vLogger::eprint("WINDOW", "SDL could not initialize! SDL_Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "WINDOW", "SDL could not initialize! SDL_Error: brred<", err, ">");
         std::exit(1);
 		return 1;
 	}
@@ -60,7 +60,7 @@ int Window::createWindow(int width, int height, const char* title) {
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == NULL) {
         std::string err = SDL_GetError();
-        vLogger::eprint("WINDOW", "Window could not be created! SDL_Error: " + RED_COLOR_STR + err + RESET_COLOR_STR,  LOGLEVEL::ERROR);
+        Logger::instance().log(LogLevel::ERROR, "WINDOW", "Window could not be created! SDL_Error: brred<", err, ">");
         std::exit(1);
         return 1;
     }
@@ -88,7 +88,7 @@ void Window::resizeContext(int w, int h) {
 
 int Window::SDL_TTF_INIT() {
     // if (TTF_Init() != 0) {
-    //     Logger::eprint("WINDOW", "SDL_TTF could not initialize!",  LOGLEVEL::ERROR);
+    //     Logger::log("WINDOW", "SDL_TTF could not initialize!",  LogLevel::ERROR);
     //     std::exit(1);
     //     return 1;
     // }
@@ -140,7 +140,7 @@ void Window::toggleFullscreen() {
 }
 
 void Window::exit() {
-    vLogger::eprint("WINDOW", "Deleting GL context, closing window",  LOGLEVEL::INFO);
+    Logger::instance().log(LogLevel::INFO, "WINDOW", "Deleting GL context, closing window");
     SDL_DestroyRenderer(guirenderer);
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);

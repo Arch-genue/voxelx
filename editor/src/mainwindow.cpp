@@ -9,7 +9,7 @@
 #include "./ui_mainwindow.h"
 #include "settings.h"
 
-#include "voxels/voxelmodel.h"
+#include "voxels/voxelmodel.hpp"
 #include "gamesystems/camera.h"
 
 #define GLEW_STATIC
@@ -28,7 +28,7 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    vLogger::setLogLevel(LOGLEVEL::ERROR);
+    Logger::instance().setLogLevel(LogLevel::ERROR);
     VSettings vsettings("test");
     vsettings.save();
 

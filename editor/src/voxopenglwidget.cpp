@@ -4,7 +4,7 @@
 #include "voxopenglwidget.h"
 
 #include "window/window.h"
-#include "utilities/logger.h"
+#include "utilities/logger.hpp"
 
 #include "loaders/resourcemanager.h"
 

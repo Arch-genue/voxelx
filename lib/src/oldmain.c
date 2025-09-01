@@ -43,10 +43,10 @@ void posix_death_signal(int signum) {
 int main() {
     signal(SIGSEGV, posix_death_signal);
 
-    vLogger::setLogLevel(LOGLEVEL::VERBOSE);
+    Logger::instance().setLogLevel(LogLevel::VERBOSE);
   
     std::string _version = _VERSION;
-    vLogger::eprint("ENGINE", "VoxelX " + _version + "\n", LOGLEVEL::VERBOSE);
+    Logger::instance().log("ENGINE", "VoxelX " + _version + "\n", LogLevel::VERBOSE);
 
     Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();

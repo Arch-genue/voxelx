@@ -21,7 +21,7 @@ public:
     //     glGenBuffers(1, &_vbo);
 
     //     _vertexSize = 0;
-    //     for (int i = 0; _meshAttributes[i]; i++) {
+    //     for (int i = 0; _meshAttributes[i]; ++i) {
     //         _vertexSize += _meshAttributes[i];
     //     }
 
@@ -31,7 +31,7 @@ public:
     //     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _vertexSize * _vertices, this->_meshBuffer.data(), GL_STATIC_DRAW);
 
     //     int offset = 0;
-    //     for (int i = 0; _meshAttributes[i]; i++) {
+    //     for (int i = 0; _meshAttributes[i]; ++i) {
     //         glVertexAttribPointer(i, _meshAttributes[i], GL_FLOAT, GL_FALSE, _vertexSize * sizeof(float), (GLvoid*)(offset * sizeof(float)));
     //         glEnableVertexAttribArray(i);
     //         offset += _meshAttributes[i];

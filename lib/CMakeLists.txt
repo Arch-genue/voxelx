@@ -40,7 +40,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(sol2)
 
 file(GLOB_RECURSE HEADER ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
-file(GLOB_RECURSE SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+file(GLOB_RECURSE SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp)
 list(REMOVE_ITEM SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -77,10 +77,6 @@ include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
 find_package(Lua REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 
-# find_package(Lua REQUIRED)
-# include_directories(voxelx PUBLIC ${LUA_INCLUDE_DIR})
-
-# NEW PHYSICS LIBRARY
 find_package ( ReactPhysics3D REQUIRED )
 
 set (LIBRARIES 
@@ -96,9 +92,6 @@ set (LIBRARIES
 	sol2
 )
 
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/vendor/luacpp/Source)
-
 add_executable(voxelx 
 	${SOURCE}
 	${IMGUI_SOURCES}
@@ -106,14 +99,4 @@ add_executable(voxelx
 # add_library(voxelx STATIC ${SOURCE})
 target_link_libraries(voxelx PRIVATE ${LIBRARIES})
 
-# add_library(imgui STATIC ${IMGUI_SOURCES})
-# target_include_directories(voxelx
-# 	PUBLIC vendor/luacpp/Source
-# 	PUBLIC vendor/lua
-# )
-
 target_compile_options(voxelx PRIVATE -g)
-
-# install(TARGETS voxelx
-#     LIBRARY DESTINATION lib
-#     ARCHIVE DESTINATION lib)
