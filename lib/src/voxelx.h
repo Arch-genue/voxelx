@@ -16,13 +16,11 @@
 #include "window/window.h"
 #include "window/input.h"
 
-#include "graphics/renderer.h"
+// #include "assetmanager/assetmanager.h"
+// #include "gamesystems/gamemanager.h"
 
-#include "loaders/resourcemanager.h"
-#include "gamesystems/gamemanager.h"
-
-#include "voxels/voxelmodel.hpp"
-#include "gamesystems/camera.h"
+// #include "voxels/voxelstructure.h"
+// #include "gamesystems/camera.h"
 
 /**
  * @brief Версия Voxel3D Engine

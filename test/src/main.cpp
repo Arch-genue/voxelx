@@ -52,13 +52,13 @@ int main() {
     Window::init(WIDTH, HEIGHT, TITLE);
     Input::init();
 
-    ResourceManager::init("../res/");
+    AssetManager::instance().init("../res/");
 
     Renderer::init();
-    ResourceManager::loadShaders();
-    ResourceManager::loadTextures();
-    ResourceManager::loadModels();
-    ResourceManager::loadFonts();
+    AssetManager::instance().loadShaders();
+    AssetManager::instance().loadTextures();
+    AssetManager::instance().loadGameModels();
+    AssetManager::instance().loadFonts();
 
     GameManager *gm = new GameManager();
 
@@ -67,25 +67,25 @@ int main() {
     Renderer::addCamera(camera);
     
     MapGenerator mapgen(glm::vec3(1000, 100, 1000));
-    VoxelModel* mapmodel = mapgen.generateMap();
+    VoxelStructure* mapmodel = mapgen.generateMap();
     mapmodel->setForbiddenSide("bottom", false);
 
-    ResourceManager::addModel(mapmodel, "floor");
-    ResourceManager::prepareModel("floor");
+    AssetManager::instance().addModel(mapmodel, "floor");
+    AssetManager::instance().prepareStructure("floor");
 
     //! GameObjects
-    GameObject *floorobj = new GameObject(gm, "floor", ResourceManager::getModel("floor"), glm::vec3(0, 0, 0));
+    GameObject *floorobj = new GameObject(gm, "floor", AssetManager::instance().getModel("floor"), glm::vec3(0, 0, 0));
     floorobj->getPhysicsObject()->setPhysicsType(STATIC_PHYSICS);
 
-    GameObject *appleobj = new GameObject(gm, "player", ResourceManager::getModel("apple"), glm::vec3(0, 150, 40));
+    GameObject *appleobj = new GameObject(gm, "player", AssetManager::instance().getModel("apple"), glm::vec3(0, 150, 40));
     appleobj->attachCamera(camera, glm::vec3(0, 15, 0)); //! Attach camera to appleobj, apple hidden
     appleobj->getPhysicsObject()->setPhysicsType(DYNAMIC_PHYSICS);
     appleobj->getPhysicsObject()->getRigidBody()->setAngularLockAxisFactor(rp3d::Vector3(0, 0, 0));
 
-    GameObject *appleobj1 = new GameObject(gm, "apple", ResourceManager::getModel("apple"), glm::vec3(0, 15, 37));
+    GameObject *appleobj1 = new GameObject(gm, "apple", AssetManager::instance().getModel("apple"), glm::vec3(0, 15, 37));
     appleobj1->getPhysicsObject()->setPhysicsType(DYNAMIC_PHYSICS);
 
-    GameObject *breadobj = new GameObject(gm, "bread", ResourceManager::getModel("bread"), glm::vec3(50, 30, 20));
+    GameObject *breadobj = new GameObject(gm, "bread", AssetManager::instance().getModel("bread"), glm::vec3(50, 30, 20));
     breadobj->getPhysicsObject()->setPhysicsType(DYNAMIC_PHYSICS);
 
     gm->addGameObject(floorobj);
@@ -101,7 +101,7 @@ int main() {
     float jumpforce = 500.0f;
 
     // GUI gui;
-    FT_Face face = ResourceManager::getFont("arial");
+    FT_Face face = AssetManager::instance().getFont("arial");
     TextMesh* textMesh = new TextMesh(face);
 
     Input::add_event_handler(JPRESSED, SDLK_ESCAPE, exit_game);
@@ -235,22 +235,22 @@ int main() {
         light.linear = 0.000014f;
         light.quadratic = 0.0000032f;
 
-        ResourceManager::getShader("voxel")->use();        
-        ResourceManager::getShader("voxel")->uniformMatrix("projection", Renderer::getCamera()->getProjection());
-        ResourceManager::getShader("voxel")->uniformMatrix("view", Renderer::getCamera()->getView());
-        ResourceManager::getShader("voxel")->uniformVec3("viewPos", Renderer::getCamera()->getPosition());
+        AssetManager::instance().get<Shader>("voxel")->use();        
+        AssetManager::instance().get<Shader>("voxel")->uniformMatrix("projection", Renderer::getCamera()->getProjection());
+        AssetManager::instance().get<Shader>("voxel")->uniformMatrix("view", Renderer::getCamera()->getView());
+        AssetManager::instance().get<Shader>("voxel")->uniformVec3("viewPos", Renderer::getCamera()->getPosition());
 
         gm->UpdatePhysics(deltaTime);
         gm->Update(light);
 
         //? TEXT
-        ResourceManager::getShader("font")->use();
-        ResourceManager::getShader("font")->uniformMatrix("projection", glm::ortho(0.0f, (float)Window::width, 0.0f, (float)Window::height));
-        ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.9f, 0.3f, 0.9f));
+        AssetManager::instance().get<Shader>("font")->use();
+        AssetManager::instance().get<Shader>("font")->uniformMatrix("projection", glm::ortho(0.0f, (float)Window::width, 0.0f, (float)Window::height));
+        AssetManager::instance().get<Shader>("font")->uniformVec3("textColor", glm::vec3(0.9f, 0.3f, 0.9f));
         textMesh->draw("VoxelX: " + _version, 5.0f, (float)Window::height-20.0f, 0.4f);
 
         if (DEBUG_MODE) {
-            ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.7f, 0.1f));
+            AssetManager::instance().get<Shader>("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.7f, 0.1f));
 
             textMesh->draw("Debug mode", Window::width / 2 - 80.0f, Window::height-20.0f, 0.5f);
             textMesh->draw("FPS: " + std::to_string((int)(1.0f / deltaTime)), 5.0f, Window::height-50.0f, 0.4f);
@@ -262,11 +262,11 @@ int main() {
             // textMesh->draw("LIGHT Object position: " + std::to_string(lightobj->getPosition().x)  + " " + std::to_string(lightobj->getPosition().y)  + " " + std::to_string(lightobj->getPosition().z), 5.0f,  Window::height - 175.0f, 0.4f);
             // textMesh->draw("BOX Object position: " + std::to_string(boxobj->getPosition().x)  + " " + std::to_string(boxobj->getPosition().y)  + " " + std::to_string(boxobj->getPosition().z), 5.0f,  Window::height - 195.0f, 0.4f);
         
-            ResourceManager::getShader("octoline")->use();
-            ResourceManager::getShader("octoline")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::mat4(1.0f));
+            AssetManager::instance().get<Shader>("octoline")->use();
+            AssetManager::instance().get<Shader>("octoline")->uniformMatrix("projviewmodel", Renderer::getCamera()->getProjection() * Renderer::getCamera()->getView() * glm::mat4(1.0f));
             rp3d::DebugRenderer& dbgrndr = gm->getPhysicsEngine()->getPhysicsWorld()->getDebugRenderer();
 
-            ResourceManager::getShader("octoline")->uniformVec3("clr", glm::vec3(0.2f, 1.0f, 0.2f));
+            AssetManager::instance().get<Shader>("octoline")->uniformVec3("clr", glm::vec3(0.2f, 1.0f, 0.2f));
             if (dbgrndr.getNbLines() != 0) {
                 std::vector<float> lines;
                 lines.reserve(dbgrndr.getNbLines() * 2 * 3);
@@ -287,7 +287,7 @@ int main() {
                 delete _mesh;
             }
 
-            ResourceManager::getShader("octoline")->uniformVec3("clr", glm::vec3(1.0f, 0.2f, 0.0f));
+            AssetManager::instance().get<Shader>("octoline")->uniformVec3("clr", glm::vec3(1.0f, 0.2f, 0.0f));
             if (dbgrndr.getNbTriangles() != 0) {
                 std::vector<float> triangles;
                 triangles.reserve(dbgrndr.getNbTriangles() * 3 * 3);
@@ -319,7 +319,7 @@ int main() {
         Input::pullEvents();
     }
     std::cout << "\n";
-    ResourceManager::cleanup();
+    AssetManager::instance().cleanup();
     Input::cleanup();
     Window::exit();
     return 0;

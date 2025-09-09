@@ -2,14 +2,13 @@
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include "loaders/resourcemanager.h"
+#include "assetmanager/assetmanager.h"
 #include "window/window.h"
-#include "graphics/renderer.h"
 
 #include "./ui_mainwindow.h"
 #include "settings.h"
 
-#include "voxels/voxelmodel.hpp"
+#include "voxels/voxelstructure.h"
 #include "gamesystems/camera.h"
 
 #define GLEW_STATIC
@@ -62,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     Renderer::init();
 
-    ResourceManager::init("../res/");
+    AssetManager::instance().init("../res/");
     
     _gm = new GameManager();
 

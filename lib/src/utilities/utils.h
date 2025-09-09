@@ -52,6 +52,7 @@ extern bool isNumeric(const std::string& str);
  * @param color Значение параметра
  * @return float* Массив float содержащий значения x, y либо одно значение
  */
+
 extern float* random_keyword_parse(std::string color);
 
 /**
@@ -74,3 +75,6 @@ float measureFunctionTime(Func &func, Args&&... args) {
     float duration = std::chrono::duration<float>(end - start).count();
     return duration;
 }
+
+extern int floordiv(int a, int b);
+extern int floormod(int a, int b);

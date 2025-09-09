@@ -1,16 +1,16 @@
 #pragma once
 
 #include "voxels/chunk.h"
-#include "voxels/voxelmodel.hpp"
+#include "voxels/voxelstructure.h"
 
 class VoxelApi {
 public:
     static void reg (sol::state& lua) {
-        lua.new_usertype<VoxelModel::ChunkType>("Chunk",
-            // "getVoxel", &VoxelModel::ChunkType::getVoxel,
-            // "getVoxel", static_cast<Voxel&(VoxelModel::ChunkType::*)(int, int, int)>(&VoxelModel::ChunkType::getVoxel),
-            "getRemesh", [](const VoxelModel::ChunkType& v){ return v._remesh; },
-            "setRemesh", [](VoxelModel::ChunkType& v, bool val){ v._remesh = val; }
+        lua.new_usertype<VoxelChunk>("Chunk",
+            // "getVoxel", &VoxelChunk::getVoxel,
+            // "getVoxel", static_cast<Voxel&(VoxelChunk::*)(int, int, int)>(&VoxelChunk::getVoxel),
+            "getRemesh", [](const VoxelChunk& v){ return v._remesh; },
+            "setRemesh", [](VoxelChunk& v, bool val){ v._remesh = val; }
         );
         lua.new_usertype<Voxel>("Voxel",
             // "setColor", [](Voxel& v, glm::vec4 clr){ v.setColor(clr); },
@@ -23,16 +23,15 @@ public:
             "isVisible", [](const Voxel& v){ return v.visible; },
             "setVisible", [](Voxel& v, bool val){ v.visible = val; }
         );
-        lua.new_usertype<VoxelModel>("VoxelModel",
-            "getVoxel", &VoxelModel::getVoxel,
-            "getHeight", &VoxelModel::getHeight,
-            "getName", &VoxelModel::getName,
-            "getOrCreateChunk", &VoxelModel::getOrCreateChunk
+        lua.new_usertype<VoxelStructure>("VoxelModel",
+            "getName", &VoxelStructure::getName,
+            "getVoxel", &VoxelStructure::getVoxel,
+            "getOrCreateChunk", &VoxelStructure::getOrCreateChunk
             // "getPhysicsObject", &GameObject::getPhysicsObject
         );
         lua.new_usertype<MeshModel>("MeshModel",
-            // "getVoxelModel", &MeshModel::getVoxelModel,
-            "getVoxelModel", &MeshModel::getVoxelModel
+            // "getStructure", &MeshModel::getStructure,
+            "getStructure", &MeshModel::getStructure
             // "forEachMesh", &MeshModel::forEachMesh
         );
     }

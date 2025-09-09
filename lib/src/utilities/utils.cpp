@@ -75,3 +75,16 @@ float* random_keyword_parse(std::string color) {
         return nullptr;
     }
 }
+
+int floordiv(int a, int b) {
+    int q = a / b;
+    int r = a % b;
+    if ((r != 0) && ((r > 0) != (b > 0))) --q; // сместить к floor
+    return q;
+}
+
+int floormod(int a, int b) {
+    int m = a % b;
+    if (m < 0) m += (b > 0 ? b : -b);
+    return m;
+}

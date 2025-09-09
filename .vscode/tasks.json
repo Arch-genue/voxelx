@@ -8,8 +8,6 @@
             "args": [
                 "-B",
                 "${workspaceFolder}/build",
-                "-G",
-                "Ninja",
                 "."
             ],
             "group": {
@@ -21,7 +19,7 @@
         {
             "label": "Run VoxelX",
             "type": "shell",
-            "command": "${workspaceFolder}/build/voxelx",
+            "command": "${workspaceFolder}/build/lib/voxelx",
             "group": "test",
             "presentation": {
                 "reveal": "always",

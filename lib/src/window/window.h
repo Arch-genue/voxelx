@@ -14,7 +14,6 @@
 #define NO_SDL_GLEXT
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_ttf.h>
 #include <glm/glm.hpp>
 
 class SDL_Window;
@@ -25,40 +24,46 @@ class SDL_Window;
  */
 class Window {
 public:
-    static int width;
-    static int height;
-
-    static bool _pause;
-
-    static SDL_Window * window;
-    static SDL_Renderer* guirenderer;
-    static SDL_GLContext glContext;
-
-    static glm::vec3 sky;
+    Window(int width, int height, const char *title);
+    ~Window();
     
-    static int init(int width, int height, const char * title);
-    static int createWindow(int width, int height, const char* title);
-    static int createContext();
+    int createWindow();
+    int createContext();
 
-    static void resizeContext(int w, int h); 
+    void resizeContext(int w, int h); 
 
-    static int SDL_TTF_INIT();
+    void _glInit();
+    void _glClear();
+    void exit();
 
-    static void _glInit();
-    static void _glClear();
-    static void exit();
+    void setCursorMode(SDL_bool mode);
+    SDL_bool getCursorMode() const;
 
-    static void setCursorMode(SDL_bool mode);
-    static SDL_bool getCursorMode();
+    void setSky(glm::vec3 sky) { _sky = sky; }
+    const glm::vec3& getSky() const { return _sky; }
 
-    static void startFrame();
-    static void renderGUI();
+    void startFrame();
+    void renderGUI();
 
-    static void setPause(bool pause) { _pause = pause; }
-    static bool getPause() { return _pause;}
+    void setPause(bool pause) { _pause = pause; }
+    bool getPause() const { return _pause;}
 
-    static void toggleFullscreen();
-    static bool isShouldClose(SDL_Event event);
-    static void setShouldClose(bool flag);
-    static bool swapBuffers(); 
+    int getWidth() const { return _width; }
+    int getHeight() const { return _height; }
+
+    void toggleFullscreen();
+    bool pollEvent(SDL_Event& event);
+    void swapBuffers(); 
+private:
+    const char* _title;
+    
+    int _width;
+    int _height;
+
+    bool _pause;
+
+    SDL_Window* _window;
+    SDL_GLContext _glContext;
+
+    glm::vec3 _sky;
 };

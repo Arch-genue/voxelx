@@ -2,50 +2,49 @@
 #include <GL/glew.h>
 
 #include "window.h"
-#include "../utilities/logger.hpp"
+#include "utilities/logger.hpp"
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
 
-SDL_Window* Window::window;
-SDL_Renderer* Window::guirenderer;
-SDL_GLContext Window::glContext;
+Window::Window(int width, int height, const char* title): _title(title), _width(width), _height(height), _sky(glm::vec3(0)) {
+    createWindow();
 
-bool Window::_pause;
-
-int Window::width = 0;
-int Window::height = 0;
-
-glm::vec3 Window::sky(0);
-
-int Window::init(int width, int height, const char* title) {
-    Window::createWindow(width, height, title);
-    if (Window::createContext() == 1) {
+    if (createContext() == 1) {
         std::string err = SDL_GetError();
         Logger::instance().log(LogLevel::ERROR, "WINDOW", "OpenGL context could not be created! SDL Error: brred<", err, ">");
         std::exit(1);
-        return 1;
     }
 
     // Инициализация Dear ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // Стили
     ImGui::StyleColorsDark();
 
     // Инициализация бэкендов SDL + OpenGL
-    ImGui_ImplSDL2_InitForOpenGL(window, glContext);
+    ImGui_ImplSDL2_InitForOpenGL(_window, _glContext);
     ImGui_ImplOpenGL3_Init("#version 330"); // версия OpenGL, которая у тебя
 
     _glInit();
-
-    return 0;
 }
 
-int Window::createWindow(int width, int height, const char* title) {
+Window::~Window() {
+    Logger::instance().log(LogLevel::INFO, "WINDOW", "Deleting GL context, closing window");
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+    
+    // SDL_DestroyRenderer(guirenderer);
+    SDL_GL_DeleteContext(_glContext);
+    SDL_DestroyWindow(_window);
+    SDL_Quit();
+}
+
+int Window::createWindow() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -54,49 +53,42 @@ int Window::createWindow(int width, int height, const char* title) {
         std::string err = SDL_GetError();
         Logger::instance().log(LogLevel::ERROR, "WINDOW", "SDL could not initialize! SDL_Error: brred<", err, ">");
         std::exit(1);
-		return 1;
 	}
 
-    window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (window == NULL) {
+    _window = SDL_CreateWindow(_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (_window == NULL) {
         std::string err = SDL_GetError();
         Logger::instance().log(LogLevel::ERROR, "WINDOW", "Window could not be created! SDL_Error: brred<", err, ">");
         std::exit(1);
-        return 1;
     }
-
-    Window::width = width;
-    Window::height = height;
 
     return 0;
 }
 
 int Window::createContext() {
-    glContext = SDL_GL_CreateContext(window);
-    if (glContext == NULL) {
-        return 1;
+    _glContext = SDL_GL_CreateContext(_window);
+    if (_glContext == NULL) { 
+        std::string err = SDL_GetError();
+        Logger::instance().log(LogLevel::ERROR, "Window", "OpenGL context could not be created! SDL Error: brred<", err, ">");
+        std::exit(1);
     }
-    glewInit();
+
+    GLenum err = glewInit();
+    if (err != GLEW_OK) {
+        Logger::instance().log(LogLevel::ERROR, "Window", "GLEW error: brred<", (const char*)glewGetErrorString(err), ">");
+        std::exit(1);
+    }
 
     return 0;
 }
 
 void Window::resizeContext(int w, int h) {
-    width = w;
-    height = h;
-}
-
-int Window::SDL_TTF_INIT() {
-    // if (TTF_Init() != 0) {
-    //     Logger::log("WINDOW", "SDL_TTF could not initialize!",  LogLevel::ERROR);
-    //     std::exit(1);
-    //     return 1;
-    // }
-    return 0;
+    _width = w; _height = h;
+    glViewport(0, 0, _width, _height);
 }
 
 void Window::_glInit() {
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, _width, _height);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     
@@ -107,23 +99,17 @@ void Window::_glInit() {
 }
 void Window::_glClear() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(sky.x, sky.y, sky.z, 1.0f);
+    glClearColor(_sky.x, _sky.y, _sky.z, 1.0f);
 }
 
-bool Window::swapBuffers() {
-    SDL_GL_SwapWindow(window);
-    return 1;
+void Window::swapBuffers() {
+    SDL_GL_SwapWindow(_window);
 }
 
-void Window::setCursorMode(SDL_bool mode) {
-    SDL_SetRelativeMouseMode(mode);
-}
-SDL_bool Window::getCursorMode() {
-    return SDL_GetRelativeMouseMode();
-}
+void Window::setCursorMode(SDL_bool mode) { SDL_SetRelativeMouseMode(mode); }
+SDL_bool Window::getCursorMode() const { return SDL_GetRelativeMouseMode(); }
 
 void Window::startFrame() {
-    // Начало нового кадра ImGui
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
@@ -135,20 +121,10 @@ void Window::renderGUI() {
 }
 
 void Window::toggleFullscreen() {
-    uint32_t flags = SDL_GetWindowFlags(window);
-    SDL_SetWindowFullscreen(window, (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+    uint32_t flags = SDL_GetWindowFlags(_window);
+    SDL_SetWindowFullscreen(_window, (flags & SDL_WINDOW_FULLSCREEN_DESKTOP) ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
-void Window::exit() {
-    Logger::instance().log(LogLevel::INFO, "WINDOW", "Deleting GL context, closing window");
-    SDL_DestroyRenderer(guirenderer);
-    SDL_GL_DeleteContext(glContext);
-    SDL_DestroyWindow(window);
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplSDL2_Shutdown();
-    ImGui::DestroyContext();
-    SDL_Quit();
-}
-bool Window::isShouldClose(SDL_Event event) {
+bool Window::pollEvent(SDL_Event& event) {
     return SDL_PollEvent(&event) != 0;
 }

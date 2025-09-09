@@ -1,51 +1,13 @@
 #include "input.h"
 
-#include "../utilities/logger.hpp"
+#include "utilities/logger.hpp"
 #include "imgui_impl_sdl2.h"
 
-SDL_Event Input::_sdlevent;
-
-bool* Input::_keys;
-
-uint32_t* Input::_frames;
-uint32_t Input::_current = 0;
-float Input::deltaX = 0.0f;
-float Input::deltaY = 0.0f;
-float Input::x = 0.0f;
-float Input::y = 0.0f;
-bool Input::_cursor_locked = false;
-bool Input::_cursor_started = false;
-
-std::unordered_map<uint32_t, std::function<void()> > Input::_pressedeventfunc; // Keyboard press
-std::unordered_map<uint32_t, std::function<void()> > Input::_jpressedeventfunc; // Keyboard pressed
-std::unordered_map<uint32_t, std::function<void()> > Input::_clickedeventfunc; // Mouse click
-std::unordered_map<uint32_t, std::function<void()> > Input::_jclickedeventfunc; // Mouse clicked
-std::unordered_map<uint32_t, std::function<void()> > Input::_mousemoteventfunc; // Mouse motion
-
-#define _MOUSE_BUTTONS 1024
-#define _SPECIAL_BUTTONS 1040
-
-#define F_KEY_MAGIC 1073741824
-
-int Input::init() {
-    _keys = new bool [1512];
-    _frames = new uint32_t [1512];
-
-    memset(_keys, false, 1512 * sizeof(bool));
-    memset(_frames, 0, 1512 * sizeof(uint32_t));
-
-    _pressedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
-    _jpressedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
-    _clickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
-    _jclickedeventfunc = std::unordered_map<uint32_t, std::function<void()>>();
-
-    Logger::instance().log(LogLevel::INFO, "INPUT", "Input system initialized");
-    return 0;
-}
+Input::Input(): _current(0), _deltaX(0.0f), _deltaY(0.0f), _x(0.0f), _y(0.0f), _cursor_locked(false), _cursor_started(false) {}
 
 void Input::cursor_position_callback(SDL_MouseMotionEvent e) {
     int xpos, ypos;
-    if (Window::getCursorMode()) {
+    if (_window->getCursorMode()) {
         xpos = e.xrel;
         ypos = e.yrel;
     } else {
@@ -53,42 +15,40 @@ void Input::cursor_position_callback(SDL_MouseMotionEvent e) {
         ypos = e.y;
     }
 
-    if (Input::_cursor_started) {
-        Input::deltaX += xpos; //xpos-Input::x;
-        Input::deltaY += ypos; //ypos-Input::y;
+    if (_cursor_started) {
+        _deltaX += xpos; //xpos-x;
+        _deltaY += ypos; //ypos-y;
     } else {
-        Input::_cursor_started = true; 
+        _cursor_started = true; 
     }
-    Input::x = xpos;
-    Input::y = ypos;
+    _x = xpos;
+    _y = ypos;
 }
 
 void Input::mouse_button_callback(Uint8& button, int action) {
     if ( action == 1 ) {
-        Input::_keys[_MOUSE_BUTTONS + button] = true;
-        Input::_frames[_MOUSE_BUTTONS + button] = Input::_current;
+        _keys[MouseButtons + button] = true;
+        _frames[MouseButtons + button] = _current;
     } else if ( action == 0) {
-        Input::_keys[_MOUSE_BUTTONS + button] = false;
-        Input::_frames[_MOUSE_BUTTONS + button] = Input::_current;
+        _keys[MouseButtons + button] = false;
+        _frames[MouseButtons + button] = _current;
     }
 }
 void Input::key_callback(SDL_Keycode key, int action) {
     if (action == 1) {
         setKey(key, true);
-        setFrame(key, Input::_current);
+        setFrame(key, _current);
     } else if (action == 0) {
         setKey(key, false);
-        setFrame(key, Input::_current);
+        setFrame(key, _current);
     }
 }
 
 void Input::window_size_callback(int width, int height) {
-    glViewport(0, 0, width, height);
-    Window::width = width;
-    Window::height = height;
+    _window->resizeContext(width, height);
 }
 
-void Input::add_event_handler(EVENT event, uint32_t btn,  void (*func)(void)) {
+void Input::add_event_handler(EVENT event, uint32_t btn, std::function<void()> func) {
     switch (event) {
         case PRESSED:
             _pressedeventfunc[btn] = func;
@@ -108,27 +68,6 @@ void Input::add_event_handler(EVENT event, uint32_t btn,  void (*func)(void)) {
     }
 }
 
-// template<typename Func>
-// void Input::add_event_handler(EVENT event, uint32_t btn, Func&& func) {
-//     switch (event) {
-//         case PRESSED:
-//             _pressedeventfunc[btn] = func;
-//             break;
-//         case JPRESSED:
-//             _jpressedeventfunc[btn] = func;
-//             break;
-//         case CLICKED:
-//             _clickedeventfunc[btn] = func;
-//             break;
-//         case JCLICKED:
-//             _jclickedeventfunc[btn] = func;
-//             break;
-//         case MOTION:
-//             _mousemoteventfunc[btn] = func;
-//             break;
-//     }
-// }
-
 void Input::process_keys() {
     for (auto it = _pressedeventfunc.begin(); it != _pressedeventfunc.end(); ++it) {
         if (pressed(it->first)) it->second();
@@ -144,15 +83,9 @@ void Input::process_keys() {
     }
 }
 
-void Input::cleanup() {
-    Logger::instance().log(LogLevel::INFO, "INPUT", "Clear input buffers");
-    delete []_keys;
-    delete []_frames;
-}
-
 void Input::setKey(int key, bool value) {
-    if (key >= F_KEY_MAGIC) {
-        uint32_t index = (_SPECIAL_BUTTONS + key - F_KEY_MAGIC);
+    if (key >= FKeyMagic) {
+        uint32_t index = (SpecialButtons + key - FKeyMagic);
         _keys[index] = value;
     } else {
         _keys[key] = value;
@@ -160,8 +93,8 @@ void Input::setKey(int key, bool value) {
 }
 
 void Input::setFrame(int key, uint32_t value) {
-    if (key >= F_KEY_MAGIC) {
-        uint32_t index = (_SPECIAL_BUTTONS + key - F_KEY_MAGIC);
+    if (key >= FKeyMagic) {
+        uint32_t index = (SpecialButtons + key - FKeyMagic);
         _frames[index] = value;
     } else {
         _frames[key] = value;
@@ -169,8 +102,8 @@ void Input::setFrame(int key, uint32_t value) {
 }
 
 bool Input::getKey(int keycode) {
-    if (keycode >= F_KEY_MAGIC) {
-        uint32_t index = (_SPECIAL_BUTTONS + keycode - F_KEY_MAGIC);
+    if (keycode >= FKeyMagic) {
+        uint32_t index = (SpecialButtons + keycode - FKeyMagic);
         return _keys[index];
     } else {
         return _keys[keycode];
@@ -178,8 +111,8 @@ bool Input::getKey(int keycode) {
 }
 
 uint32_t Input::getFrame(int keycode) {
-    if (keycode >= F_KEY_MAGIC) {
-        uint32_t index = (_SPECIAL_BUTTONS + keycode - F_KEY_MAGIC);
+    if (keycode >= FKeyMagic) {
+        uint32_t index = (SpecialButtons + keycode - FKeyMagic);
         return _frames[index];
     } else {
         return _frames[keycode];
@@ -187,26 +120,26 @@ uint32_t Input::getFrame(int keycode) {
 }
 
 bool Input::pressed(uint32_t keycode) {
-    if ( keycode < 0 || (keycode >= _MOUSE_BUTTONS && keycode < _SPECIAL_BUTTONS)) return false;
+    if ( keycode < 0 || (keycode >= MouseButtons && keycode < SpecialButtons)) return false;
     return getKey(keycode);
 }
 bool Input::jpressed(uint32_t keycode) {
-    if ( keycode < 0 || (keycode >= _MOUSE_BUTTONS && keycode < _SPECIAL_BUTTONS)) return false;
+    if ( keycode < 0 || (keycode >= MouseButtons && keycode < SpecialButtons)) return false;
     return getKey(keycode) && getFrame(keycode) == _current;
 }
 
 bool Input::clicked(uint32_t button) {
-    int index = _MOUSE_BUTTONS + button;
+    int index = MouseButtons + button;
     return _keys[index];
 }
 bool Input::jclicked(uint32_t button) {
-    int index = _MOUSE_BUTTONS + button;
+    int index = MouseButtons + button;
     return _keys[index] && _frames[index] == _current;
 }
 
 void Input::toggleCursor() {
     _cursor_locked = !_cursor_locked;
-    Window::setCursorMode(_cursor_locked ? SDL_TRUE : SDL_FALSE);
+    _window->setCursorMode(_cursor_locked ? SDL_TRUE : SDL_FALSE);
 }
 
 void Input::processEvents(bool &quit) {
@@ -230,6 +163,6 @@ void Input::processEvents(bool &quit) {
 
 void Input::pullEvents() {
     _current++;
-    deltaX = 0.0f;
-    deltaY = 0.0f;
+    _deltaX = 0.0f;
+    _deltaY = 0.0f;
 }

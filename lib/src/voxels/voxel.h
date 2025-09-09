@@ -7,11 +7,18 @@ struct Color { // 4 байта
     uint8_t g = 0;
     uint8_t b = 0;
     uint8_t a = 0;
+
+    bool operator==(const Color& clr) {
+        return r == clr.r and g == clr.g and b == clr.b and a == clr.a;
+    }
+    bool operator!=(const Color& clr) {
+        return r != clr.r or g != clr.g or b != clr.b or a != clr.a;
+    }
 };
 
 struct Voxel {
     Color color = {0, 0, 0, 0}; // r=0, g=0, b=0, a=0;
-    uint8_t mat  : 4 = 0x1; // 0..15 типов
+    uint8_t mat : 4 = 0x1; // 0..15 типов
     uint8_t visible : 1 = 0;
     uint8_t unused : 3; // 3 бита — для выравнивания
 

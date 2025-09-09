@@ -84,7 +84,9 @@
         "source_location": "cpp",
         "ranges": "cpp",
         "shared_mutex": "cpp",
-        "stdfloat": "cpp"
+        "stdfloat": "cpp",
+        "filesystem": "cpp",
+        "oldassetmanager.C": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

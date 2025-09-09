@@ -6,7 +6,7 @@
 #include "window/window.h"
 #include "utilities/logger.hpp"
 
-#include "loaders/resourcemanager.h"
+#include "assetmanager/assetmanager.h"
 
 #include <chrono>
 
@@ -15,19 +15,19 @@ void VoxOpenGLWidget::initializeGL() {
     Window::createContext();
     Window::_glInit();
 
-    ResourceManager::loadShaders();
-    ResourceManager::loadTextures();
-    ResourceManager::loadModels();
-    ResourceManager::loadFonts();
+    AssetManager::instance().loadShaders();
+    AssetManager::instance().loadTextures();
+    AssetManager::instance().loadGameModels();
+    AssetManager::instance().loadFonts();
 
-    FT_Face face = ResourceManager::getFont("arial");
+    FT_Face face = AssetManager::instance().getFont("arial");
     _textMesh = new TextMesh(face);
     
     _ang = 0.0f;
 
     _camera = new Camera(glm::vec3(3, 1, 0), glm::radians(150.0f));
     Renderer::addCamera(_camera);
-    GameObject *appleobj = new GameObject(gm, "player", ResourceManager::getModel("apple"), glm::vec3(0, 10, 5));
+    GameObject *appleobj = new GameObject(gm, "player", AssetManager::instance().getModel("apple"), glm::vec3(0, 10, 5));
     appleobj->attachCamera(_camera, glm::vec3(0, 50, 0)); //! Attach camera to appleobj, apple hidden
     // appleobj->setPhysics(DYNAMIC_PHYSICS);
     appleobj->setVisible(true);
@@ -60,24 +60,24 @@ void VoxOpenGLWidget::paintGL() {
     light.linear = 0.014f;
     light.quadratic = 0.00007f;
 
-    ResourceManager::getShader("voxel")->use();        
-    ResourceManager::getShader("voxel")->uniformMatrix("projection", Renderer::getCamera()->getProjection());
-    ResourceManager::getShader("voxel")->uniformMatrix("view", Renderer::getCamera()->getView());
+    AssetManager::instance().get<Shader>("voxel")->use();        
+    AssetManager::instance().get<Shader>("voxel")->uniformMatrix("projection", Renderer::getCamera()->getProjection());
+    AssetManager::instance().get<Shader>("voxel")->uniformMatrix("view", Renderer::getCamera()->getView());
 
     gm->UpdatePhysics(0.01f);
 
     gm->Update(light);
 
-    ResourceManager::getShader("font")->use();
-    ResourceManager::getShader("font")->uniformMatrix("projection", glm::ortho(0.0f, (float)Window::width, 0.0f, (float)Window::height));
-    ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.65f, 1.0f, 1.0f));
+    AssetManager::instance().get<Shader>("font")->use();
+    AssetManager::instance().get<Shader>("font")->uniformMatrix("projection", glm::ortho(0.0f, (float)Window::width, 0.0f, (float)Window::height));
+    AssetManager::instance().get<Shader>("font")->uniformVec3("textColor", glm::vec3(0.65f, 1.0f, 1.0f));
     _textMesh->draw("VoxelX", 5.0f, (float)Window::height-20.0f, 0.4f);
 
-    ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.5f, 0.1f));
+    AssetManager::instance().get<Shader>("font")->uniformVec3("textColor", glm::vec3(0.1f, 0.5f, 0.1f));
     // _textMesh->draw("Debug mode", Window::width / 2 - 80.0f, Window::height-20.0f, 0.5f);
     _textMesh->draw("FPS: " + std::to_string((int)(1.0f / deltaTime)), 5.0f, Window::height-50.0f, 0.4f);
     
-    ResourceManager::getShader("font")->uniformVec3("textColor", glm::vec3(1.0f, 0.0f, 0.3f));
+    AssetManager::instance().get<Shader>("font")->uniformVec3("textColor", glm::vec3(1.0f, 0.0f, 0.3f));
     _textMesh->draw("> ", Window::width / 2, Window::height-20.0f, 0.4f);
 
     update();

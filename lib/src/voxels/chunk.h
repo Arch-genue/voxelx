@@ -1,40 +1,31 @@
 #pragma once
 
-#include <array>
 #include <glm/glm.hpp>
-#include <iostream>
-#include "voxelmodel.hpp"
+#include <GL/glew.h>
 
-class VoxelModel;
+#include <array>
+#include <unordered_map>
 
-// Chunk
-template<int SIZE = 16>
-struct Chunk {
-    static constexpr int VOLUME = SIZE * SIZE * SIZE;
-    static constexpr int SIZE2 = SIZE * SIZE;
+#include "graphics/shader.h"
+#include "voxel.h"
 
-    std::array<Voxel, VOLUME> voxels;
+#define CHUNK_SIZE 16
+
+class VoxelStructure;
+
+class VoxelChunk {
+private:    
+    static constexpr int VOLUME = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
+    static constexpr int SIZE2 = CHUNK_SIZE * CHUNK_SIZE;
+public:
     glm::ivec3 position;
+    std::array<Voxel, VOLUME> voxels;
+    VoxelStructure* _structure;
 
-    VoxelModel* voxelmodel;
-
-    Voxel& getVoxel(int x, int y, int z) {
-        if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE) {
-            // пересчёт координат относительно соседнего чанка
-            int globalX = position.x * SIZE + x;
-            int globalY = position.y * SIZE + y;
-            int globalZ = position.z * SIZE + z;
-
-            // спрашиваем модель за вокселем
-            return voxelmodel->getVoxel(globalX, globalY, globalZ);
-        }
-        return voxels[x + y * SIZE + z * SIZE2];
-    }
-    
-
-    const Voxel& getVoxel(int x, int y, int z) const {
-        return voxels[x + y * SIZE + z * SIZE2];
-    }
+    Voxel& getVoxel(int x, int y, int z);
+    const Voxel& getVoxel(int x, int y, int z) const;
+    Voxel& getVoxel(glm::vec3& pos);
+    Voxel& getVoxel(glm::ivec3& pos);
 
     bool _remesh = true; // нужно пересобирать меш
 };

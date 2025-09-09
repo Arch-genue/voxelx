@@ -1,19 +1,20 @@
 /**
- * @file mesh.h
+ * @file meshmodel.h
  * @author Vlad Kartsaev
- * @brief Mesh class implementation
- * @version 0.5
- * @date 2023-04-06
+ * @brief Mesh container
+ * @version 0.7
+ * @date 2025-09-02
  * 
- * @copyright Copyright (c) 2024
+ * @copyright Copyright (c) 2025
  * 
  */
 
 #pragma once
 
 #include <unordered_map>
-#include "voxels/voxelmodel.hpp"
-#include "mesh.h"
+#include "voxels/voxelstructure.h"
+#include "graphics/voxelmesh.h"
+#include "graphics/renderer.h"
 
 /**
  * @brief Класс MeshModel, который хранит меши чанков модели VoxelModel
@@ -21,11 +22,15 @@
  */
 class MeshModel {
 public:
-    MeshModel(VoxelModel* voxelmodel): _voxelmodel(voxelmodel) {};
-    VoxelModel* getVoxelModel() { return _voxelmodel; }
+    MeshModel(VoxelStructure* structure): _structure(structure) {
+        _structure->forEachChunk([&](VoxelChunk& chunk, const ChunkCoord& chunkpos) {
+            this->set(&chunk, std::make_unique<VoxelMesh>(_structure, chunk));
+        });
+    };
+    VoxelStructure* getStructure() { return _structure; }
 
     void draw(unsigned int primitive, glm::mat4 modelmatrix, Shader* shader) {
-        this->forEachMesh([&](VoxelModel::ChunkType& chunk, Mesh* mesh) {
+        this->forEachMesh([&](VoxelChunk& chunk, VoxelMesh* mesh) {
             mesh->draw(primitive, modelmatrix, shader);
         });
     }
@@ -33,28 +38,27 @@ public:
     template<typename Func>
     void forEachMesh(Func func) {
         for (auto& [chunk, mesh] : _map) {
-            func(*chunk, mesh);
+            func(*chunk, mesh.get());
         }
     }
 
-    void set(VoxelModel::ChunkTypePtr chunk, Mesh* mesh) {
-        _map[chunk] = mesh;
+    void set(VoxelChunk* chunk, std::unique_ptr<VoxelMesh> mesh) {
+        _map[chunk] = std::move(mesh);
     }
 
-    Mesh* get(VoxelModel::ChunkTypePtr chunk) const {
+    VoxelMesh* get(VoxelChunk* chunk) const {
         auto it = _map.find(chunk);
-        return (it != _map.end()) ? it->second : nullptr;
+        return (it != _map.end()) ? it->second.get() : nullptr;
     }
 
-    void remove(VoxelModel::ChunkTypePtr chunk) {
+    void remove(VoxelChunk* chunk) {
         auto it = _map.find(chunk);
         if (it != _map.end()) {
-            delete it->second;   // если _map владеет Mesh
             _map.erase(it);
         }
     }
 
 private:
-    std::unordered_map<VoxelModel::ChunkTypePtr, Mesh*> _map;
-    VoxelModel* _voxelmodel;
+    std::unordered_map<VoxelChunk*, std::unique_ptr<VoxelMesh>> _map;
+    VoxelStructure* _structure;
 };

@@ -11,32 +11,32 @@
 
 #pragma once
 
-#include "../gamesystems/camera.h"
-#include "meshmodel.h"
-
-class MeshModel;
-class Camera;
+#include "voxels/voxelstructure.h"
 
 class Renderer {
-private:
-	static Camera* camera;
-
-	static void vertex(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, const glm::ivec3 &normal, Color& clr);
-
-	static void top(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
-	static void bottom(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
-	static void left(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
-	static void right(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
-	static void front(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
-	static void back(std::vector<float>& posBuffer, std::vector<int8_t>& normalBuffer, std::vector<uint8_t>& colorBuffer, float x, float y, float z, Color& clr);
-
 public:
-	static void init();
+    static void generate_mesh(VoxelStructure *structure, VoxelChunk& chunk, size_t& vertices, GLuint& vao, GLuint& vboPos, GLuint& vboNormal, GLuint& vboColor);
 
-    static void addCamera(Camera* cam);
+private:
+    Renderer() = default;
+    ~Renderer() = default;
 
-	static MeshModel* generateMeshModel(VoxelModel* voxelmodel);
-    static Mesh* generateMesh(VoxelModel* voxels, VoxelModel::ChunkType& chunk);
+    static void quadFace(
+        const glm::vec3& v0,
+        const glm::vec3& v1,
+        const glm::vec3& v2,
+        const glm::vec3& v3,
+        const glm::ivec3& normal,
+        const Color& clr
+    );
+    static void vertex(
+        const glm::vec3 &pos, 
+        const glm::ivec3 &normal, 
+        const Color& clr
+    );
 
-    static Camera* getCamera();
+    static std::vector<float> _posBuffer;
+    static std::vector<int8_t> _normalBuffer;
+    static std::vector<uint8_t> _colorBuffer;
+
 };

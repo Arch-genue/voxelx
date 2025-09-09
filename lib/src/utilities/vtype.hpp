@@ -17,45 +17,6 @@
 
 namespace vtype {
     /**
-     * @brief Вектор с возможностью поиска по значению  
-     * 
-     * @tparam T Тип
-     */
-    template<typename T>
-    class fndvector {
-    private:
-        std::vector<T> _data;
-
-    public:
-        void push_back(const T& value) { _data.push_back(value); }
-        void push_back(T&& value) { _data.push_back(std::move(value)); }
-
-        T& at(size_t n) { return _data.at(n); }
-        const T& at(size_t n) const { return _data.at(n); }
-
-        bool contains(const T &value) const {
-            return std::find(_data.begin(), _data.end(), value) != _data.end();
-        }
-
-        int32_t indexOf(const T &value) {
-            auto it = std::find(_data.begin(), _data.end(), value);
-            if (it != _data.end()) {
-                return std::distance(_data.begin(), it);
-            } else {
-                return -1;
-            }
-        }
-
-        size_t size() const {
-            return _data.size();
-        }
-
-        void clear() {
-            _data.clear();
-        }
-    };
-
-    /**
      * @brief Трехмерный массив
      * 
      * @tparam X Тип индекса

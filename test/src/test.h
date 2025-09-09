@@ -17,8 +17,8 @@ public:
         _size = size;
     }
 
-    VoxelModel* generateMap() {
-        VoxelModel* voxmodel = new VoxelModel();
+    VoxelStructure* generateMap() {
+        VoxelStructure* voxmodel = new VoxelStructure();
         voxmodel->setMinSize(glm::ivec3(-_size.x / 2, -_size.y / 2, -_size.z / 2));
         voxmodel->setSize(glm::ivec3(_size.x / 2, _size.y / 2, _size.z / 2));
 
