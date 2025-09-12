@@ -12,10 +12,17 @@
 #pragma once
 
 #include "voxels/voxelstructure.h"
+#include "voxelmesh.h"
 
 class Renderer {
 public:
-    static void generate_mesh(VoxelStructure *structure, VoxelChunk& chunk, size_t& vertices, GLuint& vao, GLuint& vboPos, GLuint& vboNormal, GLuint& vboColor);
+    static void reserve();
+
+    static void initInstancing();
+    static void generateInstances(VoxelChunk &chunk);
+    static void drawInstances(glm::mat4 _modelmatrix, Shader *shader);
+
+    static std::unique_ptr<VoxelMesh> generate_mesh(VoxelChunk& chunk);
 
 private:
     Renderer() = default;

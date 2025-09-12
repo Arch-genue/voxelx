@@ -22,10 +22,31 @@ public:
     std::array<Voxel, VOLUME> voxels;
     VoxelStructure* _structure;
 
-    Voxel& getVoxel(int x, int y, int z);
-    const Voxel& getVoxel(int x, int y, int z) const;
-    Voxel& getVoxel(glm::vec3& pos);
-    Voxel& getVoxel(glm::ivec3& pos);
+    Voxel& at(int x, int y, int z);
+    const Voxel& at(int x, int y, int z) const;
+    Voxel& at(glm::vec3& pos);
+    Voxel& at(glm::ivec3& pos);
 
-    bool _remesh = true; // нужно пересобирать меш
+    template<typename Func>
+    void each(Func func) {
+        for (const auto& voxel : voxels) {
+            func(voxel);
+        }
+    }
+    template<typename Func>
+    void eachVisible(Func func) {
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+            for (int y = 0; y < CHUNK_SIZE; y++) {
+                for (int z = 0; z < CHUNK_SIZE; z++) {
+                    Voxel& voxel = voxels[x + y * CHUNK_SIZE + z * SIZE2];
+                    if (!voxel.visible) continue;
+
+                    glm::vec3 globalPos = glm::vec3(position * CHUNK_SIZE + glm::ivec3(x, y, z));
+                    func(voxel, globalPos);
+                }
+            }
+        }
+    }
+
+    bool _dirty = true; // нужно пересобирать меш
 };

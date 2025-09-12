@@ -3,13 +3,10 @@
         {
             "name": "Linux",
             "includePath": [
-                "/home/user/dev/voxelx/lib/src/**",
-                "/home/user/dev/voxelx/editor/src/**",
-                "/usr/include/freetype2/**",
-                "/usr/include/freetype2",
-                "/home/user/dev/voxelx/lib/vendor/luacpp/Source/**",
-                "/home/user/dev/voxelx/vendor/imgui/**",
-                "/home/user/dev/voxelx/vendor/imgui/backends/**"
+                "${workspaceFolder}/lib/src/**",
+                // "/home/user/dev/voxelx/editor/src/**",
+                "${workspaceFolder}/vendor/imgui",
+                "${workspaceFolder}/vendor/imgui/backends"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
@@ -19,21 +16,9 @@
             "mergeConfigurations": false,
             "configurationProvider": "ms-vscode.cmake-tools",
             "browse": {
-                "path": [
-                    "/home/user/dev/voxelx/**",
-                    "/home/user/dev/voxelx",
-                ],
+                "path": ["${workspaceFolder}"],
                 "limitSymbolsToIncludedHeaders": true
             }
-        },
-        {
-            "name": "Linux x64",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "cStandard": "c17",
-            "cppStandard": "c++17",
         }
     ],
     "version": 4

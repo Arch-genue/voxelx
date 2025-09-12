@@ -2,34 +2,50 @@
 
 #include <iostream>
 
-static constexpr glm::ivec3 normals[6] = { {0,1,0}, {0,-1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
+// static constexpr glm::ivec3 normals[6] = { {0,1,0}, {0,-1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
+static constexpr glm::ivec3 normals[6] = {
+    { 0,  1,  0}, // Top (y = +0.5)
+    { 0, -1,  0}, // Bottom (y = -0.5)
+    { 1,  0,  0}, // Right  (x = +0.5)
+    {-1,  0,  0}, // Left   (x = -0.5)
+    { 0,  0,  1}, // Front  (z = +0.5)
+    { 0,  0, -1}  // Back   (z = -0.5)
+};
+
 static constexpr glm::vec3 neighborOffset[6] = { {0,1,0}, {0,-1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
 
 static constexpr glm::vec3 offsets[6][4] = {
-	{{-0.5f, +0.5f, -0.5f}, {-0.5f, +0.5f, +0.5f}, {+0.5f, +0.5f, +0.5f}, {+0.5f, +0.5f, -0.5f}}, // Top
-    {{-0.5f, -0.5f, -0.5f}, {+0.5f, -0.5f, +0.5f}, {-0.5f, -0.5f, +0.5f}, {+0.5f, -0.5f, -0.5f}}, // Bottom
-    {{+0.5f, -0.5f, -0.5f}, {+0.5f, +0.5f, -0.5f}, {+0.5f, +0.5f, +0.5f}, {+0.5f, -0.5f, +0.5f}}, // Left
-    {{-0.5f, -0.5f, -0.5f}, {-0.5f, +0.5f, +0.5f}, {-0.5f, +0.5f, -0.5f}, {-0.5f, -0.5f, +0.5f}}, // Right
-    {{-0.5f, -0.5f, +0.5f}, {+0.5f, -0.5f, +0.5f}, {+0.5f, +0.5f, +0.5f}, {-0.5f, +0.5f, +0.5f}}, // Front
-    {{-0.5f, -0.5f, -0.5f}, {-0.5f, +0.5f, -0.5f}, {+0.5f, +0.5f, -0.5f}, {+0.5f, -0.5f, -0.5f}}  // Back
+    // Top (y = +0.5)
+    {{-0.5f, +0.5f, -0.5f}, {+0.5f, +0.5f, -0.5f}, {+0.5f, +0.5f, +0.5f}, {-0.5f, +0.5f, +0.5f}},
+    // Bottom (y = -0.5)
+    {{-0.5f, -0.5f, -0.5f}, {-0.5f, -0.5f, +0.5f}, {+0.5f, -0.5f, +0.5f}, {+0.5f, -0.5f, -0.5f}},
+    // Right (x = +0.5)
+    {{+0.5f, -0.5f, -0.5f}, {+0.5f, -0.5f, +0.5f}, {+0.5f, +0.5f, +0.5f}, {+0.5f, +0.5f, -0.5f}},
+    // Left (x = -0.5)
+    {{-0.5f, -0.5f, -0.5f}, {-0.5f, +0.5f, -0.5f}, {-0.5f, +0.5f, +0.5f}, {-0.5f, -0.5f, +0.5f}},
+    // Front (z = +0.5)
+    {{-0.5f, -0.5f, +0.5f}, {-0.5f, +0.5f, +0.5f}, {+0.5f, +0.5f, +0.5f}, {+0.5f, -0.5f, +0.5f}},
+    // Back (z = -0.5)
+    {{-0.5f, -0.5f, -0.5f}, {+0.5f, -0.5f, -0.5f}, {+0.5f, +0.5f, -0.5f}, {-0.5f, +0.5f, -0.5f}}
 };
 
 std::vector<float> Renderer::_posBuffer;
 std::vector<int8_t> Renderer::_normalBuffer;
 std::vector<uint8_t> Renderer::_colorBuffer;
 
-void Renderer::generate_mesh(VoxelStructure *structure, VoxelChunk& chunk, size_t& vertices, GLuint& vao, GLuint& vboPos, GLuint& vboNormal, GLuint& vboColor) {
-    _posBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 3);
+void Renderer::reserve() {
+	_posBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 3);
 	_normalBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 3);
 	_colorBuffer.reserve(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 36 * 4);
+}
 
-	structure->forEachVisibleVoxelInChunk(chunk, [&] (Voxel &voxel, int x, int y, int z) {
+std::unique_ptr<VoxelMesh> Renderer::generate_mesh(VoxelChunk& chunk) {
+	chunk.eachVisible([&](Voxel& voxel, glm::vec3 pos) {
 		Color& clr = voxel.getColor();
 
 		for (int i=0; i<6; i++) {
-			glm::vec3 pos(x, y, z);
 			glm::vec3 neighborPos = pos + neighborOffset[i];
-			if (!chunk.getVoxel(neighborPos).visible) {
+			if (!chunk.at(neighborPos).visible) {
 				quadFace(
                     pos+offsets[i][0], pos+offsets[i][1],
                     pos+offsets[i][2], pos+offsets[i][3],
@@ -39,7 +55,16 @@ void Renderer::generate_mesh(VoxelStructure *structure, VoxelChunk& chunk, size_
 		}
 	});
 
-	vertices = _posBuffer.size() / 3;
+	size_t vertices = _posBuffer.size() / 3;
+	GLuint vao;
+	GLuint vboPos;
+	GLuint vboNormal;
+	GLuint vboColor;
+
+	glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vboPos);
+    glGenBuffers(1, &vboNormal);
+    glGenBuffers(1, &vboColor);
 
 	glBindVertexArray(vao);
 
@@ -62,6 +87,12 @@ void Renderer::generate_mesh(VoxelStructure *structure, VoxelChunk& chunk, size_
 	glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
+
+	_posBuffer.clear();
+	_normalBuffer.clear();
+	_colorBuffer.clear();
+
+	return std::make_unique<VoxelMesh>(vertices, vao, vboPos, vboNormal, vboColor);
 }
 
 void Renderer::quadFace(

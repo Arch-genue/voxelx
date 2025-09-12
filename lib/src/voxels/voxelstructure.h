@@ -9,7 +9,6 @@
 
 #include "voxel.h"
 #include "chunk.h"
-#include "graphics/shader.h"
 
 struct ChunkCoord {
     int x, y, z;
@@ -32,6 +31,7 @@ class VoxelStructure {
 public:
     using ChunkMap = std::unordered_map<ChunkCoord, VoxelChunk, ChunkCoordHash>;
 
+    VoxelStructure() {};
     VoxelStructure(const std::filesystem::path& path);
     VoxelStructure(const VoxelStructure& other); // Конструктор копирования
     ~VoxelStructure() = default;
@@ -47,12 +47,24 @@ public:
     Voxel& voxel(int x, int y, int z);
 
     template<typename Func>
-    void forEachVoxel(Func func) {
+    void eachVoxel(Func func) {
         for (auto& [chunkPos, chunk] : chunks) {
             for (int z = 0; z < CHUNK_SIZE; ++z) {
                 for (int y = 0; y < CHUNK_SIZE; ++y) {
                     for (int x = 0; x < CHUNK_SIZE; ++x) {
-                        func(chunk.getVoxel(x, y, z), chunkPos, x, y, z);
+                        func(chunk.at(x, y, z), x, y, z);
+                    }
+                }
+            }
+        }
+    }
+    template<typename Func>
+    void eachVoxel(Func func) const {
+        for (auto& [chunkPos, chunk] : chunks) {
+            for (int z = 0; z < CHUNK_SIZE; ++z) {
+                for (int y = 0; y < CHUNK_SIZE; ++y) {
+                    for (int x = 0; x < CHUNK_SIZE; ++x) {
+                        func(chunk.at(x, y, z), x, y, z);
                     }
                 }
             }
@@ -60,38 +72,9 @@ public:
     }
 
     template<typename Func>
-    void forEachVoxel(Func func) const {
+    void eachChunk(Func func) {
         for (auto& [chunkPos, chunk] : chunks) {
-            for (int z = 0; z < CHUNK_SIZE; ++z) {
-                for (int y = 0; y < CHUNK_SIZE; ++y) {
-                    for (int x = 0; x < CHUNK_SIZE; ++x) {
-                        func(chunk.getVoxel(x, y, z), chunkPos, x, y, z);
-                    }
-                }
-            }
-        }
-    }
-
-    template<typename Func>
-    void forEachVisibleVoxelInChunk(VoxelChunk& chunk, Func func) {
-        glm::ivec3 chunkPos = chunk.position;
-        for (int z = 0; z < CHUNK_SIZE; ++z)
-            for (int y = 0; y < CHUNK_SIZE; ++y)
-                for (int x = 0; x < CHUNK_SIZE; ++x) {
-                    Voxel vox = chunk.voxels[x + CHUNK_SIZE * (y + CHUNK_SIZE * z)];
-                    if (vox.visible) {
-                        int gx = chunkPos.x * CHUNK_SIZE + x;
-                        int gy = chunkPos.y * CHUNK_SIZE + y;
-                        int gz = chunkPos.z * CHUNK_SIZE + z;
-                        func(vox, gx, gy, gz);
-                    }
-                }
-    }
-
-    template<typename Func>
-    void forEachChunk(Func func) {
-        for (auto& [chunkPos, chunk] : chunks) {
-            func(chunk, chunkPos);
+            func(chunk);
         }
     }
 

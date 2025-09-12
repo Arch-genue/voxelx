@@ -23,14 +23,16 @@
 class MeshModel {
 public:
     MeshModel(VoxelStructure* structure): _structure(structure) {
-        _structure->forEachChunk([&](VoxelChunk& chunk, const ChunkCoord& chunkpos) {
-            this->set(&chunk, std::make_unique<VoxelMesh>(_structure, chunk));
+        _structure->eachChunk([&](VoxelChunk& chunk) {
+            // this->set(&chunk, std::make_unique<VoxelMesh>(chunk));
+            this->set(&chunk, Renderer::generate_mesh(chunk));
         });
     };
     VoxelStructure* getStructure() { return _structure; }
 
     void draw(unsigned int primitive, glm::mat4 modelmatrix, Shader* shader) {
         this->forEachMesh([&](VoxelChunk& chunk, VoxelMesh* mesh) {
+            // mesh->drawInstances(primitive, modelmatrix, shader);
             mesh->draw(primitive, modelmatrix, shader);
         });
     }

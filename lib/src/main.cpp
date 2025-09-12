@@ -2,24 +2,30 @@
 // #include "gamesystems/mapgenerator.h"
 #include "assetmanager/assetmanager.h"
 #include "gamesystems/camera.h"
-// #include "physics/physicsengine.h"
 // #include "scripting/scriptsystem.hpp"
-// #include "debugui.hpp"
+#include "debugui.hpp"
 
 #include "ecs/ecs.h"
 #include "utilities/logger.hpp"
 
 #include <iostream>
+#include <chrono>
 
 bool QUIT = false;
 
 void exit_game() { QUIT = true; }
+
+#include <random>
+
+std::mt19937 rng(std::random_device{}());
 
 int main() {
     Logger::instance().setLogLevel(LogLevel::VERBOSE);
   
     Window window(1024, 768, "VoxelX Demo");
     Input::instance().setWindow(&window);
+    Renderer::reserve();
+    // Renderer::initInstancing();
 
     AssetManager::instance().init("/home/user/dev/voxelx/build/res/");
     AssetManager::instance().loadShaders();
@@ -40,15 +46,6 @@ int main() {
 
     window.setSky({0.1f, 0.1f, 0.1f});
 
-    // Voxel vox;
-    // vox.setColor(glm::vec4(0.4f));
-    // vox.mat = 0x2;
-    // vox.visible = true;
-    // std::cout << "Voxel size: " << sizeof(vox) << "\n";
-
-    // VoxelChunk chunk;
-    // std::cout << "Chunk size: " << sizeof(chunk) << "\n";
-
     //* 
     // MapGenerator map(glm::ivec3(500, 200, 500));
     // VoxelStructure* voxelmodel = map.generateMap();
@@ -61,47 +58,73 @@ int main() {
 
     float MOUSE_SPEED = 1.3f;
 
-    //! GameObjects
-    // GameObject *wallobj = new GameObject("wallobj", AssetManager::instance().getMeshFromModel("wall"), glm::vec3(60, 300, 0));
-    // wallobj->getPhysicsObject()->setRigidBody(gm.getPhysicsEngine()->createRigidBody(wallobj->getPosition()));
-    // wallobj->getPhysicsObject()->setPhysicsType(STATIC_PHYSICS);
-    // wallobj->getPhysicsObject()->setCollider(gm.getPhysicsEngine()->getPhysicsCommon().createBoxShape(rp3d::Vector3(1.5f, 20, 50)));
-
-    // GameObject *mapobj = new GameObject("mapobj", AssetManager::instance().clone<GameModel>("map"), glm::vec3(0, 0, 0));
-    // mapobj->getPhysicsObject()->setRigidBody(gm.getPhysicsEngine()->createRigidBody(mapobj->getPosition()));
-    // mapobj->getPhysicsObject()->setPhysicsType(STATIC_PHYSICS);
-    // mapobj->getPhysicsObject()->setCollider(gm.getPhysicsEngine()->getPhysicsCommon().createBoxShape(rp3d::Vector3(300, 100, 300)));
-
-    // GameObject *appleobj = new GameObject("appleobj", AssetManager::instance().getMeshFromModel("apple"), glm::vec3(0, 200, 0));
-    // appleobj->getPhysicsObject()->setRigidBody(gm.getPhysicsEngine()->createRigidBody(appleobj->getPosition()));
-    // appleobj->getPhysicsObject()->setPhysicsType(DYNAMIC_PHYSICS);
-    // appleobj->getPhysicsObject()->setCollider(gm.getPhysicsEngine()->getPhysicsCommon().createSphereShape(10));
-    // appleobj->getPhysicsObject()->getRigidBody()->setAngularLockAxisFactor(rp3d::Vector3(0, 0, 0));
-    // appleobj->attachScript("test");
-    // appleobj->attachCamera(camera);
-
-    // gm.addGameObject(mapobj);
-    // gm.addGameObject(appleobj);
-    // gm.addGameObject(wallobj);
-    // gm.addGameObject(wall1obj);
-
     float jumpforce = 500.0f;
-
-    float currentTime = 0.0f;
-    float deltaTime = 0.0f;
-    float lastTime = 0.0f;
 
     //!!
 
     ECSManager ecsmanager;
     PhysicsSystem& physicssystem = ecsmanager.physicsSystem;
 
+    Entity map = ecsmanager.createEntity();
+    glm::vec3 mapposition(0, -600, 0);
+    ecsmanager.addComponent<Name>(map, "map");
+    ecsmanager.addComponent<Transform>(map, mapposition, glm::vec3(0,0,0), glm::vec3(1,1,1));
+    ecsmanager.addComponent<RigidBody>(map, ecsmanager.physicsSystem.getWorld(), mapposition, rp3d::BodyType::STATIC);
+    ecsmanager.addComponent<Collider>(map, ecsmanager.getComponent<RigidBody>(map).body, physicssystem.physicsCommon.createBoxShape(rp3d::Vector3(500, 150, 500)), rp3d::Transform().identity());
+    ecsmanager.addComponent<Render>(map, "map");
+
     Entity player = ecsmanager.createEntity();
-    ecsmanager.addComponent<Transform>(player, glm::vec3(1,2,3), glm::vec3(0,0,0), glm::vec3(1,1,1));
-    ecsmanager.addComponent<RigidBody>(player, ecsmanager.physicsSystem.getWorld(), rp3d::Transform().identity());
-    ecsmanager.getComponent<RigidBody>(player).body->setType(rp3d::BodyType::DYNAMIC);
-    ecsmanager.addComponent<Collider>(player, ecsmanager.getComponent<RigidBody>(player).body, physicssystem.physicsCommon.createBoxShape(rp3d::Vector3(1, 1, 1)), rp3d::Transform().identity());
+    glm::vec3 plposition(1, 300, -50);
+    ecsmanager.addComponent<Name>(player, "Apple");
+    ecsmanager.addComponent<Transform>(player, plposition, glm::vec3(0,0,0), glm::vec3(1,1,1));
+    ecsmanager.addComponent<RigidBody>(player, ecsmanager.physicsSystem.getWorld(), plposition, rp3d::BodyType::STATIC);
+    rp3d::Transform trt;
+    trt.setPosition(rp3d::Vector3(0, 1, 2));
+    ecsmanager.addComponent<Collider>(player, ecsmanager.getComponent<RigidBody>(player).body, physicssystem.physicsCommon.createBoxShape(rp3d::Vector3(5, 5, 5)), trt);
     ecsmanager.addComponent<Render>(player, "apple");
+
+    Entity player1 = ecsmanager.createEntity();
+    glm::vec3 pl1position(1, 200, 50);
+    ecsmanager.addComponent<Transform>(player1, pl1position, glm::vec3(0,0,0), glm::vec3(1,1,1));
+    ecsmanager.addComponent<RigidBody>(player1, ecsmanager.physicsSystem.getWorld(), pl1position, rp3d::BodyType::STATIC);
+    ecsmanager.addComponent<Collider>(player1, ecsmanager.getComponent<RigidBody>(player1).body, physicssystem.physicsCommon.createBoxShape(rp3d::Vector3(5, 5, 5)), rp3d::Transform().identity());
+    ecsmanager.addComponent<Render>(player1, "apple");
+
+    ecsmanager.serialize(player);
+
+    std::uniform_real_distribution<float> offsetDist(-5.0f, 5.0f); // небольшой разброс
+    std::uniform_real_distribution<float> rotDist(0.0f, glm::pi<float>() * 2);
+
+    int rows = 15;
+    int cols = 15;
+
+    // for (int i = 0; i < rows; i++) {
+    //     for (int j = 0; j < cols; j++) {
+    //         Entity obj = ecsmanager.createEntity();
+
+    //         // Плотнее ставим объекты, шаг ~размер яблока
+    //         glm::vec3 objposition(
+    //             20 + j * 5 + offsetDist(rng),  // шаг 12 вместо 30
+    //             200 + offsetDist(rng),          // небольшое смещение по высоте
+    //             50 - i * 5 + offsetDist(rng)   // шаг 12
+    //         );
+
+    //         glm::vec3 randomRotation(rotDist(rng), rotDist(rng), rotDist(rng));
+
+    //         ecsmanager.addComponent<Transform>(obj, objposition, randomRotation, glm::vec3(1,1,1));
+    //         ecsmanager.addComponent<RigidBody>(obj, ecsmanager.physicsSystem.getWorld(), objposition, rp3d::BodyType::DYNAMIC);
+    //         ecsmanager.addComponent<Collider>(
+    //             obj, 
+    //             ecsmanager.getComponent<RigidBody>(obj).body, 
+    //             physicssystem.physicsCommon.createBoxShape(rp3d::Vector3(5, 5, 5)), 
+    //             rp3d::Transform().identity()
+    //         );
+    //         auto& collider = ecsmanager.getComponent<Collider>(obj);
+    //         collider.collider->getMaterial().setBounciness(0.6f); // от 0 до 1
+    //         collider.collider->getMaterial().setFrictionCoefficient(0.3f);
+    //         ecsmanager.addComponent<Render>(obj, "apple");
+    //     }
+    // }
 
     // rp3d::Transform tran = ecsmanager.getComponent<RigidBody>(player).body->getTransform();
     // tran.setPosition(rp3d::Vector3(50, 0, 100));
@@ -113,27 +136,25 @@ int main() {
     //           << t.modelMatrix[3].y << " "
     //           << t.modelMatrix[3].z << "\n";
 
+    using Clock = std::chrono::high_resolution_clock;
+    auto lastTime = Clock::now();
+
     while (!QUIT) {
         Input::instance().processEvents(QUIT);
         Input::instance().process_keys();
 
-        // currentTime = SDL_GetTicks() / 1000.0f;
-        // deltaTime = currentTime - lastTime;
-        // lastTime = currentTime;
+        auto currentTime = Clock::now();
+        std::chrono::duration<float> frameTime = currentTime - lastTime;
+        float deltaTime = frameTime.count(); // в секундах
+        lastTime = currentTime;
         
         window._glClear();
-
-        // rp3d::Vector3 rpos = ecsmanager.getComponent<RigidBody>(player).body->getTransform().getPosition();
-        // Logger::instance().log(LogLevel::DEBUG, "Rigidbody", "Position: ", rpos.x, " ", rpos.y, " ", rpos.z);
-
-        // glm::vec3 dpos = ecsmanager.getComponent<Transform>(player).position;
-        // Logger::instance().log(LogLevel::DEBUG, "Transform", "Position: ", dpos.x, " ", dpos.y, " ", dpos.z);
         
         AssetManager::instance().get<Shader>("voxel")->use();
         AssetManager::instance().get<Shader>("voxel")->uniformMatrix("projection", camera->getProjection((float)window.getWidth() / (float)window.getHeight()));
         AssetManager::instance().get<Shader>("voxel")->uniformMatrix("view", camera->getView());
         AssetManager::instance().get<Shader>("voxel")->uniformVec3("viewPos", camera->getPosition());
-        ecsmanager.update();
+        ecsmanager.update(deltaTime);
 
         if (Input::instance().getCursorLock()) {
             cam.x += -Input::instance().get_delta_x() * MOUSE_SPEED / window.getHeight();
@@ -181,6 +202,40 @@ int main() {
                 // appleobj->getPhysicsObject()->applyForce(glm::vec3(0, jumpforce * 5, -jumpforce * 5));
             }
         }
+
+        if (Input::instance().jclicked(SDL_BUTTON_MIDDLE)) {
+            ecsmanager.removeComponent<Render>(player);
+            ecsmanager.destroy(player);
+            
+            for (int i = 0; i < rows; i++) {
+                continue;
+                for (int j = 0; j < cols; j++) {
+                    Entity obj = ecsmanager.createEntity();
+
+                    // Плотнее ставим объекты, шаг ~размер яблока
+                    glm::vec3 objposition(
+                        20 + j * 5 + offsetDist(rng),  // шаг 12 вместо 30
+                        200 + offsetDist(rng),          // небольшое смещение по высоте
+                        50 - i * 5 + offsetDist(rng)   // шаг 12
+                    );
+
+                    glm::vec3 randomRotation(rotDist(rng), rotDist(rng), rotDist(rng));
+
+                    ecsmanager.addComponent<Transform>(obj, objposition, randomRotation, glm::vec3(1,1,1));
+                    ecsmanager.addComponent<RigidBody>(obj, ecsmanager.physicsSystem.getWorld(), objposition, rp3d::BodyType::DYNAMIC);
+                    ecsmanager.addComponent<Collider>(
+                        obj, 
+                        ecsmanager.getComponent<RigidBody>(obj).body, 
+                        physicssystem.physicsCommon.createBoxShape(rp3d::Vector3(5, 5, 5)), 
+                        rp3d::Transform().identity()
+                    );
+                    auto& collider = ecsmanager.getComponent<Collider>(obj);
+                    collider.collider->getMaterial().setBounciness(0.6f); // от 0 до 1
+                    collider.collider->getMaterial().setFrictionCoefficient(0.3f);
+                    ecsmanager.addComponent<Render>(obj, "apple");
+                }
+            }
+        }
         // Light light;
         // light.position = camera->getPosition(); //glm::vec3(0.0f, 150.0f, 0.0f); //lightobj->getPosition();
         // light.direction = camera->getTarget();
@@ -204,17 +259,17 @@ int main() {
         // gm.UpdatePhysics(deltaTime);
         // gm.Update(light);
 
-        // window.startFrame();
+        window.startFrame();
 
-        // ShowDebug();
-        // if (window.getPause()) {        
-        //     static int test = 0;
+        ShowDebug();
+        if (window.getPause()) {        
+            static int test = 0;
 
-        //     ShowInspector(gm.getGameObjects(), test);
-        //     DebugPhysics((float)window.getWidth() / (float)window.getHeight());
-        // }
+            ShowInspector(ecsmanager, test);
+            // DebugPhysics((float)window.getWidth() / (float)window.getHeight());
+        }
 
-        // window.renderGUI();
+        window.renderGUI();
 
         window.swapBuffers();
         Input::instance().pullEvents();

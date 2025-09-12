@@ -2,7 +2,7 @@
 
 #include "assetmanager/assetmanager.h"
 #include "utilities/logger.hpp"
-#include <iostream>
+
 class RenderSystem {
 public:
     void update(std::unordered_map<Entity, Transform>& transforms, std::unordered_map<Entity, Render>& renders) {
@@ -14,14 +14,13 @@ public:
             }
             int remeshed = 0;
             VoxelStructure* structure = gamemodel->getStructure();
-            structure->forEachChunk([&] (VoxelChunk& chunk, const ChunkCoord &chunkPos) {
-                if (!chunk._remesh) { return; }
+            structure->eachChunk([&] (VoxelChunk& chunk) {
+                if (!chunk._dirty) { return; }
                 remeshed++;
-                
-                // chunk.met = new VoxelMesh(structure, chunk);
-                // VoxelMesh* newmesh = Renderer::generateMesh(structure, chunk);
-                gamemodel->getModel()->set(&chunk, std::make_unique<VoxelMesh>(structure, chunk));
-                chunk._remesh = false;
+
+                gamemodel->getModel()->set(&chunk, Renderer::generate_mesh(chunk));
+                // gamemodel->getModel()->set(&chunk, std::make_unique<VoxelMesh>(chunk));
+                chunk._dirty = false;
             });
             if (remeshed > 0) {
                 Logger::instance().log(LogLevel::VERBOSE, "GameManager", "Remeshed: bryellow<", remeshed ,">");

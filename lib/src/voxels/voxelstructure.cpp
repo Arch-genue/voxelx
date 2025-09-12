@@ -17,7 +17,7 @@ VoxelStructure::VoxelStructure(const std::filesystem::path &path): _path(path) {
 }
 
 VoxelStructure::VoxelStructure(const VoxelStructure &other) {
-    other.forEachVoxel([&](const Voxel& voxel, const ChunkCoord& chunkpos, int x, int y, int z) {
+    other.eachVoxel([&](const Voxel& voxel, int x, int y, int z) {
         Voxel voxel1 = voxel;
         this->getVoxel(x, y, z) = voxel;
     });
@@ -44,7 +44,7 @@ Voxel& VoxelStructure::getVoxel(int x, int y, int z) {
     int lx = floormod(x, CHUNK_SIZE);
     int ly = floormod(y, CHUNK_SIZE);
     int lz = floormod(z, CHUNK_SIZE);
-    return this->getVoxelChunk(x, y, z).getVoxel(lx, ly, lz);
+    return this->getVoxelChunk(x, y, z).at(lx, ly, lz);
 }
 
 Voxel& VoxelStructure::voxel(int x, int y, int z) {
@@ -52,8 +52,8 @@ Voxel& VoxelStructure::voxel(int x, int y, int z) {
     int ly = floormod(y, CHUNK_SIZE);
     int lz = floormod(z, CHUNK_SIZE);
     VoxelChunk& chunk = this->getVoxelChunk(x, y, z);
-    chunk._remesh = true;
-    return chunk.getVoxel(lx, ly, lz);
+    chunk._dirty = true;
+    return chunk.at(lx, ly, lz);
 }
 
 uint8_t VoxelStructure::load_structure(const std::string &filename) {
@@ -103,8 +103,8 @@ void VoxelStructure::save_structure(VoxelStructure* voxelmodel) {
     file << "# X Y Z RRGGBB\n";
     file << "\n";
 
-    voxelmodel->forEachChunk([&](VoxelChunk &chunk, const ChunkCoord &chunkPos) {
-        voxelmodel->forEachVisibleVoxelInChunk(chunk, [&](Voxel &voxel, int x, int y, int z) {
+    voxelmodel->eachChunk([&](VoxelChunk &chunk) {
+        chunk.eachVisible([&](Voxel &voxel, glm::vec3 pos) {
         std::ostringstream oss;
         oss << std::hex << std::setfill('0')
             << std::setw(2) << (voxel.color.r & 0xFF)
@@ -113,7 +113,7 @@ void VoxelStructure::save_structure(VoxelStructure* voxelmodel) {
             << std::setw(2) << (voxel.color.a & 0xFF);
 
             std::string hexString = oss.str();
-            file << x << " " << y << " " << z << " " << hexString << "\n";
+            file << pos.x << " " << pos.y << " " << pos.z << " " << hexString << "\n";
         });
     });
 

@@ -6,13 +6,15 @@ public:
     
     PhysicsSystem() {
         world = physicsCommon.createPhysicsWorld();
+        world->setGravity(rp3d::Vector3(0, -19.81f, 0));
     }
 
     ~PhysicsSystem() {
         physicsCommon.destroyPhysicsWorld(world);
     }
+    
 
-    void update() {
+    void update(float deltaTime) {
         world->update(1 / 60.0f);
     }
 

@@ -86,7 +86,20 @@
         "shared_mutex": "cpp",
         "stdfloat": "cpp",
         "filesystem": "cpp",
-        "oldassetmanager.C": "cpp"
+        "oldassetmanager.C": "cpp",
+        "csetjmp": "cpp",
+        "barrier": "cpp",
+        "coroutine": "cpp",
+        "cuchar": "cpp",
+        "expected": "cpp",
+        "latch": "cpp",
+        "scoped_allocator": "cpp",
+        "spanstream": "cpp",
+        "stacktrace": "cpp",
+        "syncstream": "cpp",
+        "version": "cpp"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.intelliSenseCacheSize": 1024,
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.errorSquiggles": "enabledIfIncludesResolve"
 }
